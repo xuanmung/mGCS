@@ -29,43 +29,46 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mGCS));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lblCntFt = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cbxFtBaud = new System.Windows.Forms.ComboBox();
+            this.cbxFtCom = new System.Windows.Forms.ComboBox();
             this.btnCntFt = new System.Windows.Forms.Button();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.lblCntGpsSim = new System.Windows.Forms.Label();
-            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
-            this.label2 = new System.Windows.Forms.Label();
-            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnSend = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbxIP = new System.Windows.Forms.TextBox();
-            this.btnCntGpsSim = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbxFsIp = new System.Windows.Forms.TextBox();
-            this.btnCntFs = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.cbxFtCom = new System.Windows.Forms.ComboBox();
-            this.cbxFtBaud = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.cbxVhclBaud = new System.Windows.Forms.ComboBox();
             this.cbxVhclCom = new System.Windows.Forms.ComboBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.splitContainer5 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnSend = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbxIP = new System.Windows.Forms.TextBox();
+            this.btnCntGpsSim = new System.Windows.Forms.Button();
+            this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbxFsIp = new System.Windows.Forms.TextBox();
+            this.btnCntFs = new System.Windows.Forms.Button();
+            this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.lbxView = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
@@ -112,23 +115,27 @@
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.lbxView);
             this.splitContainer2.Size = new System.Drawing.Size(238, 499);
             this.splitContainer2.SplitterDistance = 274;
             this.splitContainer2.TabIndex = 0;
             // 
             // chart1
             // 
-            chartArea6.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea6);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend6.Name = "Legend1";
-            this.chart1.Legends.Add(legend6);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(0, 0);
             this.chart1.Name = "chart1";
-            series6.ChartArea = "ChartArea1";
-            series6.Legend = "Legend1";
-            series6.Name = "Series1";
-            this.chart1.Series.Add(series6);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(779, 497);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
@@ -168,6 +175,51 @@
             this.lblCntFt.TabIndex = 0;
             this.lblCntFt.Text = "Connection to F/T sensor";
             this.lblCntFt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(94, 9);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(55, 12);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Baudrate";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(22, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(59, 12);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "COM port";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cbxFtBaud
+            // 
+            this.cbxFtBaud.FormattingEnabled = true;
+            this.cbxFtBaud.Items.AddRange(new object[] {
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400",
+            "57600",
+            "115200",
+            "230400"});
+            this.cbxFtBaud.Location = new System.Drawing.Point(90, 33);
+            this.cbxFtBaud.Name = "cbxFtBaud";
+            this.cbxFtBaud.Size = new System.Drawing.Size(65, 20);
+            this.cbxFtBaud.TabIndex = 2;
+            // 
+            // cbxFtCom
+            // 
+            this.cbxFtCom.FormattingEnabled = true;
+            this.cbxFtCom.Location = new System.Drawing.Point(19, 33);
+            this.cbxFtCom.Name = "cbxFtCom";
+            this.cbxFtCom.Size = new System.Drawing.Size(65, 20);
+            this.cbxFtCom.TabIndex = 2;
             // 
             // btnCntFt
             // 
@@ -216,200 +268,6 @@
             this.lblCntGpsSim.Text = "Connection to Vehicle";
             this.lblCntGpsSim.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // splitContainer5
-            // 
-            this.splitContainer5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.splitContainer5.IsSplitterFixed = true;
-            this.splitContainer5.Location = new System.Drawing.Point(508, 0);
-            this.splitContainer5.Name = "splitContainer5";
-            this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer5.Panel1
-            // 
-            this.splitContainer5.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.splitContainer5.Panel1.Controls.Add(this.label2);
-            // 
-            // splitContainer5.Panel2
-            // 
-            this.splitContainer5.Panel2.Controls.Add(this.btnSend);
-            this.splitContainer5.Panel2.Controls.Add(this.label1);
-            this.splitContainer5.Panel2.Controls.Add(this.tbxIP);
-            this.splitContainer5.Panel2.Controls.Add(this.btnCntGpsSim);
-            this.splitContainer5.Size = new System.Drawing.Size(266, 110);
-            this.splitContainer5.SplitterDistance = 37;
-            this.splitContainer5.TabIndex = 4;
-            // 
-            // label2
-            // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(264, 35);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Connection to GPS Sim.";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // splitContainer6
-            // 
-            this.splitContainer6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Left;
-            this.splitContainer6.IsSplitterFixed = true;
-            this.splitContainer6.Location = new System.Drawing.Point(774, 0);
-            this.splitContainer6.Name = "splitContainer6";
-            this.splitContainer6.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer6.Panel1
-            // 
-            this.splitContainer6.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.splitContainer6.Panel1.Controls.Add(this.label4);
-            // 
-            // splitContainer6.Panel2
-            // 
-            this.splitContainer6.Panel2.Controls.Add(this.label3);
-            this.splitContainer6.Panel2.Controls.Add(this.tbxFsIp);
-            this.splitContainer6.Panel2.Controls.Add(this.btnCntFs);
-            this.splitContainer6.Size = new System.Drawing.Size(248, 110);
-            this.splitContainer6.SplitterDistance = 37;
-            this.splitContainer6.TabIndex = 5;
-            // 
-            // label4
-            // 
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label4.Location = new System.Drawing.Point(0, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(246, 35);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Connection to Flight Sim.";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnSend
-            // 
-            this.btnSend.Location = new System.Drawing.Point(125, 30);
-            this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(53, 23);
-            this.btnSend.TabIndex = 9;
-            this.btnSend.Text = "Send";
-            this.btnSend.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 12);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "IP adress";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tbxIP
-            // 
-            this.tbxIP.Location = new System.Drawing.Point(75, 4);
-            this.tbxIP.Name = "tbxIP";
-            this.tbxIP.Size = new System.Drawing.Size(103, 21);
-            this.tbxIP.TabIndex = 7;
-            this.tbxIP.Text = "192.168.0.41";
-            this.tbxIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbxIP.TextChanged += new System.EventHandler(this.tbxIP_TextChanged);
-            // 
-            // btnCntGpsSim
-            // 
-            this.btnCntGpsSim.BackgroundImage = global::mGCS.Properties.Resources.btnConnect;
-            this.btnCntGpsSim.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCntGpsSim.Location = new System.Drawing.Point(189, 0);
-            this.btnCntGpsSim.Name = "btnCntGpsSim";
-            this.btnCntGpsSim.Size = new System.Drawing.Size(75, 67);
-            this.btnCntGpsSim.TabIndex = 6;
-            this.btnCntGpsSim.UseVisualStyleBackColor = true;
-            this.btnCntGpsSim.Click += new System.EventHandler(this.btnCntGpsSim_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(55, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(59, 12);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "IP adress";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tbxFsIp
-            // 
-            this.tbxFsIp.Location = new System.Drawing.Point(36, 32);
-            this.tbxFsIp.Name = "tbxFsIp";
-            this.tbxFsIp.Size = new System.Drawing.Size(101, 21);
-            this.tbxFsIp.TabIndex = 10;
-            this.tbxFsIp.Text = "192.168.0.41";
-            this.tbxFsIp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // btnCntFs
-            // 
-            this.btnCntFs.BackgroundImage = global::mGCS.Properties.Resources.btnConnect;
-            this.btnCntFs.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnCntFs.Location = new System.Drawing.Point(171, 0);
-            this.btnCntFs.Name = "btnCntFs";
-            this.btnCntFs.Size = new System.Drawing.Size(75, 67);
-            this.btnCntFs.TabIndex = 9;
-            this.btnCntFs.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.BackgroundImage = global::mGCS.Properties.Resources.btnConnect;
-            this.button2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button2.Location = new System.Drawing.Point(189, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 67);
-            this.button2.TabIndex = 7;
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // cbxFtCom
-            // 
-            this.cbxFtCom.FormattingEnabled = true;
-            this.cbxFtCom.Location = new System.Drawing.Point(19, 33);
-            this.cbxFtCom.Name = "cbxFtCom";
-            this.cbxFtCom.Size = new System.Drawing.Size(65, 20);
-            this.cbxFtCom.TabIndex = 2;
-            this.cbxFtCom.TextChanged += new System.EventHandler(this.cbxCom_TextChanged);
-            // 
-            // cbxFtBaud
-            // 
-            this.cbxFtBaud.FormattingEnabled = true;
-            this.cbxFtBaud.Items.AddRange(new object[] {
-            "2400",
-            "4800",
-            "9600",
-            "19200",
-            "38400",
-            "57600",
-            "115200",
-            "230400"});
-            this.cbxFtBaud.Location = new System.Drawing.Point(90, 33);
-            this.cbxFtBaud.Name = "cbxFtBaud";
-            this.cbxFtBaud.Size = new System.Drawing.Size(65, 20);
-            this.cbxFtBaud.TabIndex = 2;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(22, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(59, 12);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "COM port";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(94, 9);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(55, 12);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Baudrate";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -455,6 +313,163 @@
             this.cbxVhclCom.Size = new System.Drawing.Size(65, 20);
             this.cbxVhclCom.TabIndex = 14;
             // 
+            // button2
+            // 
+            this.button2.BackgroundImage = global::mGCS.Properties.Resources.btnConnect;
+            this.button2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.button2.Location = new System.Drawing.Point(189, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 67);
+            this.button2.TabIndex = 7;
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer5
+            // 
+            this.splitContainer5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.splitContainer5.IsSplitterFixed = true;
+            this.splitContainer5.Location = new System.Drawing.Point(508, 0);
+            this.splitContainer5.Name = "splitContainer5";
+            this.splitContainer5.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer5.Panel1
+            // 
+            this.splitContainer5.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.splitContainer5.Panel1.Controls.Add(this.label2);
+            // 
+            // splitContainer5.Panel2
+            // 
+            this.splitContainer5.Panel2.Controls.Add(this.btnSend);
+            this.splitContainer5.Panel2.Controls.Add(this.label1);
+            this.splitContainer5.Panel2.Controls.Add(this.tbxIP);
+            this.splitContainer5.Panel2.Controls.Add(this.btnCntGpsSim);
+            this.splitContainer5.Size = new System.Drawing.Size(266, 110);
+            this.splitContainer5.SplitterDistance = 37;
+            this.splitContainer5.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(264, 35);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Connection to GPS Sim.";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnSend
+            // 
+            this.btnSend.Location = new System.Drawing.Point(125, 30);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(53, 23);
+            this.btnSend.TabIndex = 9;
+            this.btnSend.Text = "Send";
+            this.btnSend.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(59, 12);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "IP adress";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tbxIP
+            // 
+            this.tbxIP.Location = new System.Drawing.Point(75, 4);
+            this.tbxIP.Name = "tbxIP";
+            this.tbxIP.Size = new System.Drawing.Size(103, 21);
+            this.tbxIP.TabIndex = 7;
+            this.tbxIP.Text = "192.168.0.41";
+            this.tbxIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbxIP.TextChanged += new System.EventHandler(this.tbxIP_TextChanged);
+            // 
+            // btnCntGpsSim
+            // 
+            this.btnCntGpsSim.BackgroundImage = global::mGCS.Properties.Resources.btnConnect;
+            this.btnCntGpsSim.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCntGpsSim.Location = new System.Drawing.Point(189, 0);
+            this.btnCntGpsSim.Name = "btnCntGpsSim";
+            this.btnCntGpsSim.Size = new System.Drawing.Size(75, 67);
+            this.btnCntGpsSim.TabIndex = 6;
+            this.btnCntGpsSim.UseVisualStyleBackColor = true;
+            this.btnCntGpsSim.Click += new System.EventHandler(this.btnCntGpsSim_Click);
+            // 
+            // splitContainer6
+            // 
+            this.splitContainer6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Left;
+            this.splitContainer6.IsSplitterFixed = true;
+            this.splitContainer6.Location = new System.Drawing.Point(774, 0);
+            this.splitContainer6.Name = "splitContainer6";
+            this.splitContainer6.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer6.Panel1
+            // 
+            this.splitContainer6.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.splitContainer6.Panel1.Controls.Add(this.label4);
+            // 
+            // splitContainer6.Panel2
+            // 
+            this.splitContainer6.Panel2.Controls.Add(this.label3);
+            this.splitContainer6.Panel2.Controls.Add(this.tbxFsIp);
+            this.splitContainer6.Panel2.Controls.Add(this.btnCntFs);
+            this.splitContainer6.Size = new System.Drawing.Size(248, 110);
+            this.splitContainer6.SplitterDistance = 37;
+            this.splitContainer6.TabIndex = 5;
+            // 
+            // label4
+            // 
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label4.Location = new System.Drawing.Point(0, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(246, 35);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Connection to Flight Sim.";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(55, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 12);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "IP adress";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tbxFsIp
+            // 
+            this.tbxFsIp.Location = new System.Drawing.Point(36, 32);
+            this.tbxFsIp.Name = "tbxFsIp";
+            this.tbxFsIp.Size = new System.Drawing.Size(101, 21);
+            this.tbxFsIp.TabIndex = 10;
+            this.tbxFsIp.Text = "192.168.0.41";
+            this.tbxFsIp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnCntFs
+            // 
+            this.btnCntFs.BackgroundImage = global::mGCS.Properties.Resources.btnConnect;
+            this.btnCntFs.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnCntFs.Location = new System.Drawing.Point(171, 0);
+            this.btnCntFs.Name = "btnCntFs";
+            this.btnCntFs.Size = new System.Drawing.Size(75, 67);
+            this.btnCntFs.TabIndex = 9;
+            this.btnCntFs.UseVisualStyleBackColor = true;
+            // 
+            // lbxView
+            // 
+            this.lbxView.FormattingEnabled = true;
+            this.lbxView.ItemHeight = 12;
+            this.lbxView.Location = new System.Drawing.Point(3, 19);
+            this.lbxView.Name = "lbxView";
+            this.lbxView.Size = new System.Drawing.Size(230, 88);
+            this.lbxView.TabIndex = 0;
+            // 
             // mGCS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -466,6 +481,7 @@
             this.Controls.Add(this.splitContainer4);
             this.Controls.Add(this.splitContainer3);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "mGCS";
             this.Text = "mGCS";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mGCS_FormClosing);
@@ -474,6 +490,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
@@ -532,6 +549,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cbxVhclBaud;
         private System.Windows.Forms.ComboBox cbxVhclCom;
+        private System.Windows.Forms.ListBox lbxView;
 
     }
 }

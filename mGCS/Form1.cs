@@ -39,7 +39,9 @@ namespace mGCS
         private bool ftConnected = false;
         private string ftCom;
         private string ftBaud;
-
+        private double fx, fy, fz, tx, ty, tz;
+        private string ftBuffer;
+        private Thread ftDataReceiver;
 
         //Vehicle variables
         private bool vehicleConnected = false;
@@ -47,15 +49,6 @@ namespace mGCS
         //Flight Sim. variables
         private bool fsConnected = false;
 
-
-
-        //F/T sensor functions
-        void getAvailableComPorts()
-        {
-            string[] ports = SerialPort.GetPortNames();
-            cbxFtCom.Items.AddRange(ports);
-            cbxVhclCom.Items.AddRange(ports);
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -205,18 +198,27 @@ namespace mGCS
             catch { }
         }
 
-        private void cbxCom_TextChanged(object sender, EventArgs e)
-        {
 
+        /// <summary>
+        ///  F/T sensor functions
+        /// </summary>
+        void getAvailableComPorts()
+        {
+            string[] ports = SerialPort.GetPortNames();
+            cbxFtCom.Items.AddRange(ports);
+            cbxVhclCom.Items.AddRange(ports);
         }
 
         private void btnCntFt_Click(object sender, EventArgs e)
         {
             if (!ftSerialPort.IsOpen)
             {
+                //If no COM port or no Baudrate selected, pop up a warning
                 if (cbxFtCom.Text == "" || cbxFtBaud.Text == "")
+                {
                     MessageBox.Show("Please fully choose a COM port and a Baudrate", "F/T sensor connection");
-                else
+                }
+                else //If both COM port and Baudrate selected then try to connect
                 {
                     ftSerialPort.PortName = cbxFtCom.Text;
                     ftSerialPort.BaudRate = Convert.ToInt32(cbxFtBaud.Text);
@@ -225,6 +227,8 @@ namespace mGCS
                         ftSerialPort.Open();
                         btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
                         //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
+                        ftDataReceiver = new Thread(new ThreadStart(ftDataReceive));
+                        ftDataReceiver.Start();
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -232,10 +236,46 @@ namespace mGCS
                     }
                 }
             }
-            else {
+            else 
+            {
                 ftSerialPort.Close();
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
                 //MessageBox.Show("F/T sensor disconnected", "F/T sensor connection");
+                ftDataReceiver.Abort();
+            }
+        }
+        void ftDataReceive()
+        {
+            while (ftSerialPort.IsOpen)
+            {
+                char requestCode = (char)20;
+                this.Invoke((MethodInvoker)delegate()
+                {
+                    lbxView.Items.Add("START");
+                });
+                
+                try
+                {
+                    ftSerialPort.WriteLine(requestCode.ToString());
+                }
+                catch (Exception x)
+                {
+                MessageBox.Show(x.Message.ToString(), "F/T sensor connection");
+                }
+                try
+                {
+                    ftBuffer = ftSerialPort.ReadLine();
+                    this.Invoke((MethodInvoker)delegate()
+                    {
+                        lbxView.Items.Add(ftBuffer);
+                    });
+                }
+                catch (TimeoutException)
+                {
+                    MessageBox.Show("F/T data reading Timeout", "F/T sensor connection");
+                }
+                catch (Exception x)
+                { MessageBox.Show(x.Message.ToString(), "F/T sensor connection"); }
             }
         }
     }
