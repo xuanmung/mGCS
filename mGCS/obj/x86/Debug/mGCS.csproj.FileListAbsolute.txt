@@ -1,0 +1,8 @@
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\bin\Debug\mGCS.exe
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\bin\Debug\mGCS.pdb
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\obj\x86\Debug\mGCS.Properties.Resources.resources
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\obj\x86\Debug\mGCS.csproj.GenerateResource.Cache
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\obj\x86\Debug\mGCS.exe
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\obj\x86\Debug\mGCS.pdb
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\obj\x86\Debug\mGCS.mGCS.resources
+D:\STUDY\PROJECTS\GTB\mGCS\mGCS\obj\x86\Debug\mGCS.csprojResolveAssemblyReference.cache
