@@ -35,6 +35,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mGCS));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.lbxView = new System.Windows.Forms.ListBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lblCntFt = new System.Windows.Forms.Label();
@@ -62,7 +63,6 @@
             this.tbxFsIp = new System.Windows.Forms.TextBox();
             this.btnCntFs = new System.Windows.Forms.Button();
             this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
-            this.lbxView = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -122,6 +122,15 @@
             this.splitContainer2.Size = new System.Drawing.Size(238, 499);
             this.splitContainer2.SplitterDistance = 274;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // lbxView
+            // 
+            this.lbxView.FormattingEnabled = true;
+            this.lbxView.ItemHeight = 12;
+            this.lbxView.Location = new System.Drawing.Point(3, 19);
+            this.lbxView.Name = "lbxView";
+            this.lbxView.Size = new System.Drawing.Size(230, 88);
+            this.lbxView.TabIndex = 0;
             // 
             // chart1
             // 
@@ -220,6 +229,7 @@
             this.cbxFtCom.Name = "cbxFtCom";
             this.cbxFtCom.Size = new System.Drawing.Size(65, 20);
             this.cbxFtCom.TabIndex = 2;
+            this.cbxFtCom.Click += new System.EventHandler(this.cbxFtCom_Click);
             // 
             // btnCntFt
             // 
@@ -460,15 +470,6 @@
             this.btnCntFs.Size = new System.Drawing.Size(75, 67);
             this.btnCntFs.TabIndex = 9;
             this.btnCntFs.UseVisualStyleBackColor = true;
-            // 
-            // lbxView
-            // 
-            this.lbxView.FormattingEnabled = true;
-            this.lbxView.ItemHeight = 12;
-            this.lbxView.Location = new System.Drawing.Point(3, 19);
-            this.lbxView.Name = "lbxView";
-            this.lbxView.Size = new System.Drawing.Size(230, 88);
-            this.lbxView.TabIndex = 0;
             // 
             // mGCS
             // 

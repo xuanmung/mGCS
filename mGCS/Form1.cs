@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Timers;
 using System.IO.Ports;
+using System.IO;
 
 
 namespace mGCS
@@ -42,6 +43,8 @@ namespace mGCS
         private double fx, fy, fz, tx, ty, tz;
         private string ftBuffer;
         private Thread ftDataReceiver;
+        private string ftLoggingFile;
+        private static TextWriter mTwriter;
 
         //Vehicle variables
         private bool vehicleConnected = false;
@@ -205,8 +208,17 @@ namespace mGCS
         void getAvailableComPorts()
         {
             string[] ports = SerialPort.GetPortNames();
+
+            //Clear all the items in the lists then re-add
+            cbxFtCom.Items.Clear();
             cbxFtCom.Items.AddRange(ports);
+            cbxVhclCom.Items.Clear();
             cbxVhclCom.Items.AddRange(ports);
+        }
+
+        private void cbxFtCom_Click(object sender, EventArgs e)
+        {
+            getAvailableComPorts();
         }
 
         private void btnCntFt_Click(object sender, EventArgs e)
@@ -224,9 +236,24 @@ namespace mGCS
                     ftSerialPort.BaudRate = Convert.ToInt32(cbxFtBaud.Text);
                     try
                     {
+                        //Open Serial Port
                         ftSerialPort.Open();
+
+                        //Change button's Icon
                         btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
                         //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
+
+                        //Show Save-file Dialog for Logging FT data
+                        SaveFileDialog sfDlg = new SaveFileDialog();
+                        sfDlg.DefaultExt = "txt";
+                        sfDlg.Title = "Save F/T Logging File";
+                        DialogResult dlgResult = sfDlg.ShowDialog();
+                        if (dlgResult == DialogResult.OK && !string.IsNullOrWhiteSpace(sfDlg.FileName))
+                        {
+                            ftLoggingFile = sfDlg.FileName;
+                        }
+
+                        //Launch a new Thread for FT data receiving
                         ftDataReceiver = new Thread(new ThreadStart(ftDataReceive));
                         ftDataReceiver.Start();
                     }
@@ -238,10 +265,15 @@ namespace mGCS
             }
             else 
             {
+                //Dismiss the Thread
+                ftDataReceiver.Suspend();
+
+                //Close the serial port
                 ftSerialPort.Close();
+
+                //Return button's Icon
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
                 //MessageBox.Show("F/T sensor disconnected", "F/T sensor connection");
-                ftDataReceiver.Abort();
             }
         }
         void ftDataReceive()
@@ -249,11 +281,14 @@ namespace mGCS
             while (ftSerialPort.IsOpen)
             {
                 char requestCode = (char)20;
+
+                //Just for Debugging
                 this.Invoke((MethodInvoker)delegate()
                 {
                     lbxView.Items.Add("START");
                 });
                 
+                //Send request to FT controller
                 try
                 {
                     ftSerialPort.WriteLine(requestCode.ToString());
@@ -262,9 +297,13 @@ namespace mGCS
                 {
                 MessageBox.Show(x.Message.ToString(), "F/T sensor connection");
                 }
+
+                //Read FT data
                 try
                 {
                     ftBuffer = ftSerialPort.ReadLine();
+
+                    //Just for Debugging
                     this.Invoke((MethodInvoker)delegate()
                     {
                         lbxView.Items.Add(ftBuffer);
@@ -276,6 +315,29 @@ namespace mGCS
                 }
                 catch (Exception x)
                 { MessageBox.Show(x.Message.ToString(), "F/T sensor connection"); }
+
+                StreamWriter mStrmWtr;
+                if (!string.IsNullOrEmpty(ftLoggingFile))
+                {
+                    //Open file to append text
+                    mStrmWtr = File.AppendText(ftLoggingFile);
+
+                    string[] ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
+                    //int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
+
+                    foreach (string str in ftDataStr)
+                    {
+                        //Write "\t" following each element of ftDataStr
+                        if (str.GetEnumerator().MoveNext())
+                            mStrmWtr.Write(str + "\t");
+                        else
+                            //Write new line after fully writting ftDataStr
+                            mStrmWtr.WriteLine(str);
+                    }
+
+                    //Close stream writter after appending text
+                    mStrmWtr.Close();
+                }
             }
         }
     }
