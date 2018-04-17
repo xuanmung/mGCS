@@ -36,7 +36,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.lbxView = new System.Windows.Forms.ListBox();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartPosSim = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lblCntFt = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -70,7 +70,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPosSim)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -103,7 +103,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.chart1);
+            this.splitContainer1.Panel2.Controls.Add(this.chartPosSim);
             this.splitContainer1.Size = new System.Drawing.Size(1023, 499);
             this.splitContainer1.SplitterDistance = 238;
             this.splitContainer1.TabIndex = 1;
@@ -132,22 +132,21 @@
             this.lbxView.Size = new System.Drawing.Size(230, 88);
             this.lbxView.TabIndex = 0;
             // 
-            // chart1
+            // chartPosSim
             // 
             chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartPosSim.ChartAreas.Add(chartArea1);
+            this.chartPosSim.Dock = System.Windows.Forms.DockStyle.Fill;
             legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(0, 0);
-            this.chart1.Name = "chart1";
+            this.chartPosSim.Legends.Add(legend1);
+            this.chartPosSim.Location = new System.Drawing.Point(0, 0);
+            this.chartPosSim.Name = "chartPosSim";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
             series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(779, 497);
-            this.chart1.TabIndex = 0;
-            this.chart1.Text = "chart1";
+            this.chartPosSim.Series.Add(series1);
+            this.chartPosSim.Size = new System.Drawing.Size(779, 497);
+            this.chartPosSim.TabIndex = 0;
             // 
             // splitContainer3
             // 
@@ -494,7 +493,7 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPosSim)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             this.splitContainer3.Panel2.PerformLayout();
@@ -523,7 +522,7 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartPosSim;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Label lblCntFt;
         private System.Windows.Forms.SplitContainer splitContainer4;

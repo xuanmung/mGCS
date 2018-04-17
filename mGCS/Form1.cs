@@ -45,6 +45,9 @@ namespace mGCS
         private Thread ftDataReceiver;
         private string ftLoggingFile;
         private static TextWriter mTwriter;
+        PositionMap mPosMap;
+        LowPassFilter mLpf;
+        PseudoPositioning mPsner;
 
         //Vehicle variables
         private bool vehicleConnected = false;
@@ -59,6 +62,17 @@ namespace mGCS
             mTimer.Interval = 100; //100 mili-seconds
             mTimer.Tick += new System.EventHandler(mTimer_Tick);
             //mTimer.Start();
+
+            mLpf = new LowPassFilter(2.0, 0.05);
+            PositionMap mPosMap = new PositionMap(chartPosSim);
+            try
+            {
+                mPosMap.update(1, 2);
+                mPosMap.update(-1, -2);
+            }
+            catch { }
+
+            chartPosSim.Titles.Add("Vehicle's Position"); 
         }
         
         private void tbxIP_TextChanged(object sender, EventArgs e)
@@ -96,6 +110,7 @@ namespace mGCS
                 catch { }
             }
         }
+
         void gpsSimConnected(IAsyncResult iar)
         {
             try
@@ -319,25 +334,43 @@ namespace mGCS
                 StreamWriter mStrmWtr;
                 if (!string.IsNullOrEmpty(ftLoggingFile))
                 {
-                    //Open file to append text
-                    mStrmWtr = File.AppendText(ftLoggingFile);
-
-                    string[] ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
-                    //int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
-
-                    foreach (string str in ftDataStr)
+                    try
                     {
-                        //Write "\t" following each element of ftDataStr
-                        if (str.GetEnumerator().MoveNext())
-                            mStrmWtr.Write(str + "\t");
-                        else
-                            //Write new line after fully writting ftDataStr
-                            mStrmWtr.WriteLine(str);
-                    }
+                        string[] ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
+                        int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
 
-                    //Close stream writter after appending text
-                    mStrmWtr.Close();
+                        //Processing ftData
+                        double[] forces = (new FtConversion()).normalize(ftData);
+                        mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
+                        mPsner.generate(forces[0], forces[1], forces[2]);
+
+                        //Open file to append text
+                        mStrmWtr = File.AppendText(ftLoggingFile);
+
+                        //Write data into text file
+                        foreach (string str in ftDataStr)
+                        {
+                            //Write "\t" following each element of ftDataStr
+                            if (str.GetEnumerator().MoveNext())
+                                mStrmWtr.Write(str + "\t");
+                            else
+                                //Write new line after fully writting ftDataStr
+                                mStrmWtr.WriteLine(str);
+                        }
+
+                        //Close stream writter after appending text
+                        mStrmWtr.Close();
+                    }
+                    catch { }
                 }
+
+                //Update data visualization onto the Chart
+                try
+                {
+                    mPosMap.update(mPsner.getX(), mPsner.getY());
+                    //mPosMap.update(-1, -2);
+                }
+                catch { }
             }
         }
     }
