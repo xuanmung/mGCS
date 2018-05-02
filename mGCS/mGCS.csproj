@@ -34,6 +34,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MsgPack">
+      <HintPath>..\..\Refered_code\msgpack-rpc-cli\src\MsgPack.Rpc.Client.Mono\bin\Debug\MsgPack.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgPack.Rpc">
+      <HintPath>..\..\Refered_code\msgpack-rpc-cli\src\MsgPack.Rpc.Client.Mono\bin\Debug\MsgPack.Rpc.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgPack.Rpc.Client">
+      <HintPath>..\..\Refered_code\msgpack-rpc-cli\src\MsgPack.Rpc.Client.Mono\bin\Debug\MsgPack.Rpc.Client.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -47,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AirSimHelper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -54,7 +54,9 @@
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
             this.btnSend = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.tbxGpsSimPort = new System.Windows.Forms.TextBox();
             this.tbxIP = new System.Windows.Forms.TextBox();
             this.btnCntGpsSim = new System.Windows.Forms.Button();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
@@ -68,7 +70,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartPosSim)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
@@ -116,18 +118,18 @@
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer2.Panel1
+            // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.lbxView);
+            this.splitContainer2.Panel2.Controls.Add(this.lbxView);
             this.splitContainer2.Size = new System.Drawing.Size(238, 499);
-            this.splitContainer2.SplitterDistance = 274;
+            this.splitContainer2.SplitterDistance = 224;
             this.splitContainer2.TabIndex = 0;
             // 
             // lbxView
             // 
             this.lbxView.FormattingEnabled = true;
             this.lbxView.ItemHeight = 12;
-            this.lbxView.Location = new System.Drawing.Point(3, 19);
+            this.lbxView.Location = new System.Drawing.Point(2, 3);
             this.lbxView.Name = "lbxView";
             this.lbxView.Size = new System.Drawing.Size(230, 88);
             this.lbxView.TabIndex = 0;
@@ -349,7 +351,9 @@
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.btnSend);
+            this.splitContainer5.Panel2.Controls.Add(this.label9);
             this.splitContainer5.Panel2.Controls.Add(this.label1);
+            this.splitContainer5.Panel2.Controls.Add(this.tbxGpsSimPort);
             this.splitContainer5.Panel2.Controls.Add(this.tbxIP);
             this.splitContainer5.Panel2.Controls.Add(this.btnCntGpsSim);
             this.splitContainer5.Size = new System.Drawing.Size(266, 110);
@@ -376,6 +380,16 @@
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 35);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(27, 12);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "Port";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -385,6 +399,16 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "IP adress";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tbxGpsSimPort
+            // 
+            this.tbxGpsSimPort.Location = new System.Drawing.Point(75, 31);
+            this.tbxGpsSimPort.Name = "tbxGpsSimPort";
+            this.tbxGpsSimPort.Size = new System.Drawing.Size(44, 21);
+            this.tbxGpsSimPort.TabIndex = 7;
+            this.tbxGpsSimPort.Text = "0";
+            this.tbxGpsSimPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbxGpsSimPort.TextChanged += new System.EventHandler(this.tbxGpsSimPort_TextChanged);
             // 
             // tbxIP
             // 
@@ -469,6 +493,7 @@
             this.btnCntFs.Size = new System.Drawing.Size(75, 67);
             this.btnCntFs.TabIndex = 9;
             this.btnCntFs.UseVisualStyleBackColor = true;
+            this.btnCntFs.Click += new System.EventHandler(this.btnCntFs_Click);
             // 
             // mGCS
             // 
@@ -490,7 +515,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.chartPosSim)).EndInit();
@@ -550,6 +575,8 @@
         private System.Windows.Forms.ComboBox cbxVhclBaud;
         private System.Windows.Forms.ComboBox cbxVhclCom;
         private System.Windows.Forms.ListBox lbxView;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbxGpsSimPort;
 
     }
 }

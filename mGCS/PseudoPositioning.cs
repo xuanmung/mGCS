@@ -20,7 +20,7 @@ namespace mGCS
             y_drag = drag_y;
         }
 
-        public bool generate(double ax, double ay, double az)
+        public bool runEstimation(double ax, double ay, double az)
         {
             vx += (ax - x_drag * vx) * sampling_time;
             vy += (ay - y_drag * vy) * sampling_time;

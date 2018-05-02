@@ -27,10 +27,10 @@ namespace mGCS
         //Variables declaration\
 
         //GPS Sim. variables
-        private static Socket mClient;
-        private static byte[] mPkg = new byte[512];
-        private static string gpsSimIP;
-        private static string gpsSimGateway;
+        private static Socket   mClient;
+        private static byte[]   mPkg = new byte[512];
+        private static string   gpsSimIP;
+        private static int      gpsSimPort;
         private System.Windows.Forms.Timer mTimer;
         private TcpClient client = new TcpClient();
         private bool gpsConnected = false;
@@ -65,12 +65,12 @@ namespace mGCS
 
             mLpf = new LowPassFilter(2.0, 0.05);
             PositionMap mPosMap = new PositionMap(chartPosSim);
-            try
-            {
-                mPosMap.update(1, 2);
-                mPosMap.update(-1, -2);
-            }
-            catch { }
+            //try
+            //{
+            //    mPosMap.update(1, 2);
+            //    mPosMap.update(-1, -2);
+            //}
+            //catch { }
 
             chartPosSim.Titles.Add("Vehicle's Position"); 
         }
@@ -78,6 +78,16 @@ namespace mGCS
         private void tbxIP_TextChanged(object sender, EventArgs e)
         {
             gpsSimIP = tbxIP.Text;
+        }
+
+
+        private void tbxGpsSimPort_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                gpsSimPort = Convert.ToInt32(tbxGpsSimPort.Text);
+            }
+            catch { }
         }
 
         private void btnCntGpsSim_Click(object sender, EventArgs e)
@@ -254,21 +264,25 @@ namespace mGCS
                         //Open Serial Port
                         ftSerialPort.Open();
 
-                        //Change button's Icon
-                        btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
-                        //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
+                        ////Change button's Icon
+                        //btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
+                        ////MessageBox.Show("F/T sensor connected", "F/T sensor connection");
 
                         //Show Save-file Dialog for Logging FT data
                         SaveFileDialog sfDlg = new SaveFileDialog();
                         sfDlg.DefaultExt = "txt";
+                        sfDlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                        sfDlg.FilterIndex = 2;
+                        sfDlg.RestoreDirectory = true;
                         sfDlg.Title = "Save F/T Logging File";
                         DialogResult dlgResult = sfDlg.ShowDialog();
                         if (dlgResult == DialogResult.OK && !string.IsNullOrWhiteSpace(sfDlg.FileName))
                         {
-                            ftLoggingFile = sfDlg.FileName;
+                            ftLoggingFile = sfDlg.FileName; 
                         }
 
                         //Launch a new Thread for FT data receiving
+                        
                         ftDataReceiver = new Thread(new ThreadStart(ftDataReceive));
                         ftDataReceiver.Start();
                     }
@@ -280,11 +294,16 @@ namespace mGCS
             }
             else 
             {
-                //Dismiss the Thread
-                ftDataReceiver.Suspend();
+                while (ftDataReceiver.IsAlive)
+                    try
+                    {
+                        //Dismiss the Thread
+                        ftDataReceiver.Suspend();
 
-                //Close the serial port
-                ftSerialPort.Close();
+                        //Close the serial port
+                        ftSerialPort.Close();
+                    }
+                    catch { }
 
                 //Return button's Icon
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
@@ -293,16 +312,27 @@ namespace mGCS
         }
         void ftDataReceive()
         {
-            while (ftSerialPort.IsOpen)
+            StreamWriter mStrmWtr;
+            string[] ftDataStr;
+
+            if (ftSerialPort.IsOpen)
             {
                 char requestCode = (char)20;
+                //MessageBox.Show("Here we go 1");
 
-                //Just for Debugging
-                this.Invoke((MethodInvoker)delegate()
+                try
                 {
-                    lbxView.Items.Add("START");
-                });
-                
+                    //just for debugging
+                    this.Invoke((MethodInvoker)delegate()
+                    {
+                        lbxView.Items.Add("start");
+                    });
+                }
+                catch (Exception x)
+                {
+                    MessageBox.Show(x.Message.ToString());
+                }
+
                 //Send request to FT controller
                 try
                 {
@@ -310,44 +340,77 @@ namespace mGCS
                 }
                 catch (Exception x)
                 {
-                MessageBox.Show(x.Message.ToString(), "F/T sensor connection");
+                    MessageBox.Show(x.Message.ToString(), "F/T sensor connection");
                 }
 
                 //Read FT data
                 try
                 {
-                    ftBuffer = ftSerialPort.ReadLine();
-
-                    //Just for Debugging
-                    this.Invoke((MethodInvoker)delegate()
+                    if (ftSerialPort.BytesToRead > 0)
                     {
-                        lbxView.Items.Add(ftBuffer);
-                    });
+                        ftBuffer = ftSerialPort.ReadLine();
+
+                        //Just for Debugging
+                        this.Invoke((MethodInvoker)delegate()
+                        {
+                            lbxView.Items.Add(ftBuffer);
+                        });
+                    }
                 }
                 catch (TimeoutException)
                 {
                     MessageBox.Show("F/T data reading Timeout", "F/T sensor connection");
                 }
-                catch (Exception x)
-                { MessageBox.Show(x.Message.ToString(), "F/T sensor connection"); }
+                //catch (Exception x)
+                //{ 
+                //    MessageBox.Show(x.Message.ToString(), "F/T sensor connection"); 
+                //}
+                //MessageBox.Show("Here we go 2");
 
-                StreamWriter mStrmWtr;
+                //Check if F/T data is read appopriately
+                if (ftBuffer == null)
+                {
+                    MessageBox.Show("F/T data reading Failed", "F/T sensor connection");
+                    return;
+                }
+                else
+                {
+                    //Change button's Icon
+                    btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
+                    //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
+                }
+
+                try
+                {
+                //string[] ftDataStr = { "" };
+                //if (ftBuffer.Length > 0)
+                //{
+                ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
+                int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
+                try
+                {
+                    //Processing ftData
+                    double[] forces = (new FtConversion()).normalize(ftData);
+                    mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
+                    //mPsner.runEstimation(forces[0], forces[1], forces[2]);
+                    mPsner.runEstimation(0.01, 0.1, 1);
+                }
+                catch (Exception x)
+                {
+                    MessageBox.Show(x.Message.ToString());
+                }
+
                 if (!string.IsNullOrEmpty(ftLoggingFile))
                 {
-                    try
-                    {
-                        string[] ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
-                        int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
+                    //Open file to append text
+                    mStrmWtr = File.AppendText(ftLoggingFile);
 
-                        //Processing ftData
-                        double[] forces = (new FtConversion()).normalize(ftData);
-                        mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
-                        mPsner.generate(forces[0], forces[1], forces[2]);
+                    MessageBox.Show(ftLoggingFile);
 
-                        //Open file to append text
-                        mStrmWtr = File.AppendText(ftLoggingFile);
+                    mStrmWtr.WriteLine("Test");
 
-                        //Write data into text file
+                    //Write data into text file
+                    if (ftDataStr.Length > 0)
                         foreach (string str in ftDataStr)
                         {
                             //Write "\t" following each element of ftDataStr
@@ -358,20 +421,46 @@ namespace mGCS
                                 mStrmWtr.WriteLine(str);
                         }
 
-                        //Close stream writter after appending text
-                        mStrmWtr.Close();
-                    }
-                    catch { }
+                    //Close stream writter after appending text
+                    mStrmWtr.Close();
                 }
+                else MessageBox.Show("ftLoggingFile = " + ftLoggingFile);
+                }
+                catch (Exception x)
+                {
+                    MessageBox.Show(x.Message.ToString());
+                }
+
 
                 //Update data visualization onto the Chart
                 try
                 {
+
                     mPosMap.update(mPsner.getX(), mPsner.getY());
                     //mPosMap.update(-1, -2);
                 }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message.ToString(), "Chart error");
+                }
+            }
+            else {
+                try
+                {
+                    //Dismiss the Thread
+                    ftDataReceiver.Suspend();
+                }
                 catch { }
+
+                //Return button's Icon
+                btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
             }
         }
+
+        private void btnCntFs_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }
