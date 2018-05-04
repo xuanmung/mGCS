@@ -65,6 +65,7 @@
             this.tbxFsIp = new System.Windows.Forms.TextBox();
             this.btnCntFs = new System.Windows.Forms.Button();
             this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
+            this.mFtTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -122,7 +123,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.lbxView);
             this.splitContainer2.Size = new System.Drawing.Size(238, 499);
-            this.splitContainer2.SplitterDistance = 224;
+            this.splitContainer2.SplitterDistance = 223;
             this.splitContainer2.TabIndex = 0;
             // 
             // lbxView
@@ -495,6 +496,10 @@
             this.btnCntFs.UseVisualStyleBackColor = true;
             this.btnCntFs.Click += new System.EventHandler(this.btnCntFs_Click);
             // 
+            // mFtTimer
+            // 
+            this.mFtTimer.Tick += new System.EventHandler(this.mFtTimer_Tick);
+            // 
             // mGCS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -577,6 +582,7 @@
         private System.Windows.Forms.ListBox lbxView;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbxGpsSimPort;
+        private System.Windows.Forms.Timer mFtTimer;
 
     }
 }

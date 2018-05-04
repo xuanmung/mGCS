@@ -64,7 +64,7 @@ namespace mGCS
             //mTimer.Start();
 
             mLpf = new LowPassFilter(2.0, 0.05);
-            PositionMap mPosMap = new PositionMap(chartPosSim);
+            mPosMap = new PositionMap(chartPosSim);
             //try
             //{
             //    mPosMap.update(1, 2);
@@ -226,7 +226,6 @@ namespace mGCS
             catch { }
         }
 
-
         /// <summary>
         ///  F/T sensor functions
         /// </summary>
@@ -284,7 +283,8 @@ namespace mGCS
                         //Launch a new Thread for FT data receiving
                         
                         ftDataReceiver = new Thread(new ThreadStart(ftDataReceive));
-                        ftDataReceiver.Start();
+                        //ftDataReceiver.Start();
+                        mFtTimer.Start();
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -299,11 +299,19 @@ namespace mGCS
                     {
                         //Dismiss the Thread
                         ftDataReceiver.Suspend();
+                    }
+                    catch { }
 
+                mFtTimer.Stop();
+
+                while (ftSerialPort.IsOpen)
+                    try
+                    {
                         //Close the serial port
                         ftSerialPort.Close();
                     }
                     catch { }
+                    
 
                 //Return button's Icon
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
@@ -312,12 +320,14 @@ namespace mGCS
         }
         void ftDataReceive()
         {
-            StreamWriter mStrmWtr;
+            StreamWriter mStrmWrt;
             string[] ftDataStr;
 
             if (ftSerialPort.IsOpen)
             {
+                //request code
                 char requestCode = (char)20;
+                
                 //MessageBox.Show("Here we go 1");
 
                 try
@@ -337,6 +347,7 @@ namespace mGCS
                 try
                 {
                     ftSerialPort.WriteLine(requestCode.ToString());
+                    Thread.Sleep(60);
                 }
                 catch (Exception x)
                 {
@@ -344,23 +355,28 @@ namespace mGCS
                 }
 
                 //Read FT data
+                //int readingTime = 0;
+                //while (readingTime < 1000 && ftBuffer == null)
+                //{
                 try
-                {
-                    if (ftSerialPort.BytesToRead > 0)
                     {
-                        ftBuffer = ftSerialPort.ReadLine();
-
-                        //Just for Debugging
-                        this.Invoke((MethodInvoker)delegate()
+                        if (ftSerialPort.BytesToRead > 0)
                         {
-                            lbxView.Items.Add(ftBuffer);
-                        });
+                            ftBuffer = ftSerialPort.ReadLine();
+
+                            //Just for Debugging
+                            this.Invoke((MethodInvoker)delegate()
+                            {
+                                lbxView.Items.Add(ftBuffer);
+                            });
+                        }
                     }
-                }
-                catch (TimeoutException)
-                {
-                    MessageBox.Show("F/T data reading Timeout", "F/T sensor connection");
-                }
+                    catch (TimeoutException)
+                    {
+                        MessageBox.Show("F/T data reading Timeout", "F/T sensor connection");
+                    }
+                //    readingTime++;
+                //}
                 //catch (Exception x)
                 //{ 
                 //    MessageBox.Show(x.Message.ToString(), "F/T sensor connection"); 
@@ -368,74 +384,84 @@ namespace mGCS
                 //MessageBox.Show("Here we go 2");
 
                 //Check if F/T data is read appopriately
-                if (ftBuffer == null)
-                {
-                    MessageBox.Show("F/T data reading Failed", "F/T sensor connection");
-                    return;
-                }
-                else
-                {
-                    //Change button's Icon
-                    btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
-                    //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
-                }
+                    if (ftBuffer == null)
+                    {
+                        MessageBox.Show("F/T data reading Failed", "F/T sensor connection");
+                        return;
+                    }
+                    else
+                    {
+                        //Change button's Icon
+                        btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
+                        //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
+                    }
 
-                try
-                {
-                //string[] ftDataStr = { "" };
-                //if (ftBuffer.Length > 0)
-                //{
-                ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
-                int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
-                try
-                {
-                    //Processing ftData
-                    double[] forces = (new FtConversion()).normalize(ftData);
+                    //just for debuging
                     mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
-                    //mPsner.runEstimation(forces[0], forces[1], forces[2]);
                     mPsner.runEstimation(0.01, 0.1, 1);
+
+                    try
+                    {
+                    //string[] ftDataStr = { "" };
+                    //if (ftBuffer.Length > 0)
+                    //{
+                    ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
+                    int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
+                    try
+                    {
+                        //Processing ftData
+                        FtConversion ftCvs = new FtConversion(mLpf);
+                        double[] forces = new double[3];
+                        forces = ftCvs.normalize(ftData);
+                    
+                        //mPsner.runEstimation(forces[0], forces[1], forces[2]);
+                    
+                    }
+                    catch (Exception x)
+                    {
+                        MessageBox.Show(x.Message.ToString());
+                    }
+
+                    if (!string.IsNullOrEmpty(ftLoggingFile))
+                    {
+                        //Open file to append text
+                        mStrmWrt = File.AppendText(ftLoggingFile);
+
+                        //MessageBox.Show(ftLoggingFile);
+
+                        //mStrmWtr.WriteLine("Test");
+
+                        //Write data into text file
+                        if (ftDataStr.Length > 0)
+                            foreach (string str in ftDataStr)
+                            {
+                                //Write "\t" following each element of ftDataStr
+                                if (str.GetEnumerator().MoveNext())
+                                    mStrmWrt.Write(str + "\t");
+                                else
+                                {
+                                    //Write new line after fully writting ftDataStr
+                                    //string lastStr = str.Replace("\r", string.Empty);
+                                    //mStrmWrt.WriteLine(lastStr);
+                                    mStrmWrt.WriteLine(str);
+
+                                }
+                            }
+                            //mStrmWrt.Write(ftDataStr);
+
+                        //Close stream writter after appending text
+                        mStrmWrt.Close();
+                    }
+                //else MessageBox.Show("ftLoggingFile = " + ftLoggingFile);
                 }
                 catch (Exception x)
                 {
                     MessageBox.Show(x.Message.ToString());
                 }
-
-                if (!string.IsNullOrEmpty(ftLoggingFile))
-                {
-                    //Open file to append text
-                    mStrmWtr = File.AppendText(ftLoggingFile);
-
-                    MessageBox.Show(ftLoggingFile);
-
-                    mStrmWtr.WriteLine("Test");
-
-                    //Write data into text file
-                    if (ftDataStr.Length > 0)
-                        foreach (string str in ftDataStr)
-                        {
-                            //Write "\t" following each element of ftDataStr
-                            if (str.GetEnumerator().MoveNext())
-                                mStrmWtr.Write(str + "\t");
-                            else
-                                //Write new line after fully writting ftDataStr
-                                mStrmWtr.WriteLine(str);
-                        }
-
-                    //Close stream writter after appending text
-                    mStrmWtr.Close();
-                }
-                else MessageBox.Show("ftLoggingFile = " + ftLoggingFile);
-                }
-                catch (Exception x)
-                {
-                    MessageBox.Show(x.Message.ToString());
-                }
-
-
+                
                 //Update data visualization onto the Chart
                 try
                 {
-
                     mPosMap.update(mPsner.getX(), mPsner.getY());
                     //mPosMap.update(-1, -2);
                 }
@@ -444,22 +470,27 @@ namespace mGCS
                     MessageBox.Show(e.Message.ToString(), "Chart error");
                 }
             }
-            else {
-                try
-                {
-                    //Dismiss the Thread
-                    ftDataReceiver.Suspend();
-                }
-                catch { }
+            //else {
+            //    try
+            //    {
+            //        //Dismiss the Thread
+            //        ftDataReceiver.Suspend();
+            //    }
+            //    catch { }
 
-                //Return button's Icon
-                btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
-            }
+            //    //Return button's Icon
+            //    btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
+            //}
         }
 
         private void btnCntFs_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void mFtTimer_Tick(object sender, EventArgs e)
+        {
+            ftDataReceive();
         }
 
     }

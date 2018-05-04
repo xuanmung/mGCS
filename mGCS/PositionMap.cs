@@ -38,7 +38,7 @@ namespace mGCS
 
                 return true;
             }
-            catch
+            catch (Exception mEx)
             {
                 return false;
             }
