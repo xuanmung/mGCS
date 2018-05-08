@@ -19,12 +19,19 @@ namespace mGCS
         {
             try
             {
-                mChart.ChartAreas[0].AxisX.ScaleView.Zoom(-10, 10);
-                mChart.ChartAreas[0].AxisY.ScaleView.Zoom(-10, 10);
+                //mChart.ChartAreas[0].AxisX.ScaleView.Zoom(-10, 10);
+                //mChart.ChartAreas[0].AxisY.ScaleView.Zoom(-10, 10);
                 mChart.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
                 mChart.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
+                mChart.ChartAreas[0].AxisX.Minimum = -100;
+                mChart.ChartAreas[0].AxisX.Maximum = 100;
+                mChart.ChartAreas[0].AxisY.Minimum = -100;
+                mChart.ChartAreas[0].AxisY.Maximum = 100;
+
                 mChart.ChartAreas[0].CursorX.IsUserEnabled = true;
                 mChart.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+                mChart.ChartAreas[0].CursorY.IsUserEnabled = true;
+                mChart.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
                 mChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Gray;
                 mChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
 
