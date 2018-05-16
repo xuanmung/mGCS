@@ -13,7 +13,6 @@ using System.Timers;
 using System.IO.Ports;
 using System.IO;
 
-
 namespace mGCS
 {
     public partial class mGCS : Form
@@ -28,6 +27,7 @@ namespace mGCS
 
         //GPS Sim. variables
         private static Socket   mClient;
+        bool skSts1;
         private static byte[]   mPkg = new byte[512];
         private static string   gpsSimIP;
         private static int      gpsSimPort;
@@ -35,12 +35,12 @@ namespace mGCS
         private TcpClient client = new TcpClient();
         private bool gpsConnected = false;
 
-
         //F/T sensor variables
         private bool ftConnected = false;
         private string ftCom;
         private string ftBaud;
-        private double fx, fy, fz, tx, ty, tz;
+        //private double fx, fy, fz, tx, ty, tz;
+        double[] forces = new double[3];
         private string ftBuffer;
         private Thread ftDataReceiver;
         private string ftLoggingFile;
@@ -48,13 +48,12 @@ namespace mGCS
         PositionMap mPosMap;
         LowPassFilter mLpf;
         PseudoPositioning mPsner;
-
+        private const double VEHICLE_MASS = 2.3;
         //Vehicle variables
         private bool vehicleConnected = false;
-
+        
         //Flight Sim. variables
         private bool fsConnected = false;
-
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -63,23 +62,17 @@ namespace mGCS
             mTimer.Tick += new System.EventHandler(mTimer_Tick);
             //mTimer.Start();
 
+            //Initiate Lowpass filter
             mLpf = new LowPassFilter(2.0, 0.05);
             mPosMap = new PositionMap(chartPosSim);
-            //try
-            //{
-            //    mPosMap.update(1, 2);
-            //    mPosMap.update(-1, -2);
-            //}
-            //catch { }
-
-            chartPosSim.Titles.Add("Vehicle's Position"); 
+            chartPosSim.Titles.Add("Vehicle's Position");
+            mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
         }
         
         private void tbxIP_TextChanged(object sender, EventArgs e)
         {
             gpsSimIP = tbxIP.Text;
         }
-
 
         private void tbxGpsSimPort_TextChanged(object sender, EventArgs e)
         {
@@ -93,12 +86,16 @@ namespace mGCS
         private void btnCntGpsSim_Click(object sender, EventArgs e)
         {
             mClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
             if (!gpsConnected)
             {
                 try
                 {
-                    IPEndPoint iep = new IPEndPoint(IPAddress.Parse(gpsSimIP), 57000);
+                    IPEndPoint iep = new IPEndPoint(IPAddress.Parse(gpsSimIP), gpsSimPort);
                     mClient.BeginConnect(iep, new AsyncCallback(gpsSimConnected), mClient);
+                    Thread.Sleep(10);
+                    skSts1 = mClient.Connected;
+                    //bool skSts1 = socketConnected(mClient);
                     btnCntGpsSim.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
                     gpsConnected = true;
                 }
@@ -111,6 +108,12 @@ namespace mGCS
             {
                 try
                 {
+                    while (mTimer.Enabled)
+                        try
+                        {
+                            mTimer.Stop();
+                        }
+                        catch { }
                     if (socketConnected(mClient))
                         mClient.Close();
                     MessageBox.Show("GPS Sim. disconnected", "GPS Sim. Connection");
@@ -127,7 +130,7 @@ namespace mGCS
             {
                 mClient.EndConnect(iar);
                 MessageBox.Show("GPS Sim. Connected (" + mClient.RemoteEndPoint.ToString() + ")", "GPS Sim. Connection"); 
-                Thread receiver = new Thread(new ThreadStart(receiveData));
+                //Thread receiver = new Thread(new ThreadStart(receiveData));
                 //Thread sender = new Thread(new ThreadStart(sendData));
                 //mTimer.Start();
             }
@@ -140,27 +143,73 @@ namespace mGCS
 
         void receiveData()
         {
-            
-            int receiver;
-            string strData;
-            while (true)
-            {
-                receiver = mClient.Receive(mPkg);
-                strData = Encoding.ASCII.GetString(mPkg, 0, receiver); 
-                if (strData == "bye") break;
-            }
-            strData = "bye";
-            byte[] msg = Encoding.ASCII.GetBytes(strData);
-            mClient.Send(msg);
-            mClient.Close();
-            return;
+            //int receiver;
+            //string strData;
+            //while (true)
+            //{
+            //    receiver = mClient.Receive(mPkg);
+            //    strData = Encoding.ASCII.GetString(mPkg, 0, receiver); 
+            //    if (strData == "bye") break;
+            //}
+            //strData = "bye";
+            //byte[] msg = Encoding.ASCII.GetBytes(strData);
+            //mClient.Send(msg);
+            //mClient.Close();
+            //return;
         }
 
         void mTimer_Tick(object sender, EventArgs e)
         {
-            //byte[] msg = BitConverter.GetBytes(1.2);
-            //mClient.BeginSend(msg, 0, msg.Length, 0, new AsyncCallback(sendData), mClient);
-            //return;
+            const int INT_SIZE = 4, DOUBLE_SIZE = 8;
+            byte[] msg = new byte[40];
+
+            byte[] dataType = BitConverter.GetBytes((uint)3593);
+            Array.Reverse(dataType, 0, dataType.Length);
+
+            byte[] dataLen = BitConverter.GetBytes((uint)32);
+            Array.Reverse(dataLen, 0, dataLen.Length);
+
+            byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)1.1), ecef_y = BitConverter.GetBytes((double)2.1), ecef_z = BitConverter.GetBytes((double)3.1);
+            Array.Reverse(time, 0, time.Length);
+            Array.Reverse(ecef_x, 0, ecef_x.Length);
+            Array.Reverse(ecef_y, 0, ecef_y.Length);
+            Array.Reverse(ecef_z, 0, ecef_z.Length);
+
+            List<byte> dataTypeLst  = new List<byte>(dataType);
+            List<byte> dataLenLst   = new List<byte>(dataLen);
+            List<byte> timeLst      = new List<byte>(time);
+            List<byte> ecef_xLst    = new List<byte>(ecef_x);
+            List<byte> ecef_yLst    = new List<byte>(ecef_y);
+            List<byte> ecef_zLst    = new List<byte>(ecef_z);
+
+            dataTypeLst.AddRange(dataLenLst);
+            dataTypeLst.AddRange(timeLst);
+            dataTypeLst.AddRange(ecef_xLst);
+            dataTypeLst.AddRange(ecef_yLst);
+            dataTypeLst.AddRange(ecef_zLst);
+
+            msg = dataTypeLst.ToArray();
+
+            ////Other ways to merge the above byte arrays:
+            ////The first way:
+            //dataType.CopyTo(msg, dataType.Length);
+            //dataLen.CopyTo(msg, dataLen.Length);
+            //time.CopyTo(msg, time.Length);
+            //ecef_x.CopyTo(msg, ecef_x.Length);
+            //ecef_y.CopyTo(msg, ecef_y.Length);
+            //ecef_z.CopyTo(msg, ecef_z.Length);
+
+            ////The second way:
+            //Buffer.BlockCopy(dataType, 0, msg, 0 * INT_SIZE, 1 * INT_SIZE);
+            //Buffer.BlockCopy(dataLen, 0, msg, 1 * INT_SIZE, 1 * INT_SIZE);
+            //Buffer.BlockCopy(time, 0, msg, 2 * INT_SIZE, 2 * INT_SIZE);
+            //Buffer.BlockCopy(ecef_x, 0, msg, 4 * INT_SIZE, 2 * INT_SIZE);
+            //Buffer.BlockCopy(ecef_y, 0, msg, 6 * INT_SIZE, 2 * INT_SIZE);
+            //Buffer.BlockCopy(ecef_z, 0, msg, 8 * INT_SIZE, 2 * INT_SIZE);
+
+            if (socketConnected(mClient))
+                mClient.BeginSend(msg, 0, msg.Length, 0, new AsyncCallback(sendData), mClient);
+            //return
         }
 
         private void mGCS_FormClosing(object sender, FormClosingEventArgs e)
@@ -181,23 +230,10 @@ namespace mGCS
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            const int INT_SIZE = 4,  DOUBLE_SIZE = 8;
-            byte[] msg = new byte[1024];
-            byte[] dataType = BitConverter.GetBytes((uint)3593);
-            byte[] dataLen  = BitConverter.GetBytes((uint)32);
-            byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)1.1), ecef_y = BitConverter.GetBytes((double)2.1), ecef_z = BitConverter.GetBytes((double)3.1);
-
-            Buffer.BlockCopy(dataType, 0, msg, 0 * INT_SIZE, 1* INT_SIZE);
-            Buffer.BlockCopy(dataLen, 0, msg, 1 * INT_SIZE, 1* INT_SIZE);
-            Buffer.BlockCopy(time, 0, msg, 2 * INT_SIZE, 2 * INT_SIZE);
-            Buffer.BlockCopy(ecef_x, 0, msg, 4 * INT_SIZE, 2 * INT_SIZE);
-            Buffer.BlockCopy(ecef_y, 0, msg, 6 * INT_SIZE, 2 * INT_SIZE);
-            Buffer.BlockCopy(ecef_z, 0, msg, 8 * INT_SIZE, 2 * INT_SIZE);
-
-            //byte[] msg = Encoding.ASCII.GetBytes(data.ToString()); 
-            
-            //Buffer.BlockCopy(BitConverter.GetBytes(dataLen), 0, msg, msg.Length,
-            mClient.BeginSend(msg, 0, msg.Length, 0, new AsyncCallback(sendData), mClient);
+            if (!mTimer.Enabled)
+            {
+                mTimer.Start();
+            }
             return;
         }
 
@@ -281,7 +317,6 @@ namespace mGCS
                         }
 
                         //Launch a new Thread for FT data receiving
-                        
                         ftDataReceiver = new Thread(new ThreadStart(ftDataReceive));
                         //ftDataReceiver.Start();
                         mFtTimer.Start();
@@ -312,7 +347,6 @@ namespace mGCS
                     }
                     catch { }
                     
-
                 //Return button's Icon
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
                 //MessageBox.Show("F/T sensor disconnected", "F/T sensor connection");
@@ -328,8 +362,6 @@ namespace mGCS
                 //request code
                 char requestCode = (char)20;
                 
-                //MessageBox.Show("Here we go 1");
-
                 try
                 {
                     //just for debugging
@@ -347,7 +379,7 @@ namespace mGCS
                 try
                 {
                     ftSerialPort.WriteLine(requestCode.ToString());
-                    Thread.Sleep(60);
+                    Thread.Sleep(20);
                 }
                 catch (Exception x)
                 {
@@ -355,9 +387,6 @@ namespace mGCS
                 }
 
                 //Read FT data
-                //int readingTime = 0;
-                //while (readingTime < 1000 && ftBuffer == null)
-                //{
                 try
                     {
                         if (ftSerialPort.BytesToRead > 0)
@@ -375,15 +404,8 @@ namespace mGCS
                     {
                         MessageBox.Show("F/T data reading Timeout", "F/T sensor connection");
                     }
-                //    readingTime++;
-                //}
-                //catch (Exception x)
-                //{ 
-                //    MessageBox.Show(x.Message.ToString(), "F/T sensor connection"); 
-                //}
-                //MessageBox.Show("Here we go 2");
 
-                //Check if F/T data is read appopriately
+                //Check if F/T data is read appropriately
                     if (ftBuffer == null)
                     {
                         MessageBox.Show("F/T data reading Failed", "F/T sensor connection");
@@ -397,62 +419,70 @@ namespace mGCS
                     }
 
                     //just for debuging
-                    mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
-                    mPsner.runEstimation(0.01, 0.1, 1);
+                    
+                    //mPsner.runEstimation(0.01, 0.1, 1);
 
                     try
                     {
                     //string[] ftDataStr = { "" };
                     //if (ftBuffer.Length > 0)
                     //{
-                    ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
-                    int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
-                    try
-                    {
-                        //Processing ftData
-                        FtConversion ftCvs = new FtConversion(mLpf);
-                        double[] forces = new double[3];
-                        forces = ftCvs.normalize(ftData);
+                        ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
+                        int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
+                        try
+                        {
+                            //Processing ftData
+                            FtConversion ftConverter = new FtConversion(mLpf);
+                            forces = ftConverter.normalize(ftData);
                     
-                        //mPsner.runEstimation(forces[0], forces[1], forces[2]);
-                    
-                    }
-                    catch (Exception x)
-                    {
-                        MessageBox.Show(x.Message.ToString());
-                    }
+                            //Run the estimator of the Pseudo Positioner
+                            mPsner.runEstimation(forces[0] / VEHICLE_MASS, forces[1] / VEHICLE_MASS, forces[2] / VEHICLE_MASS);
+                            //mPsner.runEstimation(forces[0], forces[1], forces[2]);
+                        }
+                        catch (Exception x)
+                        {
+                            MessageBox.Show(x.Message.ToString());
+                        }
 
-                    if (!string.IsNullOrEmpty(ftLoggingFile))
-                    {
-                        //Open file to append text
-                        mStrmWrt = File.AppendText(ftLoggingFile);
+                        if (!string.IsNullOrEmpty(ftLoggingFile))
+                        {
+                            //Open file to append text
+                            mStrmWrt = File.AppendText(ftLoggingFile);
 
-                        //MessageBox.Show(ftLoggingFile);
+                            //stable
+                            Thread.Sleep(10);
 
-                        //mStrmWtr.WriteLine("Test");
+                            mStrmWrt.Write((Math.Round(mPsner.getX(), 2)).ToString().TrimEnd('0') + "\t");
+                            mStrmWrt.Write((Math.Round(mPsner.getY(), 2)).ToString().TrimEnd('0') + "\t");
+                            mStrmWrt.Write((Math.Round(mPsner.getZ(), 2)).ToString().TrimEnd('0') + "\t");
 
-                        //Write data into text file
-                        if (ftDataStr.Length > 0)
-                            foreach (string str in ftDataStr)
+                            foreach (double d in forces)
                             {
-                                //Write "\t" following each element of ftDataStr
-                                if (str.GetEnumerator().MoveNext())
-                                    mStrmWrt.Write(str + "\t");
-                                else
-                                {
-                                    //Write new line after fully writting ftDataStr
-                                    //string lastStr = str.Replace("\r", string.Empty);
-                                    //mStrmWrt.WriteLine(lastStr);
-                                    mStrmWrt.WriteLine(str);
-
-                                }
+                                mStrmWrt.Write((Math.Round(d, 2)).ToString().TrimEnd('0') + "\t");
                             }
-                            //mStrmWrt.Write(ftDataStr);
 
-                        //Close stream writter after appending text
-                        mStrmWrt.Close();
-                    }
-                //else MessageBox.Show("ftLoggingFile = " + ftLoggingFile);
+                            //Write data into text file
+                            if (ftDataStr.Length > 0)
+                                foreach (string str in ftDataStr)
+                                {
+                                    //Write "\t" following each element of ftDataStr
+                                    if (str.GetEnumerator().MoveNext())
+                                        mStrmWrt.Write(str + "\t");
+                                    else
+                                    {
+                                        //Write new line after fully writting ftDataStr
+                                        //string lastStr = str.Replace("\r", string.Empty);
+                                        //mStrmWrt.WriteLine(lastStr);
+                                        mStrmWrt.Write(str);
+                                        //mStrmWrt.WriteLine(str);
+                                    }
+                                }
+                            
+                            //mStrmWrt.WriteLine();
+
+                            //Close stream writter after appending text
+                            mStrmWrt.Close();
+                        }
                 }
                 catch (Exception x)
                 {
@@ -470,22 +500,6 @@ namespace mGCS
                     MessageBox.Show(e.Message.ToString(), "Chart error");
                 }
             }
-            //else {
-            //    try
-            //    {
-            //        //Dismiss the Thread
-            //        ftDataReceiver.Suspend();
-            //    }
-            //    catch { }
-
-            //    //Return button's Icon
-            //    btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
-            //}
-        }
-
-        private void btnCntFs_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void mFtTimer_Tick(object sender, EventArgs e)

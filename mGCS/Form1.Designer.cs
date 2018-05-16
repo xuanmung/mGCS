@@ -380,6 +380,7 @@
             this.btnSend.TabIndex = 9;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
             // label9
             // 
@@ -407,7 +408,7 @@
             this.tbxGpsSimPort.Name = "tbxGpsSimPort";
             this.tbxGpsSimPort.Size = new System.Drawing.Size(44, 21);
             this.tbxGpsSimPort.TabIndex = 7;
-            this.tbxGpsSimPort.Text = "0";
+            this.tbxGpsSimPort.Text = "16001";
             this.tbxGpsSimPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbxGpsSimPort.TextChanged += new System.EventHandler(this.tbxGpsSimPort_TextChanged);
             // 
@@ -417,7 +418,7 @@
             this.tbxIP.Name = "tbxIP";
             this.tbxIP.Size = new System.Drawing.Size(103, 21);
             this.tbxIP.TabIndex = 7;
-            this.tbxIP.Text = "192.168.0.41";
+            this.tbxIP.Text = "192.168.1.21";
             this.tbxIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbxIP.TextChanged += new System.EventHandler(this.tbxIP_TextChanged);
             // 
@@ -494,7 +495,6 @@
             this.btnCntFs.Size = new System.Drawing.Size(75, 67);
             this.btnCntFs.TabIndex = 9;
             this.btnCntFs.UseVisualStyleBackColor = true;
-            this.btnCntFs.Click += new System.EventHandler(this.btnCntFs_Click);
             // 
             // mFtTimer
             // 

@@ -15,9 +15,16 @@ namespace mGCS
 
         public PseudoPositioning(double drag_x, double drag_y, double samplingTime)
         {
-           sampling_time = samplingTime;
+            sampling_time = samplingTime;
             x_drag = drag_x;
             y_drag = drag_y;
+
+            vx  = 0;
+            vy  = 0;
+            vz  = 0;
+            x_estimate = 0;
+            y_estimate = 0;
+            z_estimate = 0;
         }
 
         public bool runEstimation(double ax, double ay, double az)

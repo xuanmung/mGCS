@@ -36,8 +36,8 @@ namespace mGCS
 
         public double filter(double data)
         {
-            current_datum = data;
-            filtered_datum = filter_weight * filtered_datum + (1 - filter_weight) * current_datum;
+            current_datum   = data;
+            filtered_datum  = filter_weight * filtered_datum + (1 - filter_weight) * current_datum;
 
             return filtered_datum;
         }
