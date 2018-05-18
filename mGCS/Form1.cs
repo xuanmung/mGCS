@@ -25,6 +25,8 @@ namespace mGCS
 
         //Variables declaration\
 
+        private UserInputHelper mInputHelper;
+
         //GPS Sim. variables
         private static Socket   mClient;
         bool skSts1;
@@ -41,6 +43,7 @@ namespace mGCS
         private string ftBaud;
         //private double fx, fy, fz, tx, ty, tz;
         double[] forces = new double[3];
+        public double[] forceBias = new double[3];
         private string ftBuffer;
         private Thread ftDataReceiver;
         private string ftLoggingFile;
@@ -48,7 +51,7 @@ namespace mGCS
         PositionMap mPosMap;
         LowPassFilter mLpf;
         PseudoPositioning mPsner;
-        private const double VEHICLE_MASS = 2.3;
+        private double mVehicleMass = 2.3;
         //Vehicle variables
         private bool vehicleConnected = false;
         
@@ -57,6 +60,13 @@ namespace mGCS
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            mInputHelper = new UserInputHelper();
+
+            pbarFzCalib.Visible = false;
+            pbarFxyCalib.Visible = false;
+            btnRefreshAll.Visible = false;
+            pnlFtSetting.Visible = false;
+
             mTimer = new System.Windows.Forms.Timer();
             mTimer.Interval = 100; //100 mili-seconds
             mTimer.Tick += new System.EventHandler(mTimer_Tick);
@@ -169,7 +179,7 @@ namespace mGCS
             byte[] dataLen = BitConverter.GetBytes((uint)32);
             Array.Reverse(dataLen, 0, dataLen.Length);
 
-            byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)1.1), ecef_y = BitConverter.GetBytes((double)2.1), ecef_z = BitConverter.GetBytes((double)3.1);
+            byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)(-3121354.2511 + mPsner.getX())), ecef_y = BitConverter.GetBytes((double)(4085516.7232 + mPsner.getY())), ecef_z = BitConverter.GetBytes((double)3761774.7523);
             Array.Reverse(time, 0, time.Length);
             Array.Reverse(ecef_x, 0, ecef_x.Length);
             Array.Reverse(ecef_y, 0, ecef_y.Length);
@@ -349,6 +359,10 @@ namespace mGCS
                     
                 //Return button's Icon
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
+
+                //Invisible Refresh button
+                btnRefreshAll.Visible = false; ;
+
                 //MessageBox.Show("F/T sensor disconnected", "F/T sensor connection");
             }
         }
@@ -415,6 +429,10 @@ namespace mGCS
                     {
                         //Change button's Icon
                         btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
+
+                        //Visible Refresh Button
+                        btnRefreshAll.Visible = true;
+
                         //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
                     }
 
@@ -436,7 +454,7 @@ namespace mGCS
                             forces = ftConverter.normalize(ftData);
                     
                             //Run the estimator of the Pseudo Positioner
-                            mPsner.runEstimation(forces[0] / VEHICLE_MASS, forces[1] / VEHICLE_MASS, forces[2] / VEHICLE_MASS);
+                            mPsner.runEstimation(forces[0] / mVehicleMass, forces[1] / mVehicleMass, forces[2] / mVehicleMass);
                             //mPsner.runEstimation(forces[0], forces[1], forces[2]);
                         }
                         catch (Exception x)
@@ -505,6 +523,53 @@ namespace mGCS
         private void mFtTimer_Tick(object sender, EventArgs e)
         {
             ftDataReceive();
+        }
+
+        private void lblCntFt_Click(object sender, EventArgs e)
+        {
+            pnlFtSetting.Visible = true;
+        }
+
+        private void btnRefreshAll_Click(object sender, EventArgs e)
+        {
+            mPsner.restart();
+            mPosMap.refresh();
+        }
+
+        private void btnCancelFtSetting_Click(object sender, EventArgs e)
+        {
+            pnlFtSetting.Visible = false;
+        }
+
+        private void btnApplyFtSetting_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mVehicleMass = Convert.ToDouble(tbxVehicleMass.Text);
+            }
+            catch (Exception x)
+            { }
+
+            pnlFtSetting.Visible = false;
+        }
+
+        private void btnFzCalib_Click(object sender, EventArgs e)
+        {
+            pbarFzCalib.Visible = true;
+        }
+
+        private void tbxVehicleMass_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void tbxVehicleMass_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            mInputHelper.pressNumberOnly(sender, e);
+        }
+
+        private void tbxGpsSimPort_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            mInputHelper.pressNumberOnly(sender, e);
         }
 
     }

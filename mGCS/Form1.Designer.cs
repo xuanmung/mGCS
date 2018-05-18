@@ -35,7 +35,61 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mGCS));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.pnlFtInfo = new System.Windows.Forms.Panel();
+            this.pnlFtSetting = new System.Windows.Forms.Panel();
+            this.tbxVehicleMass = new System.Windows.Forms.TextBox();
+            this.pbarFxyCalib = new System.Windows.Forms.ProgressBar();
+            this.lblFy0Calib = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
+            this.lblFx0Calib = new System.Windows.Forms.Label();
+            this.label44 = new System.Windows.Forms.Label();
+            this.lblFz0Calib = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.lblVehicleMass = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.pbarFzCalib = new System.Windows.Forms.ProgressBar();
+            this.btnCancelFtSetting = new System.Windows.Forms.Button();
+            this.btnApplyFtSetting = new System.Windows.Forms.Button();
+            this.btnFxyCalib = new System.Windows.Forms.Button();
+            this.btnFzCalib = new System.Windows.Forms.Button();
+            this.lblMzv = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lblMyv = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.lblMxv = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.lblMz = new System.Windows.Forms.Label();
+            this.lblFz0 = new System.Windows.Forms.Label();
+            this.lblZ = new System.Windows.Forms.Label();
+            this.lblFz = new System.Windows.Forms.Label();
+            this.lblVz = new System.Windows.Forms.Label();
+            this.lblAz = new System.Windows.Forms.Label();
+            this.lblMy = new System.Windows.Forms.Label();
+            this.lblFy0 = new System.Windows.Forms.Label();
+            this.lblY = new System.Windows.Forms.Label();
+            this.lblFy = new System.Windows.Forms.Label();
+            this.lblVy = new System.Windows.Forms.Label();
+            this.mx = new System.Windows.Forms.Label();
+            this.lblay = new System.Windows.Forms.Label();
+            this.lblFx0 = new System.Windows.Forms.Label();
+            this.lblX = new System.Windows.Forms.Label();
+            this.lblFx = new System.Windows.Forms.Label();
+            this.lblVx = new System.Windows.Forms.Label();
+            this.lblAx = new System.Windows.Forms.Label();
             this.lbxView = new System.Windows.Forms.ListBox();
+            this.btnRefreshAll = new System.Windows.Forms.Button();
             this.chartPosSim = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.lblCntFt = new System.Windows.Forms.Label();
@@ -71,8 +125,11 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.pnlFtInfo.SuspendLayout();
+            this.pnlFtSetting.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartPosSim)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
@@ -97,7 +154,7 @@
             this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 110);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 97);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -106,9 +163,10 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.btnRefreshAll);
             this.splitContainer1.Panel2.Controls.Add(this.chartPosSim);
-            this.splitContainer1.Size = new System.Drawing.Size(1023, 499);
-            this.splitContainer1.SplitterDistance = 238;
+            this.splitContainer1.Size = new System.Drawing.Size(1023, 512);
+            this.splitContainer1.SplitterDistance = 246;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer2
@@ -119,21 +177,614 @@
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.pnlFtInfo);
+            // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.lbxView);
-            this.splitContainer2.Size = new System.Drawing.Size(238, 499);
-            this.splitContainer2.SplitterDistance = 223;
+            this.splitContainer2.Size = new System.Drawing.Size(246, 512);
+            this.splitContainer2.SplitterDistance = 237;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // pnlFtInfo
+            // 
+            this.pnlFtInfo.Controls.Add(this.pnlFtSetting);
+            this.pnlFtInfo.Controls.Add(this.lblMzv);
+            this.pnlFtInfo.Controls.Add(this.label40);
+            this.pnlFtInfo.Controls.Add(this.label22);
+            this.pnlFtInfo.Controls.Add(this.label34);
+            this.pnlFtInfo.Controls.Add(this.label28);
+            this.pnlFtInfo.Controls.Add(this.label12);
+            this.pnlFtInfo.Controls.Add(this.lblMyv);
+            this.pnlFtInfo.Controls.Add(this.label39);
+            this.pnlFtInfo.Controls.Add(this.label21);
+            this.pnlFtInfo.Controls.Add(this.label33);
+            this.pnlFtInfo.Controls.Add(this.label27);
+            this.pnlFtInfo.Controls.Add(this.label11);
+            this.pnlFtInfo.Controls.Add(this.lblMxv);
+            this.pnlFtInfo.Controls.Add(this.label38);
+            this.pnlFtInfo.Controls.Add(this.label20);
+            this.pnlFtInfo.Controls.Add(this.label32);
+            this.pnlFtInfo.Controls.Add(this.label26);
+            this.pnlFtInfo.Controls.Add(this.label10);
+            this.pnlFtInfo.Controls.Add(this.lblMz);
+            this.pnlFtInfo.Controls.Add(this.lblFz0);
+            this.pnlFtInfo.Controls.Add(this.lblZ);
+            this.pnlFtInfo.Controls.Add(this.lblFz);
+            this.pnlFtInfo.Controls.Add(this.lblVz);
+            this.pnlFtInfo.Controls.Add(this.lblAz);
+            this.pnlFtInfo.Controls.Add(this.lblMy);
+            this.pnlFtInfo.Controls.Add(this.lblFy0);
+            this.pnlFtInfo.Controls.Add(this.lblY);
+            this.pnlFtInfo.Controls.Add(this.lblFy);
+            this.pnlFtInfo.Controls.Add(this.lblVy);
+            this.pnlFtInfo.Controls.Add(this.mx);
+            this.pnlFtInfo.Controls.Add(this.lblay);
+            this.pnlFtInfo.Controls.Add(this.lblFx0);
+            this.pnlFtInfo.Controls.Add(this.lblX);
+            this.pnlFtInfo.Controls.Add(this.lblFx);
+            this.pnlFtInfo.Controls.Add(this.lblVx);
+            this.pnlFtInfo.Controls.Add(this.lblAx);
+            this.pnlFtInfo.Location = new System.Drawing.Point(3, 5);
+            this.pnlFtInfo.Name = "pnlFtInfo";
+            this.pnlFtInfo.Size = new System.Drawing.Size(231, 221);
+            this.pnlFtInfo.TabIndex = 0;
+            // 
+            // pnlFtSetting
+            // 
+            this.pnlFtSetting.Controls.Add(this.tbxVehicleMass);
+            this.pnlFtSetting.Controls.Add(this.pbarFxyCalib);
+            this.pnlFtSetting.Controls.Add(this.lblFy0Calib);
+            this.pnlFtSetting.Controls.Add(this.label46);
+            this.pnlFtSetting.Controls.Add(this.lblFx0Calib);
+            this.pnlFtSetting.Controls.Add(this.label44);
+            this.pnlFtSetting.Controls.Add(this.lblFz0Calib);
+            this.pnlFtSetting.Controls.Add(this.label42);
+            this.pnlFtSetting.Controls.Add(this.lblVehicleMass);
+            this.pnlFtSetting.Controls.Add(this.label41);
+            this.pnlFtSetting.Controls.Add(this.pbarFzCalib);
+            this.pnlFtSetting.Controls.Add(this.btnCancelFtSetting);
+            this.pnlFtSetting.Controls.Add(this.btnApplyFtSetting);
+            this.pnlFtSetting.Controls.Add(this.btnFxyCalib);
+            this.pnlFtSetting.Controls.Add(this.btnFzCalib);
+            this.pnlFtSetting.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlFtSetting.Location = new System.Drawing.Point(0, 0);
+            this.pnlFtSetting.Name = "pnlFtSetting";
+            this.pnlFtSetting.Size = new System.Drawing.Size(231, 221);
+            this.pnlFtSetting.TabIndex = 13;
+            this.pnlFtSetting.Visible = false;
+            // 
+            // tbxVehicleMass
+            // 
+            this.tbxVehicleMass.Location = new System.Drawing.Point(123, 143);
+            this.tbxVehicleMass.Name = "tbxVehicleMass";
+            this.tbxVehicleMass.Size = new System.Drawing.Size(100, 21);
+            this.tbxVehicleMass.TabIndex = 13;
+            this.tbxVehicleMass.TextChanged += new System.EventHandler(this.tbxVehicleMass_TextChanged);
+            this.tbxVehicleMass.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxVehicleMass_KeyPress);
+            // 
+            // pbarFxyCalib
+            // 
+            this.pbarFxyCalib.Location = new System.Drawing.Point(6, 111);
+            this.pbarFxyCalib.Name = "pbarFxyCalib";
+            this.pbarFxyCalib.Size = new System.Drawing.Size(218, 10);
+            this.pbarFxyCalib.TabIndex = 4;
+            // 
+            // lblFy0Calib
+            // 
+            this.lblFy0Calib.AutoSize = true;
+            this.lblFy0Calib.Location = new System.Drawing.Point(199, 90);
+            this.lblFy0Calib.Name = "lblFy0Calib";
+            this.lblFy0Calib.Size = new System.Drawing.Size(27, 12);
+            this.lblFy0Calib.TabIndex = 12;
+            this.lblFy0Calib.Text = "0.00";
+            this.lblFy0Calib.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(162, 90);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(25, 12);
+            this.label46.TabIndex = 12;
+            this.label46.Text = "Fy0";
+            this.label46.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFx0Calib
+            // 
+            this.lblFx0Calib.AutoSize = true;
+            this.lblFx0Calib.Location = new System.Drawing.Point(125, 90);
+            this.lblFx0Calib.Name = "lblFx0Calib";
+            this.lblFx0Calib.Size = new System.Drawing.Size(27, 12);
+            this.lblFx0Calib.TabIndex = 12;
+            this.lblFx0Calib.Text = "0.00";
+            this.lblFx0Calib.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(88, 90);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(25, 12);
+            this.label44.TabIndex = 12;
+            this.label44.Text = "Fx0";
+            this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFz0Calib
+            // 
+            this.lblFz0Calib.AutoSize = true;
+            this.lblFz0Calib.Location = new System.Drawing.Point(128, 51);
+            this.lblFz0Calib.Name = "lblFz0Calib";
+            this.lblFz0Calib.Size = new System.Drawing.Size(27, 12);
+            this.lblFz0Calib.TabIndex = 12;
+            this.lblFz0Calib.Text = "0.00";
+            this.lblFz0Calib.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(91, 51);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(25, 12);
+            this.label42.TabIndex = 12;
+            this.label42.Text = "Fz0";
+            this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblVehicleMass
+            // 
+            this.lblVehicleMass.AutoSize = true;
+            this.lblVehicleMass.Location = new System.Drawing.Point(6, 149);
+            this.lblVehicleMass.Name = "lblVehicleMass";
+            this.lblVehicleMass.Size = new System.Drawing.Size(112, 12);
+            this.lblVehicleMass.TabIndex = 12;
+            this.lblVehicleMass.Text = "Vehicle mass [kg]";
+            this.lblVehicleMass.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(9, 20);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(127, 12);
+            this.label41.TabIndex = 12;
+            this.label41.Text = "FT sensor Calibration";
+            this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pbarFzCalib
+            // 
+            this.pbarFzCalib.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.pbarFzCalib.Location = new System.Drawing.Point(6, 71);
+            this.pbarFzCalib.Name = "pbarFzCalib";
+            this.pbarFzCalib.Size = new System.Drawing.Size(218, 10);
+            this.pbarFzCalib.TabIndex = 5;
+            // 
+            // btnCancelFtSetting
+            // 
+            this.btnCancelFtSetting.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnCancelFtSetting.Location = new System.Drawing.Point(148, 195);
+            this.btnCancelFtSetting.Name = "btnCancelFtSetting";
+            this.btnCancelFtSetting.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelFtSetting.TabIndex = 2;
+            this.btnCancelFtSetting.Text = "Cancel";
+            this.btnCancelFtSetting.UseVisualStyleBackColor = true;
+            this.btnCancelFtSetting.Click += new System.EventHandler(this.btnCancelFtSetting_Click);
+            // 
+            // btnApplyFtSetting
+            // 
+            this.btnApplyFtSetting.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnApplyFtSetting.Location = new System.Drawing.Point(6, 195);
+            this.btnApplyFtSetting.Name = "btnApplyFtSetting";
+            this.btnApplyFtSetting.Size = new System.Drawing.Size(75, 23);
+            this.btnApplyFtSetting.TabIndex = 2;
+            this.btnApplyFtSetting.Text = "Apply";
+            this.btnApplyFtSetting.UseVisualStyleBackColor = true;
+            this.btnApplyFtSetting.Click += new System.EventHandler(this.btnApplyFtSetting_Click);
+            // 
+            // btnFxyCalib
+            // 
+            this.btnFxyCalib.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnFxyCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnFxyCalib.Location = new System.Drawing.Point(6, 85);
+            this.btnFxyCalib.Name = "btnFxyCalib";
+            this.btnFxyCalib.Size = new System.Drawing.Size(75, 23);
+            this.btnFxyCalib.TabIndex = 2;
+            this.btnFxyCalib.Text = "Fx/y calib.";
+            this.btnFxyCalib.UseVisualStyleBackColor = false;
+            // 
+            // btnFzCalib
+            // 
+            this.btnFzCalib.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnFzCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnFzCalib.Location = new System.Drawing.Point(6, 46);
+            this.btnFzCalib.Name = "btnFzCalib";
+            this.btnFzCalib.Size = new System.Drawing.Size(75, 23);
+            this.btnFzCalib.TabIndex = 3;
+            this.btnFzCalib.Text = "Fz calib.";
+            this.btnFzCalib.UseVisualStyleBackColor = false;
+            this.btnFzCalib.Click += new System.EventHandler(this.btnFzCalib_Click);
+            // 
+            // lblMzv
+            // 
+            this.lblMzv.AutoSize = true;
+            this.lblMzv.Location = new System.Drawing.Point(16, 71);
+            this.lblMzv.Name = "lblMzv";
+            this.lblMzv.Size = new System.Drawing.Size(23, 12);
+            this.lblMzv.TabIndex = 12;
+            this.lblMzv.Text = "mz";
+            this.lblMzv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(95, 71);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(25, 12);
+            this.label40.TabIndex = 12;
+            this.label40.Text = "Fz0";
+            this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(166, 71);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(19, 12);
+            this.label22.TabIndex = 12;
+            this.label22.Text = "Fz";
+            this.label22.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(168, 161);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(12, 12);
+            this.label34.TabIndex = 12;
+            this.label34.Text = "z";
+            this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(95, 161);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(18, 12);
+            this.label28.TabIndex = 12;
+            this.label28.Text = "vz";
+            this.label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(11, 161);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(19, 12);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "az";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMyv
+            // 
+            this.lblMyv.AutoSize = true;
+            this.lblMyv.Location = new System.Drawing.Point(16, 47);
+            this.lblMyv.Name = "lblMyv";
+            this.lblMyv.Size = new System.Drawing.Size(23, 12);
+            this.lblMyv.TabIndex = 12;
+            this.lblMyv.Text = "my";
+            this.lblMyv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(95, 47);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(25, 12);
+            this.label39.TabIndex = 12;
+            this.label39.Text = "Fy0";
+            this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(166, 47);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(19, 12);
+            this.label21.TabIndex = 12;
+            this.label21.Text = "Fy";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(168, 137);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(12, 12);
+            this.label33.TabIndex = 12;
+            this.label33.Text = "y";
+            this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(95, 137);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(18, 12);
+            this.label27.TabIndex = 12;
+            this.label27.Text = "vy";
+            this.label27.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(11, 137);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(19, 12);
+            this.label11.TabIndex = 12;
+            this.label11.Text = "ay";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMxv
+            // 
+            this.lblMxv.AutoSize = true;
+            this.lblMxv.Location = new System.Drawing.Point(16, 24);
+            this.lblMxv.Name = "lblMxv";
+            this.lblMxv.Size = new System.Drawing.Size(23, 12);
+            this.lblMxv.TabIndex = 12;
+            this.lblMxv.Text = "mx";
+            this.lblMxv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(95, 24);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(25, 12);
+            this.label38.TabIndex = 12;
+            this.label38.Text = "Fx0";
+            this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(166, 24);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(19, 12);
+            this.label20.TabIndex = 12;
+            this.label20.Text = "Fx";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(168, 114);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(12, 12);
+            this.label32.TabIndex = 12;
+            this.label32.Text = "x";
+            this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(95, 114);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(18, 12);
+            this.label26.TabIndex = 12;
+            this.label26.Text = "vx";
+            this.label26.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(11, 114);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(19, 12);
+            this.label10.TabIndex = 12;
+            this.label10.Text = "ax";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMz
+            // 
+            this.lblMz.AutoSize = true;
+            this.lblMz.Location = new System.Drawing.Point(46, 71);
+            this.lblMz.Name = "lblMz";
+            this.lblMz.Size = new System.Drawing.Size(27, 12);
+            this.lblMz.TabIndex = 12;
+            this.lblMz.Text = "0.00";
+            this.lblMz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFz0
+            // 
+            this.lblFz0.AutoSize = true;
+            this.lblFz0.Location = new System.Drawing.Point(125, 71);
+            this.lblFz0.Name = "lblFz0";
+            this.lblFz0.Size = new System.Drawing.Size(27, 12);
+            this.lblFz0.TabIndex = 12;
+            this.lblFz0.Text = "0.00";
+            this.lblFz0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblZ
+            // 
+            this.lblZ.AutoSize = true;
+            this.lblZ.Location = new System.Drawing.Point(196, 161);
+            this.lblZ.Name = "lblZ";
+            this.lblZ.Size = new System.Drawing.Size(27, 12);
+            this.lblZ.TabIndex = 12;
+            this.lblZ.Text = "0.00";
+            this.lblZ.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFz
+            // 
+            this.lblFz.AutoSize = true;
+            this.lblFz.Location = new System.Drawing.Point(196, 71);
+            this.lblFz.Name = "lblFz";
+            this.lblFz.Size = new System.Drawing.Size(27, 12);
+            this.lblFz.TabIndex = 12;
+            this.lblFz.Text = "0.00";
+            this.lblFz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblVz
+            // 
+            this.lblVz.AutoSize = true;
+            this.lblVz.Location = new System.Drawing.Point(123, 161);
+            this.lblVz.Name = "lblVz";
+            this.lblVz.Size = new System.Drawing.Size(27, 12);
+            this.lblVz.TabIndex = 12;
+            this.lblVz.Text = "0.00";
+            this.lblVz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblAz
+            // 
+            this.lblAz.AutoSize = true;
+            this.lblAz.Location = new System.Drawing.Point(46, 161);
+            this.lblAz.Name = "lblAz";
+            this.lblAz.Size = new System.Drawing.Size(27, 12);
+            this.lblAz.TabIndex = 12;
+            this.lblAz.Text = "0.00";
+            this.lblAz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblMy
+            // 
+            this.lblMy.AutoSize = true;
+            this.lblMy.Location = new System.Drawing.Point(46, 47);
+            this.lblMy.Name = "lblMy";
+            this.lblMy.Size = new System.Drawing.Size(27, 12);
+            this.lblMy.TabIndex = 12;
+            this.lblMy.Text = "0.00";
+            this.lblMy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFy0
+            // 
+            this.lblFy0.AutoSize = true;
+            this.lblFy0.Location = new System.Drawing.Point(125, 47);
+            this.lblFy0.Name = "lblFy0";
+            this.lblFy0.Size = new System.Drawing.Size(27, 12);
+            this.lblFy0.TabIndex = 12;
+            this.lblFy0.Text = "0.00";
+            this.lblFy0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblY
+            // 
+            this.lblY.AutoSize = true;
+            this.lblY.Location = new System.Drawing.Point(196, 137);
+            this.lblY.Name = "lblY";
+            this.lblY.Size = new System.Drawing.Size(27, 12);
+            this.lblY.TabIndex = 12;
+            this.lblY.Text = "0.00";
+            this.lblY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFy
+            // 
+            this.lblFy.AutoSize = true;
+            this.lblFy.Location = new System.Drawing.Point(196, 47);
+            this.lblFy.Name = "lblFy";
+            this.lblFy.Size = new System.Drawing.Size(27, 12);
+            this.lblFy.TabIndex = 12;
+            this.lblFy.Text = "0.00";
+            this.lblFy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblVy
+            // 
+            this.lblVy.AutoSize = true;
+            this.lblVy.Location = new System.Drawing.Point(123, 137);
+            this.lblVy.Name = "lblVy";
+            this.lblVy.Size = new System.Drawing.Size(27, 12);
+            this.lblVy.TabIndex = 12;
+            this.lblVy.Text = "0.00";
+            this.lblVy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // mx
+            // 
+            this.mx.AutoSize = true;
+            this.mx.Location = new System.Drawing.Point(46, 24);
+            this.mx.Name = "mx";
+            this.mx.Size = new System.Drawing.Size(27, 12);
+            this.mx.TabIndex = 12;
+            this.mx.Text = "0.00";
+            this.mx.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblay
+            // 
+            this.lblay.AutoSize = true;
+            this.lblay.Location = new System.Drawing.Point(46, 137);
+            this.lblay.Name = "lblay";
+            this.lblay.Size = new System.Drawing.Size(27, 12);
+            this.lblay.TabIndex = 12;
+            this.lblay.Text = "0.00";
+            this.lblay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFx0
+            // 
+            this.lblFx0.AutoSize = true;
+            this.lblFx0.Location = new System.Drawing.Point(125, 24);
+            this.lblFx0.Name = "lblFx0";
+            this.lblFx0.Size = new System.Drawing.Size(27, 12);
+            this.lblFx0.TabIndex = 12;
+            this.lblFx0.Text = "0.00";
+            this.lblFx0.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblX
+            // 
+            this.lblX.AutoSize = true;
+            this.lblX.Location = new System.Drawing.Point(196, 114);
+            this.lblX.Name = "lblX";
+            this.lblX.Size = new System.Drawing.Size(27, 12);
+            this.lblX.TabIndex = 12;
+            this.lblX.Text = "0.00";
+            this.lblX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblFx
+            // 
+            this.lblFx.AutoSize = true;
+            this.lblFx.Location = new System.Drawing.Point(196, 24);
+            this.lblFx.Name = "lblFx";
+            this.lblFx.Size = new System.Drawing.Size(27, 12);
+            this.lblFx.TabIndex = 12;
+            this.lblFx.Text = "0.00";
+            this.lblFx.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblVx
+            // 
+            this.lblVx.AutoSize = true;
+            this.lblVx.Location = new System.Drawing.Point(123, 114);
+            this.lblVx.Name = "lblVx";
+            this.lblVx.Size = new System.Drawing.Size(27, 12);
+            this.lblVx.TabIndex = 12;
+            this.lblVx.Text = "0.00";
+            this.lblVx.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblAx
+            // 
+            this.lblAx.AutoSize = true;
+            this.lblAx.Location = new System.Drawing.Point(46, 114);
+            this.lblAx.Name = "lblAx";
+            this.lblAx.Size = new System.Drawing.Size(27, 12);
+            this.lblAx.TabIndex = 12;
+            this.lblAx.Text = "0.00";
+            this.lblAx.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbxView
             // 
+            this.lbxView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbxView.FormattingEnabled = true;
             this.lbxView.ItemHeight = 12;
-            this.lbxView.Location = new System.Drawing.Point(2, 3);
+            this.lbxView.Location = new System.Drawing.Point(0, 0);
             this.lbxView.Name = "lbxView";
-            this.lbxView.Size = new System.Drawing.Size(230, 88);
+            this.lbxView.Size = new System.Drawing.Size(244, 269);
             this.lbxView.TabIndex = 0;
+            // 
+            // btnRefreshAll
+            // 
+            this.btnRefreshAll.BackgroundImage = global::mGCS.Properties.Resources.btnRefres;
+            this.btnRefreshAll.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnRefreshAll.Location = new System.Drawing.Point(700, 4);
+            this.btnRefreshAll.Name = "btnRefreshAll";
+            this.btnRefreshAll.Size = new System.Drawing.Size(70, 68);
+            this.btnRefreshAll.TabIndex = 0;
+            this.btnRefreshAll.UseVisualStyleBackColor = true;
+            this.btnRefreshAll.Click += new System.EventHandler(this.btnRefreshAll_Click);
             // 
             // chartPosSim
             // 
@@ -148,7 +799,7 @@
             series1.Legend = "Legend1";
             series1.Name = "Series1";
             this.chartPosSim.Series.Add(series1);
-            this.chartPosSim.Size = new System.Drawing.Size(779, 497);
+            this.chartPosSim.Size = new System.Drawing.Size(771, 510);
             this.chartPosSim.TabIndex = 0;
             // 
             // splitContainer3
@@ -172,8 +823,8 @@
             this.splitContainer3.Panel2.Controls.Add(this.cbxFtBaud);
             this.splitContainer3.Panel2.Controls.Add(this.cbxFtCom);
             this.splitContainer3.Panel2.Controls.Add(this.btnCntFt);
-            this.splitContainer3.Size = new System.Drawing.Size(242, 110);
-            this.splitContainer3.SplitterDistance = 37;
+            this.splitContainer3.Size = new System.Drawing.Size(242, 97);
+            this.splitContainer3.SplitterDistance = 27;
             this.splitContainer3.TabIndex = 2;
             // 
             // lblCntFt
@@ -182,10 +833,11 @@
             this.lblCntFt.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lblCntFt.Location = new System.Drawing.Point(0, 0);
             this.lblCntFt.Name = "lblCntFt";
-            this.lblCntFt.Size = new System.Drawing.Size(240, 35);
+            this.lblCntFt.Size = new System.Drawing.Size(240, 25);
             this.lblCntFt.TabIndex = 0;
             this.lblCntFt.Text = "Connection to F/T sensor";
             this.lblCntFt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblCntFt.Click += new System.EventHandler(this.lblCntFt_Click);
             // 
             // label6
             // 
@@ -239,7 +891,7 @@
             this.btnCntFt.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnCntFt.Location = new System.Drawing.Point(165, 0);
             this.btnCntFt.Name = "btnCntFt";
-            this.btnCntFt.Size = new System.Drawing.Size(75, 67);
+            this.btnCntFt.Size = new System.Drawing.Size(75, 64);
             this.btnCntFt.TabIndex = 1;
             this.btnCntFt.UseVisualStyleBackColor = true;
             this.btnCntFt.Click += new System.EventHandler(this.btnCntFt_Click);
@@ -265,8 +917,8 @@
             this.splitContainer4.Panel2.Controls.Add(this.cbxVhclBaud);
             this.splitContainer4.Panel2.Controls.Add(this.cbxVhclCom);
             this.splitContainer4.Panel2.Controls.Add(this.button2);
-            this.splitContainer4.Size = new System.Drawing.Size(266, 110);
-            this.splitContainer4.SplitterDistance = 37;
+            this.splitContainer4.Size = new System.Drawing.Size(266, 97);
+            this.splitContainer4.SplitterDistance = 27;
             this.splitContainer4.TabIndex = 3;
             // 
             // lblCntGpsSim
@@ -275,7 +927,7 @@
             this.lblCntGpsSim.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lblCntGpsSim.Location = new System.Drawing.Point(0, 0);
             this.lblCntGpsSim.Name = "lblCntGpsSim";
-            this.lblCntGpsSim.Size = new System.Drawing.Size(264, 35);
+            this.lblCntGpsSim.Size = new System.Drawing.Size(264, 25);
             this.lblCntGpsSim.TabIndex = 1;
             this.lblCntGpsSim.Text = "Connection to Vehicle";
             this.lblCntGpsSim.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -331,7 +983,7 @@
             this.button2.Dock = System.Windows.Forms.DockStyle.Right;
             this.button2.Location = new System.Drawing.Point(189, 0);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 67);
+            this.button2.Size = new System.Drawing.Size(75, 64);
             this.button2.TabIndex = 7;
             this.button2.UseVisualStyleBackColor = true;
             // 
@@ -357,8 +1009,8 @@
             this.splitContainer5.Panel2.Controls.Add(this.tbxGpsSimPort);
             this.splitContainer5.Panel2.Controls.Add(this.tbxIP);
             this.splitContainer5.Panel2.Controls.Add(this.btnCntGpsSim);
-            this.splitContainer5.Size = new System.Drawing.Size(266, 110);
-            this.splitContainer5.SplitterDistance = 37;
+            this.splitContainer5.Size = new System.Drawing.Size(266, 97);
+            this.splitContainer5.SplitterDistance = 27;
             this.splitContainer5.TabIndex = 4;
             // 
             // label2
@@ -367,7 +1019,7 @@
             this.label2.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label2.Location = new System.Drawing.Point(0, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(264, 35);
+            this.label2.Size = new System.Drawing.Size(264, 25);
             this.label2.TabIndex = 1;
             this.label2.Text = "Connection to GPS Sim.";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -411,6 +1063,7 @@
             this.tbxGpsSimPort.Text = "16001";
             this.tbxGpsSimPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tbxGpsSimPort.TextChanged += new System.EventHandler(this.tbxGpsSimPort_TextChanged);
+            this.tbxGpsSimPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxGpsSimPort_KeyPress);
             // 
             // tbxIP
             // 
@@ -428,7 +1081,7 @@
             this.btnCntGpsSim.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnCntGpsSim.Location = new System.Drawing.Point(189, 0);
             this.btnCntGpsSim.Name = "btnCntGpsSim";
-            this.btnCntGpsSim.Size = new System.Drawing.Size(75, 67);
+            this.btnCntGpsSim.Size = new System.Drawing.Size(75, 64);
             this.btnCntGpsSim.TabIndex = 6;
             this.btnCntGpsSim.UseVisualStyleBackColor = true;
             this.btnCntGpsSim.Click += new System.EventHandler(this.btnCntGpsSim_Click);
@@ -452,8 +1105,8 @@
             this.splitContainer6.Panel2.Controls.Add(this.label3);
             this.splitContainer6.Panel2.Controls.Add(this.tbxFsIp);
             this.splitContainer6.Panel2.Controls.Add(this.btnCntFs);
-            this.splitContainer6.Size = new System.Drawing.Size(248, 110);
-            this.splitContainer6.SplitterDistance = 37;
+            this.splitContainer6.Size = new System.Drawing.Size(248, 97);
+            this.splitContainer6.SplitterDistance = 27;
             this.splitContainer6.TabIndex = 5;
             // 
             // label4
@@ -462,7 +1115,7 @@
             this.label4.Font = new System.Drawing.Font("Gulim", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.label4.Location = new System.Drawing.Point(0, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(246, 35);
+            this.label4.Size = new System.Drawing.Size(246, 25);
             this.label4.TabIndex = 1;
             this.label4.Text = "Connection to Flight Sim.";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -492,7 +1145,7 @@
             this.btnCntFs.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnCntFs.Location = new System.Drawing.Point(171, 0);
             this.btnCntFs.Name = "btnCntFs";
-            this.btnCntFs.Size = new System.Drawing.Size(75, 67);
+            this.btnCntFs.Size = new System.Drawing.Size(75, 64);
             this.btnCntFs.TabIndex = 9;
             this.btnCntFs.UseVisualStyleBackColor = true;
             // 
@@ -520,9 +1173,14 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.pnlFtInfo.ResumeLayout(false);
+            this.pnlFtInfo.PerformLayout();
+            this.pnlFtSetting.ResumeLayout(false);
+            this.pnlFtSetting.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartPosSim)).EndInit();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
@@ -579,10 +1237,64 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cbxVhclBaud;
         private System.Windows.Forms.ComboBox cbxVhclCom;
-        private System.Windows.Forms.ListBox lbxView;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbxGpsSimPort;
         private System.Windows.Forms.Timer mFtTimer;
+        private System.Windows.Forms.ListBox lbxView;
+        private System.Windows.Forms.Panel pnlFtInfo;
+        private System.Windows.Forms.Button btnRefreshAll;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lblAz;
+        private System.Windows.Forms.Label lblay;
+        private System.Windows.Forms.Label lblAx;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label lblFz;
+        private System.Windows.Forms.Label lblFy;
+        private System.Windows.Forms.Label lblFx;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label lblVz;
+        private System.Windows.Forms.Label lblVy;
+        private System.Windows.Forms.Label lblVx;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label lblFz0;
+        private System.Windows.Forms.Label lblZ;
+        private System.Windows.Forms.Label lblFy0;
+        private System.Windows.Forms.Label lblY;
+        private System.Windows.Forms.Label lblFx0;
+        private System.Windows.Forms.Label lblX;
+        private System.Windows.Forms.Panel pnlFtSetting;
+        private System.Windows.Forms.ProgressBar pbarFxyCalib;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.ProgressBar pbarFzCalib;
+        private System.Windows.Forms.Button btnCancelFtSetting;
+        private System.Windows.Forms.Button btnApplyFtSetting;
+        private System.Windows.Forms.Button btnFxyCalib;
+        private System.Windows.Forms.Button btnFzCalib;
+        private System.Windows.Forms.Label lblFy0Calib;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label lblFx0Calib;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.Label lblFz0Calib;
+        private System.Windows.Forms.Label lblMzv;
+        private System.Windows.Forms.Label lblMyv;
+        private System.Windows.Forms.Label lblMxv;
+        private System.Windows.Forms.Label lblMz;
+        private System.Windows.Forms.Label lblMy;
+        private System.Windows.Forms.Label mx;
+        private System.Windows.Forms.TextBox tbxVehicleMass;
+        private System.Windows.Forms.Label lblVehicleMass;
 
     }
 }

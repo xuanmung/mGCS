@@ -54,6 +54,24 @@ namespace mGCS
             return z_estimate;
         }
 
+        public bool restart()
+        {
+            try
+            {
+                vx = 0;
+                vy = 0;
+                vz = 0;
+                x_estimate = 0;
+                y_estimate = 0;
+                z_estimate = 0;
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
+        }
+
         private double deg2rad(double deg)
         {
             return deg * Math.PI / 180.0;
