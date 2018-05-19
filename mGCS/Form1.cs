@@ -42,16 +42,23 @@ namespace mGCS
         private string ftCom;
         private string ftBaud;
         //private double fx, fy, fz, tx, ty, tz;
-        double[] forces = new double[3];
-        public double[] forceBias = new double[3];
+        private double[] forces     = new double[3];
+        public double[] forceBias   = new double[3];
+        public double[] forceBiasCandidate = new double[3];
+        private bool isFzCalibrating  = false;
+        private bool isFxyCalibrating = false;
+        private int numOfCalibSample = 100;
+        private int calibStep = 0;
         private string ftBuffer;
         private Thread ftDataReceiver;
         private string ftLoggingFile;
         private static TextWriter mTwriter;
         PositionMap mPosMap;
         LowPassFilter mLpf;
+        private const double mLpfSamplingTime = 0.05;
         PseudoPositioning mPsner;
         private double mVehicleMass = 2.3;
+        private double[] drag = new double[2];
         //Vehicle variables
         private bool vehicleConnected = false;
         
@@ -76,9 +83,25 @@ namespace mGCS
             mLpf = new LowPassFilter(2.0, 0.05);
             mPosMap = new PositionMap(chartPosSim);
             chartPosSim.Titles.Add("Vehicle's Position");
-            mPsner = new PseudoPositioning(0.3, 0.28, 0.05);
+            mPsner = new PseudoPositioning(0.3, 0.28, mLpfSamplingTime);
         }
-        
+
+        private void mGCS_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult dlgRslt = MessageBox.Show("Are you sure you want to quit?", "mGCS", MessageBoxButtons.YesNo);
+            if (dlgRslt == DialogResult.No)
+                e.Cancel = true;
+            else
+            {
+                try
+                {
+                    if (socketConnected(mClient))
+                        mClient.Close();
+                }
+                catch { }
+            }
+        }
+
         private void tbxIP_TextChanged(object sender, EventArgs e)
         {
             gpsSimIP = tbxIP.Text;
@@ -220,22 +243,6 @@ namespace mGCS
             if (socketConnected(mClient))
                 mClient.BeginSend(msg, 0, msg.Length, 0, new AsyncCallback(sendData), mClient);
             //return
-        }
-
-        private void mGCS_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            DialogResult dlgRslt = MessageBox.Show("Are you sure you want to quit?", "mGCS", MessageBoxButtons.YesNo);
-            if (dlgRslt == DialogResult.No)
-                e.Cancel = true;
-            else
-            {
-                try
-                {
-                    if (socketConnected(mClient))
-                        mClient.Close();
-                }
-                catch { }
-            }
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -436,15 +443,8 @@ namespace mGCS
                         //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
                     }
 
-                    //just for debuging
-                    
-                    //mPsner.runEstimation(0.01, 0.1, 1);
-
                     try
                     {
-                    //string[] ftDataStr = { "" };
-                    //if (ftBuffer.Length > 0)
-                    //{
                         ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
                         int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
                         try
@@ -452,10 +452,42 @@ namespace mGCS
                             //Processing ftData
                             FtConversion ftConverter = new FtConversion(mLpf);
                             forces = ftConverter.normalize(ftData);
+
+                            if (isFzCalibrating)
+                            {
+                                calibStep++;
+                                forceBiasCandidate[2] = (forceBiasCandidate[2] * (calibStep - 1) + forces[2]) / calibStep;
+                                pbarFzCalib.Value = calibStep;
+                                lblFz0Calib.Text = Math.Round(forceBiasCandidate[2], 2).ToString();
+                                if (calibStep >= numOfCalibSample)
+                                {
+                                    btnFxyCalib.Enabled = true;
+                                    pbarFzCalib.Visible = false;
+                                    isFzCalibrating = false;
+                                    calibStep = 0;
+                                }
+                            }
+
+                            if (isFxyCalibrating)
+                            {
+                                calibStep++;
+                                forceBiasCandidate[0] = (forceBiasCandidate[0] * (calibStep - 1) + forces[0]) / calibStep;
+                                forceBiasCandidate[1] = (forceBiasCandidate[1] * (calibStep - 1) + forces[1]) / calibStep;
+                                pbarFxyCalib.Value = calibStep;
+                                lblFx0Calib.Text = Math.Round(forceBiasCandidate[0], 2).ToString();
+                                lblFx0Calib.Text = Math.Round(forceBiasCandidate[1], 2).ToString();
+                                if (calibStep >= numOfCalibSample)
+                                {
+                                    btnFzCalib.Enabled = true;
+                                    pbarFxyCalib.Visible = false;
+                                    isFxyCalibrating = false;
+                                    calibStep = 0;
+                                }
+                            }
+
                     
                             //Run the estimator of the Pseudo Positioner
                             mPsner.runEstimation(forces[0] / mVehicleMass, forces[1] / mVehicleMass, forces[2] / mVehicleMass);
-                            //mPsner.runEstimation(forces[0], forces[1], forces[2]);
                         }
                         catch (Exception x)
                         {
@@ -496,8 +528,6 @@ namespace mGCS
                                     }
                                 }
                             
-                            //mStrmWrt.WriteLine();
-
                             //Close stream writter after appending text
                             mStrmWrt.Close();
                         }
@@ -511,7 +541,6 @@ namespace mGCS
                 try
                 {
                     mPosMap.update(mPsner.getX(), mPsner.getY());
-                    //mPosMap.update(-1, -2);
                 }
                 catch (Exception e)
                 {
@@ -538,31 +567,40 @@ namespace mGCS
 
         private void btnCancelFtSetting_Click(object sender, EventArgs e)
         {
-            pnlFtSetting.Visible = false;
-        }
-
-        private void btnApplyFtSetting_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                mVehicleMass = Convert.ToDouble(tbxVehicleMass.Text);
-            }
-            catch (Exception x)
-            { }
-
-            pnlFtSetting.Visible = false;
+            pnlFtSetting.Visible    = false;
+            isFxyCalibrating        = false;
+            isFzCalibrating         = false;
+            calibStep = 0;
+            forceBiasCandidate[0] = 0;
+            forceBiasCandidate[1] = 0;
+            forceBiasCandidate[2] = 0;
         }
 
         private void btnFzCalib_Click(object sender, EventArgs e)
         {
-            pbarFzCalib.Visible = true;
+            btnFxyCalib.Enabled         = false;
+            calibStep                   = 0;
+            forceBiasCandidate[2]       = 0;
+            pbarFzCalib.Visible         = true;
+            //btnApplyFtSetting.Visible   = false;
+
+            isFzCalibrating = true;
+            //forceBias[3] = 
         }
 
-        private void tbxVehicleMass_TextChanged(object sender, EventArgs e)
+        private void btnFxyCalib_Click(object sender, EventArgs e)
         {
+            btnFzCalib.Enabled = false;
+            forceBiasCandidate[0] = 0;
+            forceBiasCandidate[1] = 0;
+            pbarFxyCalib.Visible = true;
+            pbarFxyCalib.Maximum = 100;
+            pbarFxyCalib.Step = 1;
+            pbarFxyCalib.Value = 1;
+            isFxyCalibrating = true;
         }
 
-        private void tbxVehicleMass_KeyPress(object sender, KeyPressEventArgs e)
+        private void tbxDragX_KeyPress(object sender, KeyPressEventArgs e)
         {
             mInputHelper.pressNumberOnly(sender, e);
         }
@@ -572,5 +610,26 @@ namespace mGCS
             mInputHelper.pressNumberOnly(sender, e);
         }
 
+        private void tbxDragX_TextChanged(object sender, EventArgs e)
+        {
+            btnApplyDragX.Visible = true;
+        }
+
+        private void tbxDragY_TextChanged(object sender, EventArgs e)
+        {
+            btnApplyDragY.Visible = true;
+        }
+
+        private void btnApplyDragX_Click(object sender, EventArgs e)
+        {
+            drag[0] = Convert.ToDouble(tbxDragX.Text);
+            btnApplyDragX.Visible = false;
+        }
+
+        private void btnApplyDragY_Click(object sender, EventArgs e)
+        {
+            drag[1] = Convert.ToDouble(tbxDragY.Text);
+            btnApplyDragY.Visible = false;
+        }
     }
 }

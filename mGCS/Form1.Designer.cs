@@ -37,7 +37,8 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.pnlFtInfo = new System.Windows.Forms.Panel();
             this.pnlFtSetting = new System.Windows.Forms.Panel();
-            this.tbxVehicleMass = new System.Windows.Forms.TextBox();
+            this.tbxDragY = new System.Windows.Forms.TextBox();
+            this.tbxDragX = new System.Windows.Forms.TextBox();
             this.pbarFxyCalib = new System.Windows.Forms.ProgressBar();
             this.lblFy0Calib = new System.Windows.Forms.Label();
             this.label46 = new System.Windows.Forms.Label();
@@ -45,11 +46,13 @@
             this.label44 = new System.Windows.Forms.Label();
             this.lblFz0Calib = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.lblVehicleMass = new System.Windows.Forms.Label();
             this.label41 = new System.Windows.Forms.Label();
             this.pbarFzCalib = new System.Windows.Forms.ProgressBar();
             this.btnCancelFtSetting = new System.Windows.Forms.Button();
-            this.btnApplyFtSetting = new System.Windows.Forms.Button();
+            this.btnApplyDragY = new System.Windows.Forms.Button();
+            this.btnApplyDragX = new System.Windows.Forms.Button();
             this.btnFxyCalib = new System.Windows.Forms.Button();
             this.btnFzCalib = new System.Windows.Forms.Button();
             this.lblMzv = new System.Windows.Forms.Label();
@@ -234,7 +237,8 @@
             // 
             // pnlFtSetting
             // 
-            this.pnlFtSetting.Controls.Add(this.tbxVehicleMass);
+            this.pnlFtSetting.Controls.Add(this.tbxDragY);
+            this.pnlFtSetting.Controls.Add(this.tbxDragX);
             this.pnlFtSetting.Controls.Add(this.pbarFxyCalib);
             this.pnlFtSetting.Controls.Add(this.lblFy0Calib);
             this.pnlFtSetting.Controls.Add(this.label46);
@@ -242,11 +246,13 @@
             this.pnlFtSetting.Controls.Add(this.label44);
             this.pnlFtSetting.Controls.Add(this.lblFz0Calib);
             this.pnlFtSetting.Controls.Add(this.label42);
+            this.pnlFtSetting.Controls.Add(this.label13);
             this.pnlFtSetting.Controls.Add(this.lblVehicleMass);
             this.pnlFtSetting.Controls.Add(this.label41);
             this.pnlFtSetting.Controls.Add(this.pbarFzCalib);
             this.pnlFtSetting.Controls.Add(this.btnCancelFtSetting);
-            this.pnlFtSetting.Controls.Add(this.btnApplyFtSetting);
+            this.pnlFtSetting.Controls.Add(this.btnApplyDragY);
+            this.pnlFtSetting.Controls.Add(this.btnApplyDragX);
             this.pnlFtSetting.Controls.Add(this.btnFxyCalib);
             this.pnlFtSetting.Controls.Add(this.btnFzCalib);
             this.pnlFtSetting.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -256,14 +262,23 @@
             this.pnlFtSetting.TabIndex = 13;
             this.pnlFtSetting.Visible = false;
             // 
-            // tbxVehicleMass
+            // tbxDragY
             // 
-            this.tbxVehicleMass.Location = new System.Drawing.Point(123, 143);
-            this.tbxVehicleMass.Name = "tbxVehicleMass";
-            this.tbxVehicleMass.Size = new System.Drawing.Size(100, 21);
-            this.tbxVehicleMass.TabIndex = 13;
-            this.tbxVehicleMass.TextChanged += new System.EventHandler(this.tbxVehicleMass_TextChanged);
-            this.tbxVehicleMass.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxVehicleMass_KeyPress);
+            this.tbxDragY.Location = new System.Drawing.Point(89, 163);
+            this.tbxDragY.Name = "tbxDragY";
+            this.tbxDragY.Size = new System.Drawing.Size(67, 21);
+            this.tbxDragY.TabIndex = 13;
+            this.tbxDragY.TextChanged += new System.EventHandler(this.tbxDragY_TextChanged);
+            this.tbxDragY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxDragX_KeyPress);
+            // 
+            // tbxDragX
+            // 
+            this.tbxDragX.Location = new System.Drawing.Point(89, 130);
+            this.tbxDragX.Name = "tbxDragX";
+            this.tbxDragX.Size = new System.Drawing.Size(67, 21);
+            this.tbxDragX.TabIndex = 13;
+            this.tbxDragX.TextChanged += new System.EventHandler(this.tbxDragX_TextChanged);
+            this.tbxDragX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxDragX_KeyPress);
             // 
             // pbarFxyCalib
             // 
@@ -295,7 +310,7 @@
             // lblFx0Calib
             // 
             this.lblFx0Calib.AutoSize = true;
-            this.lblFx0Calib.Location = new System.Drawing.Point(125, 90);
+            this.lblFx0Calib.Location = new System.Drawing.Point(127, 90);
             this.lblFx0Calib.Name = "lblFx0Calib";
             this.lblFx0Calib.Size = new System.Drawing.Size(27, 12);
             this.lblFx0Calib.TabIndex = 12;
@@ -305,7 +320,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(88, 90);
+            this.label44.Location = new System.Drawing.Point(90, 90);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(25, 12);
             this.label44.TabIndex = 12;
@@ -332,14 +347,24 @@
             this.label42.Text = "Fz0";
             this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 169);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(75, 12);
+            this.label13.TabIndex = 12;
+            this.label13.Text = "Drag coef. Y";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblVehicleMass
             // 
             this.lblVehicleMass.AutoSize = true;
-            this.lblVehicleMass.Location = new System.Drawing.Point(6, 149);
+            this.lblVehicleMass.Location = new System.Drawing.Point(6, 136);
             this.lblVehicleMass.Name = "lblVehicleMass";
-            this.lblVehicleMass.Size = new System.Drawing.Size(112, 12);
+            this.lblVehicleMass.Size = new System.Drawing.Size(75, 12);
             this.lblVehicleMass.TabIndex = 12;
-            this.lblVehicleMass.Text = "Vehicle mass [kg]";
+            this.lblVehicleMass.Text = "Drag coef. X";
             this.lblVehicleMass.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label41
@@ -363,24 +388,37 @@
             // btnCancelFtSetting
             // 
             this.btnCancelFtSetting.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnCancelFtSetting.Location = new System.Drawing.Point(148, 195);
+            this.btnCancelFtSetting.Location = new System.Drawing.Point(161, 195);
             this.btnCancelFtSetting.Name = "btnCancelFtSetting";
-            this.btnCancelFtSetting.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelFtSetting.Size = new System.Drawing.Size(62, 23);
             this.btnCancelFtSetting.TabIndex = 2;
             this.btnCancelFtSetting.Text = "Cancel";
             this.btnCancelFtSetting.UseVisualStyleBackColor = true;
             this.btnCancelFtSetting.Click += new System.EventHandler(this.btnCancelFtSetting_Click);
             // 
-            // btnApplyFtSetting
+            // btnApplyDragY
             // 
-            this.btnApplyFtSetting.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnApplyFtSetting.Location = new System.Drawing.Point(6, 195);
-            this.btnApplyFtSetting.Name = "btnApplyFtSetting";
-            this.btnApplyFtSetting.Size = new System.Drawing.Size(75, 23);
-            this.btnApplyFtSetting.TabIndex = 2;
-            this.btnApplyFtSetting.Text = "Apply";
-            this.btnApplyFtSetting.UseVisualStyleBackColor = true;
-            this.btnApplyFtSetting.Click += new System.EventHandler(this.btnApplyFtSetting_Click);
+            this.btnApplyDragY.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnApplyDragY.Location = new System.Drawing.Point(161, 163);
+            this.btnApplyDragY.Name = "btnApplyDragY";
+            this.btnApplyDragY.Size = new System.Drawing.Size(61, 23);
+            this.btnApplyDragY.TabIndex = 2;
+            this.btnApplyDragY.Text = "Apply";
+            this.btnApplyDragY.UseVisualStyleBackColor = true;
+            this.btnApplyDragY.Visible = false;
+            this.btnApplyDragY.Click += new System.EventHandler(this.btnApplyDragY_Click);
+            // 
+            // btnApplyDragX
+            // 
+            this.btnApplyDragX.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnApplyDragX.Location = new System.Drawing.Point(162, 128);
+            this.btnApplyDragX.Name = "btnApplyDragX";
+            this.btnApplyDragX.Size = new System.Drawing.Size(61, 23);
+            this.btnApplyDragX.TabIndex = 2;
+            this.btnApplyDragX.Text = "Apply";
+            this.btnApplyDragX.UseVisualStyleBackColor = true;
+            this.btnApplyDragX.Visible = false;
+            this.btnApplyDragX.Click += new System.EventHandler(this.btnApplyDragX_Click);
             // 
             // btnFxyCalib
             // 
@@ -392,6 +430,7 @@
             this.btnFxyCalib.TabIndex = 2;
             this.btnFxyCalib.Text = "Fx/y calib.";
             this.btnFxyCalib.UseVisualStyleBackColor = false;
+            this.btnFxyCalib.Click += new System.EventHandler(this.btnFxyCalib_Click);
             // 
             // btnFzCalib
             // 
@@ -1279,7 +1318,6 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.ProgressBar pbarFzCalib;
         private System.Windows.Forms.Button btnCancelFtSetting;
-        private System.Windows.Forms.Button btnApplyFtSetting;
         private System.Windows.Forms.Button btnFxyCalib;
         private System.Windows.Forms.Button btnFzCalib;
         private System.Windows.Forms.Label lblFy0Calib;
@@ -1293,8 +1331,12 @@
         private System.Windows.Forms.Label lblMz;
         private System.Windows.Forms.Label lblMy;
         private System.Windows.Forms.Label mx;
-        private System.Windows.Forms.TextBox tbxVehicleMass;
+        private System.Windows.Forms.TextBox tbxDragX;
         private System.Windows.Forms.Label lblVehicleMass;
+        private System.Windows.Forms.TextBox tbxDragY;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnApplyDragY;
+        private System.Windows.Forms.Button btnApplyDragX;
 
     }
 }
