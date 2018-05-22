@@ -55,37 +55,37 @@
             this.btnApplyDragX = new System.Windows.Forms.Button();
             this.btnFxyCalib = new System.Windows.Forms.Button();
             this.btnFzCalib = new System.Windows.Forms.Button();
-            this.lblMzv = new System.Windows.Forms.Label();
+            this.lblDY = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.lblMyv = new System.Windows.Forms.Label();
+            this.lblDX = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.lblMxv = new System.Windows.Forms.Label();
+            this.lblMs = new System.Windows.Forms.Label();
             this.label38 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.lblMz = new System.Windows.Forms.Label();
+            this.lblDragY = new System.Windows.Forms.Label();
             this.lblFz0 = new System.Windows.Forms.Label();
             this.lblZ = new System.Windows.Forms.Label();
             this.lblFz = new System.Windows.Forms.Label();
             this.lblVz = new System.Windows.Forms.Label();
             this.lblAz = new System.Windows.Forms.Label();
-            this.lblMy = new System.Windows.Forms.Label();
+            this.lblDragX = new System.Windows.Forms.Label();
             this.lblFy0 = new System.Windows.Forms.Label();
             this.lblY = new System.Windows.Forms.Label();
             this.lblFy = new System.Windows.Forms.Label();
             this.lblVy = new System.Windows.Forms.Label();
-            this.mx = new System.Windows.Forms.Label();
-            this.lblay = new System.Windows.Forms.Label();
+            this.lblMass = new System.Windows.Forms.Label();
+            this.lblAy = new System.Windows.Forms.Label();
             this.lblFx0 = new System.Windows.Forms.Label();
             this.lblX = new System.Windows.Forms.Label();
             this.lblFx = new System.Windows.Forms.Label();
@@ -98,15 +98,15 @@
             this.lblCntFt = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.cbxFtBaud = new System.Windows.Forms.ComboBox();
-            this.cbxFtCom = new System.Windows.Forms.ComboBox();
+            this.cbxFtBaudRate = new System.Windows.Forms.ComboBox();
+            this.cbxFtComPort = new System.Windows.Forms.ComboBox();
             this.btnCntFt = new System.Windows.Forms.Button();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.lblCntGpsSim = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.cbxVhclBaud = new System.Windows.Forms.ComboBox();
-            this.cbxVhclCom = new System.Windows.Forms.ComboBox();
+            this.cbxVclBaudRate = new System.Windows.Forms.ComboBox();
+            this.cbxVclComPort = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.label2 = new System.Windows.Forms.Label();
@@ -114,7 +114,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tbxGpsSimPort = new System.Windows.Forms.TextBox();
-            this.tbxIP = new System.Windows.Forms.TextBox();
+            this.tbxGpsSimIP = new System.Windows.Forms.TextBox();
             this.btnCntGpsSim = new System.Windows.Forms.Button();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.label4 = new System.Windows.Forms.Label();
@@ -123,6 +123,10 @@
             this.btnCntFs = new System.Windows.Forms.Button();
             this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.mFtTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnMassCalib = new System.Windows.Forms.Button();
+            this.lblMassCalib = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.pbarMassCalib = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -194,37 +198,37 @@
             // pnlFtInfo
             // 
             this.pnlFtInfo.Controls.Add(this.pnlFtSetting);
-            this.pnlFtInfo.Controls.Add(this.lblMzv);
+            this.pnlFtInfo.Controls.Add(this.lblDY);
             this.pnlFtInfo.Controls.Add(this.label40);
             this.pnlFtInfo.Controls.Add(this.label22);
             this.pnlFtInfo.Controls.Add(this.label34);
             this.pnlFtInfo.Controls.Add(this.label28);
             this.pnlFtInfo.Controls.Add(this.label12);
-            this.pnlFtInfo.Controls.Add(this.lblMyv);
+            this.pnlFtInfo.Controls.Add(this.lblDX);
             this.pnlFtInfo.Controls.Add(this.label39);
             this.pnlFtInfo.Controls.Add(this.label21);
             this.pnlFtInfo.Controls.Add(this.label33);
             this.pnlFtInfo.Controls.Add(this.label27);
             this.pnlFtInfo.Controls.Add(this.label11);
-            this.pnlFtInfo.Controls.Add(this.lblMxv);
+            this.pnlFtInfo.Controls.Add(this.lblMs);
             this.pnlFtInfo.Controls.Add(this.label38);
             this.pnlFtInfo.Controls.Add(this.label20);
             this.pnlFtInfo.Controls.Add(this.label32);
             this.pnlFtInfo.Controls.Add(this.label26);
             this.pnlFtInfo.Controls.Add(this.label10);
-            this.pnlFtInfo.Controls.Add(this.lblMz);
+            this.pnlFtInfo.Controls.Add(this.lblDragY);
             this.pnlFtInfo.Controls.Add(this.lblFz0);
             this.pnlFtInfo.Controls.Add(this.lblZ);
             this.pnlFtInfo.Controls.Add(this.lblFz);
             this.pnlFtInfo.Controls.Add(this.lblVz);
             this.pnlFtInfo.Controls.Add(this.lblAz);
-            this.pnlFtInfo.Controls.Add(this.lblMy);
+            this.pnlFtInfo.Controls.Add(this.lblDragX);
             this.pnlFtInfo.Controls.Add(this.lblFy0);
             this.pnlFtInfo.Controls.Add(this.lblY);
             this.pnlFtInfo.Controls.Add(this.lblFy);
             this.pnlFtInfo.Controls.Add(this.lblVy);
-            this.pnlFtInfo.Controls.Add(this.mx);
-            this.pnlFtInfo.Controls.Add(this.lblay);
+            this.pnlFtInfo.Controls.Add(this.lblMass);
+            this.pnlFtInfo.Controls.Add(this.lblAy);
             this.pnlFtInfo.Controls.Add(this.lblFx0);
             this.pnlFtInfo.Controls.Add(this.lblX);
             this.pnlFtInfo.Controls.Add(this.lblFx);
@@ -237,6 +241,8 @@
             // 
             // pnlFtSetting
             // 
+            this.pnlFtSetting.Controls.Add(this.lblMassCalib);
+            this.pnlFtSetting.Controls.Add(this.label15);
             this.pnlFtSetting.Controls.Add(this.tbxDragY);
             this.pnlFtSetting.Controls.Add(this.tbxDragX);
             this.pnlFtSetting.Controls.Add(this.pbarFxyCalib);
@@ -253,8 +259,10 @@
             this.pnlFtSetting.Controls.Add(this.btnCancelFtSetting);
             this.pnlFtSetting.Controls.Add(this.btnApplyDragY);
             this.pnlFtSetting.Controls.Add(this.btnApplyDragX);
+            this.pnlFtSetting.Controls.Add(this.btnMassCalib);
             this.pnlFtSetting.Controls.Add(this.btnFxyCalib);
             this.pnlFtSetting.Controls.Add(this.btnFzCalib);
+            this.pnlFtSetting.Controls.Add(this.pbarMassCalib);
             this.pnlFtSetting.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFtSetting.Location = new System.Drawing.Point(0, 0);
             this.pnlFtSetting.Name = "pnlFtSetting";
@@ -444,20 +452,20 @@
             this.btnFzCalib.UseVisualStyleBackColor = false;
             this.btnFzCalib.Click += new System.EventHandler(this.btnFzCalib_Click);
             // 
-            // lblMzv
+            // lblDY
             // 
-            this.lblMzv.AutoSize = true;
-            this.lblMzv.Location = new System.Drawing.Point(16, 71);
-            this.lblMzv.Name = "lblMzv";
-            this.lblMzv.Size = new System.Drawing.Size(23, 12);
-            this.lblMzv.TabIndex = 12;
-            this.lblMzv.Text = "mz";
-            this.lblMzv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDY.AutoSize = true;
+            this.lblDY.Location = new System.Drawing.Point(16, 71);
+            this.lblDY.Name = "lblDY";
+            this.lblDY.Size = new System.Drawing.Size(38, 12);
+            this.lblDY.TabIndex = 12;
+            this.lblDY.Text = "dragY";
+            this.lblDY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(95, 71);
+            this.label40.Location = new System.Drawing.Point(99, 71);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(25, 12);
             this.label40.TabIndex = 12;
@@ -487,7 +495,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(95, 161);
+            this.label28.Location = new System.Drawing.Point(98, 161);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(18, 12);
             this.label28.TabIndex = 12;
@@ -497,27 +505,27 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(11, 161);
+            this.label12.Location = new System.Drawing.Point(17, 161);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(19, 12);
             this.label12.TabIndex = 12;
             this.label12.Text = "az";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblMyv
+            // lblDX
             // 
-            this.lblMyv.AutoSize = true;
-            this.lblMyv.Location = new System.Drawing.Point(16, 47);
-            this.lblMyv.Name = "lblMyv";
-            this.lblMyv.Size = new System.Drawing.Size(23, 12);
-            this.lblMyv.TabIndex = 12;
-            this.lblMyv.Text = "my";
-            this.lblMyv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDX.AutoSize = true;
+            this.lblDX.Location = new System.Drawing.Point(16, 47);
+            this.lblDX.Name = "lblDX";
+            this.lblDX.Size = new System.Drawing.Size(38, 12);
+            this.lblDX.TabIndex = 12;
+            this.lblDX.Text = "dragX";
+            this.lblDX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(95, 47);
+            this.label39.Location = new System.Drawing.Point(99, 47);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(25, 12);
             this.label39.TabIndex = 12;
@@ -547,7 +555,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(95, 137);
+            this.label27.Location = new System.Drawing.Point(98, 137);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(18, 12);
             this.label27.TabIndex = 12;
@@ -557,27 +565,27 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(11, 137);
+            this.label11.Location = new System.Drawing.Point(17, 137);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(19, 12);
             this.label11.TabIndex = 12;
             this.label11.Text = "ay";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblMxv
+            // lblMs
             // 
-            this.lblMxv.AutoSize = true;
-            this.lblMxv.Location = new System.Drawing.Point(16, 24);
-            this.lblMxv.Name = "lblMxv";
-            this.lblMxv.Size = new System.Drawing.Size(23, 12);
-            this.lblMxv.TabIndex = 12;
-            this.lblMxv.Text = "mx";
-            this.lblMxv.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblMs.AutoSize = true;
+            this.lblMs.Location = new System.Drawing.Point(16, 24);
+            this.lblMs.Name = "lblMs";
+            this.lblMs.Size = new System.Drawing.Size(37, 12);
+            this.lblMs.TabIndex = 12;
+            this.lblMs.Text = "mass";
+            this.lblMs.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(95, 24);
+            this.label38.Location = new System.Drawing.Point(99, 24);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(25, 12);
             this.label38.TabIndex = 12;
@@ -607,7 +615,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(95, 114);
+            this.label26.Location = new System.Drawing.Point(98, 114);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(18, 12);
             this.label26.TabIndex = 12;
@@ -617,27 +625,27 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(11, 114);
+            this.label10.Location = new System.Drawing.Point(17, 114);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(19, 12);
             this.label10.TabIndex = 12;
             this.label10.Text = "ax";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblMz
+            // lblDragY
             // 
-            this.lblMz.AutoSize = true;
-            this.lblMz.Location = new System.Drawing.Point(46, 71);
-            this.lblMz.Name = "lblMz";
-            this.lblMz.Size = new System.Drawing.Size(27, 12);
-            this.lblMz.TabIndex = 12;
-            this.lblMz.Text = "0.00";
-            this.lblMz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDragY.AutoSize = true;
+            this.lblDragY.Location = new System.Drawing.Point(59, 71);
+            this.lblDragY.Name = "lblDragY";
+            this.lblDragY.Size = new System.Drawing.Size(27, 12);
+            this.lblDragY.TabIndex = 12;
+            this.lblDragY.Text = "0.00";
+            this.lblDragY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblFz0
             // 
             this.lblFz0.AutoSize = true;
-            this.lblFz0.Location = new System.Drawing.Point(125, 71);
+            this.lblFz0.Location = new System.Drawing.Point(129, 71);
             this.lblFz0.Name = "lblFz0";
             this.lblFz0.Size = new System.Drawing.Size(27, 12);
             this.lblFz0.TabIndex = 12;
@@ -667,7 +675,7 @@
             // lblVz
             // 
             this.lblVz.AutoSize = true;
-            this.lblVz.Location = new System.Drawing.Point(123, 161);
+            this.lblVz.Location = new System.Drawing.Point(128, 161);
             this.lblVz.Name = "lblVz";
             this.lblVz.Size = new System.Drawing.Size(27, 12);
             this.lblVz.TabIndex = 12;
@@ -677,27 +685,27 @@
             // lblAz
             // 
             this.lblAz.AutoSize = true;
-            this.lblAz.Location = new System.Drawing.Point(46, 161);
+            this.lblAz.Location = new System.Drawing.Point(59, 161);
             this.lblAz.Name = "lblAz";
             this.lblAz.Size = new System.Drawing.Size(27, 12);
             this.lblAz.TabIndex = 12;
             this.lblAz.Text = "0.00";
             this.lblAz.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblMy
+            // lblDragX
             // 
-            this.lblMy.AutoSize = true;
-            this.lblMy.Location = new System.Drawing.Point(46, 47);
-            this.lblMy.Name = "lblMy";
-            this.lblMy.Size = new System.Drawing.Size(27, 12);
-            this.lblMy.TabIndex = 12;
-            this.lblMy.Text = "0.00";
-            this.lblMy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDragX.AutoSize = true;
+            this.lblDragX.Location = new System.Drawing.Point(59, 47);
+            this.lblDragX.Name = "lblDragX";
+            this.lblDragX.Size = new System.Drawing.Size(27, 12);
+            this.lblDragX.TabIndex = 12;
+            this.lblDragX.Text = "0.00";
+            this.lblDragX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblFy0
             // 
             this.lblFy0.AutoSize = true;
-            this.lblFy0.Location = new System.Drawing.Point(125, 47);
+            this.lblFy0.Location = new System.Drawing.Point(129, 47);
             this.lblFy0.Name = "lblFy0";
             this.lblFy0.Size = new System.Drawing.Size(27, 12);
             this.lblFy0.TabIndex = 12;
@@ -727,37 +735,37 @@
             // lblVy
             // 
             this.lblVy.AutoSize = true;
-            this.lblVy.Location = new System.Drawing.Point(123, 137);
+            this.lblVy.Location = new System.Drawing.Point(128, 137);
             this.lblVy.Name = "lblVy";
             this.lblVy.Size = new System.Drawing.Size(27, 12);
             this.lblVy.TabIndex = 12;
             this.lblVy.Text = "0.00";
             this.lblVy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // mx
+            // lblMass
             // 
-            this.mx.AutoSize = true;
-            this.mx.Location = new System.Drawing.Point(46, 24);
-            this.mx.Name = "mx";
-            this.mx.Size = new System.Drawing.Size(27, 12);
-            this.mx.TabIndex = 12;
-            this.mx.Text = "0.00";
-            this.mx.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblMass.AutoSize = true;
+            this.lblMass.Location = new System.Drawing.Point(59, 24);
+            this.lblMass.Name = "lblMass";
+            this.lblMass.Size = new System.Drawing.Size(27, 12);
+            this.lblMass.TabIndex = 12;
+            this.lblMass.Text = "0.00";
+            this.lblMass.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblay
+            // lblAy
             // 
-            this.lblay.AutoSize = true;
-            this.lblay.Location = new System.Drawing.Point(46, 137);
-            this.lblay.Name = "lblay";
-            this.lblay.Size = new System.Drawing.Size(27, 12);
-            this.lblay.TabIndex = 12;
-            this.lblay.Text = "0.00";
-            this.lblay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAy.AutoSize = true;
+            this.lblAy.Location = new System.Drawing.Point(59, 137);
+            this.lblAy.Name = "lblAy";
+            this.lblAy.Size = new System.Drawing.Size(27, 12);
+            this.lblAy.TabIndex = 12;
+            this.lblAy.Text = "0.00";
+            this.lblAy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblFx0
             // 
             this.lblFx0.AutoSize = true;
-            this.lblFx0.Location = new System.Drawing.Point(125, 24);
+            this.lblFx0.Location = new System.Drawing.Point(129, 24);
             this.lblFx0.Name = "lblFx0";
             this.lblFx0.Size = new System.Drawing.Size(27, 12);
             this.lblFx0.TabIndex = 12;
@@ -787,7 +795,7 @@
             // lblVx
             // 
             this.lblVx.AutoSize = true;
-            this.lblVx.Location = new System.Drawing.Point(123, 114);
+            this.lblVx.Location = new System.Drawing.Point(128, 114);
             this.lblVx.Name = "lblVx";
             this.lblVx.Size = new System.Drawing.Size(27, 12);
             this.lblVx.TabIndex = 12;
@@ -797,7 +805,7 @@
             // lblAx
             // 
             this.lblAx.AutoSize = true;
-            this.lblAx.Location = new System.Drawing.Point(46, 114);
+            this.lblAx.Location = new System.Drawing.Point(59, 114);
             this.lblAx.Name = "lblAx";
             this.lblAx.Size = new System.Drawing.Size(27, 12);
             this.lblAx.TabIndex = 12;
@@ -859,8 +867,8 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.label6);
             this.splitContainer3.Panel2.Controls.Add(this.label5);
-            this.splitContainer3.Panel2.Controls.Add(this.cbxFtBaud);
-            this.splitContainer3.Panel2.Controls.Add(this.cbxFtCom);
+            this.splitContainer3.Panel2.Controls.Add(this.cbxFtBaudRate);
+            this.splitContainer3.Panel2.Controls.Add(this.cbxFtComPort);
             this.splitContainer3.Panel2.Controls.Add(this.btnCntFt);
             this.splitContainer3.Size = new System.Drawing.Size(242, 97);
             this.splitContainer3.SplitterDistance = 27;
@@ -898,10 +906,10 @@
             this.label5.Text = "COM port";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // cbxFtBaud
+            // cbxFtBaudRate
             // 
-            this.cbxFtBaud.FormattingEnabled = true;
-            this.cbxFtBaud.Items.AddRange(new object[] {
+            this.cbxFtBaudRate.FormattingEnabled = true;
+            this.cbxFtBaudRate.Items.AddRange(new object[] {
             "2400",
             "4800",
             "9600",
@@ -910,19 +918,21 @@
             "57600",
             "115200",
             "230400"});
-            this.cbxFtBaud.Location = new System.Drawing.Point(90, 33);
-            this.cbxFtBaud.Name = "cbxFtBaud";
-            this.cbxFtBaud.Size = new System.Drawing.Size(65, 20);
-            this.cbxFtBaud.TabIndex = 2;
+            this.cbxFtBaudRate.Location = new System.Drawing.Point(90, 33);
+            this.cbxFtBaudRate.Name = "cbxFtBaudRate";
+            this.cbxFtBaudRate.Size = new System.Drawing.Size(65, 20);
+            this.cbxFtBaudRate.TabIndex = 2;
+            this.cbxFtBaudRate.TextChanged += new System.EventHandler(this.cbxFtBaudRate_TextChanged);
             // 
-            // cbxFtCom
+            // cbxFtComPort
             // 
-            this.cbxFtCom.FormattingEnabled = true;
-            this.cbxFtCom.Location = new System.Drawing.Point(19, 33);
-            this.cbxFtCom.Name = "cbxFtCom";
-            this.cbxFtCom.Size = new System.Drawing.Size(65, 20);
-            this.cbxFtCom.TabIndex = 2;
-            this.cbxFtCom.Click += new System.EventHandler(this.cbxFtCom_Click);
+            this.cbxFtComPort.FormattingEnabled = true;
+            this.cbxFtComPort.Location = new System.Drawing.Point(19, 33);
+            this.cbxFtComPort.Name = "cbxFtComPort";
+            this.cbxFtComPort.Size = new System.Drawing.Size(65, 20);
+            this.cbxFtComPort.TabIndex = 2;
+            this.cbxFtComPort.TextChanged += new System.EventHandler(this.cbxFtComPort_TextChanged);
+            this.cbxFtComPort.Click += new System.EventHandler(this.cbxFtCom_Click);
             // 
             // btnCntFt
             // 
@@ -953,8 +963,8 @@
             // 
             this.splitContainer4.Panel2.Controls.Add(this.label7);
             this.splitContainer4.Panel2.Controls.Add(this.label8);
-            this.splitContainer4.Panel2.Controls.Add(this.cbxVhclBaud);
-            this.splitContainer4.Panel2.Controls.Add(this.cbxVhclCom);
+            this.splitContainer4.Panel2.Controls.Add(this.cbxVclBaudRate);
+            this.splitContainer4.Panel2.Controls.Add(this.cbxVclComPort);
             this.splitContainer4.Panel2.Controls.Add(this.button2);
             this.splitContainer4.Size = new System.Drawing.Size(266, 97);
             this.splitContainer4.SplitterDistance = 27;
@@ -991,10 +1001,10 @@
             this.label8.Text = "COM port";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // cbxVhclBaud
+            // cbxVclBaudRate
             // 
-            this.cbxVhclBaud.FormattingEnabled = true;
-            this.cbxVhclBaud.Items.AddRange(new object[] {
+            this.cbxVclBaudRate.FormattingEnabled = true;
+            this.cbxVclBaudRate.Items.AddRange(new object[] {
             "2400",
             "4800",
             "9600",
@@ -1003,18 +1013,20 @@
             "57600",
             "115200",
             "230400"});
-            this.cbxVhclBaud.Location = new System.Drawing.Point(105, 35);
-            this.cbxVhclBaud.Name = "cbxVhclBaud";
-            this.cbxVhclBaud.Size = new System.Drawing.Size(65, 20);
-            this.cbxVhclBaud.TabIndex = 13;
+            this.cbxVclBaudRate.Location = new System.Drawing.Point(105, 35);
+            this.cbxVclBaudRate.Name = "cbxVclBaudRate";
+            this.cbxVclBaudRate.Size = new System.Drawing.Size(65, 20);
+            this.cbxVclBaudRate.TabIndex = 13;
+            this.cbxVclBaudRate.TextChanged += new System.EventHandler(this.cbxVclBaudRate_TextChanged);
             // 
-            // cbxVhclCom
+            // cbxVclComPort
             // 
-            this.cbxVhclCom.FormattingEnabled = true;
-            this.cbxVhclCom.Location = new System.Drawing.Point(34, 35);
-            this.cbxVhclCom.Name = "cbxVhclCom";
-            this.cbxVhclCom.Size = new System.Drawing.Size(65, 20);
-            this.cbxVhclCom.TabIndex = 14;
+            this.cbxVclComPort.FormattingEnabled = true;
+            this.cbxVclComPort.Location = new System.Drawing.Point(34, 35);
+            this.cbxVclComPort.Name = "cbxVclComPort";
+            this.cbxVclComPort.Size = new System.Drawing.Size(65, 20);
+            this.cbxVclComPort.TabIndex = 14;
+            this.cbxVclComPort.TextChanged += new System.EventHandler(this.cbxVclComPort_TextChanged);
             // 
             // button2
             // 
@@ -1046,7 +1058,7 @@
             this.splitContainer5.Panel2.Controls.Add(this.label9);
             this.splitContainer5.Panel2.Controls.Add(this.label1);
             this.splitContainer5.Panel2.Controls.Add(this.tbxGpsSimPort);
-            this.splitContainer5.Panel2.Controls.Add(this.tbxIP);
+            this.splitContainer5.Panel2.Controls.Add(this.tbxGpsSimIP);
             this.splitContainer5.Panel2.Controls.Add(this.btnCntGpsSim);
             this.splitContainer5.Size = new System.Drawing.Size(266, 97);
             this.splitContainer5.SplitterDistance = 27;
@@ -1104,15 +1116,15 @@
             this.tbxGpsSimPort.TextChanged += new System.EventHandler(this.tbxGpsSimPort_TextChanged);
             this.tbxGpsSimPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbxGpsSimPort_KeyPress);
             // 
-            // tbxIP
+            // tbxGpsSimIP
             // 
-            this.tbxIP.Location = new System.Drawing.Point(75, 4);
-            this.tbxIP.Name = "tbxIP";
-            this.tbxIP.Size = new System.Drawing.Size(103, 21);
-            this.tbxIP.TabIndex = 7;
-            this.tbxIP.Text = "192.168.1.21";
-            this.tbxIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tbxIP.TextChanged += new System.EventHandler(this.tbxIP_TextChanged);
+            this.tbxGpsSimIP.Location = new System.Drawing.Point(75, 4);
+            this.tbxGpsSimIP.Name = "tbxGpsSimIP";
+            this.tbxGpsSimIP.Size = new System.Drawing.Size(103, 21);
+            this.tbxGpsSimIP.TabIndex = 7;
+            this.tbxGpsSimIP.Text = "192.168.1.21";
+            this.tbxGpsSimIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbxGpsSimIP.TextChanged += new System.EventHandler(this.tbxIP_TextChanged);
             // 
             // btnCntGpsSim
             // 
@@ -1192,6 +1204,46 @@
             // 
             this.mFtTimer.Tick += new System.EventHandler(this.mFtTimer_Tick);
             // 
+            // btnMassCalib
+            // 
+            this.btnMassCalib.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnMassCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnMassCalib.Location = new System.Drawing.Point(6, 195);
+            this.btnMassCalib.Name = "btnMassCalib";
+            this.btnMassCalib.Size = new System.Drawing.Size(75, 23);
+            this.btnMassCalib.TabIndex = 2;
+            this.btnMassCalib.Text = "Mass Cal";
+            this.btnMassCalib.UseVisualStyleBackColor = false;
+            this.btnMassCalib.Click += new System.EventHandler(this.btnVclMassCalib_Click);
+            // 
+            // lblMassCalib
+            // 
+            this.lblMassCalib.AutoSize = true;
+            this.lblMassCalib.Location = new System.Drawing.Point(125, 200);
+            this.lblMassCalib.Name = "lblMassCalib";
+            this.lblMassCalib.Size = new System.Drawing.Size(27, 12);
+            this.lblMassCalib.TabIndex = 15;
+            this.lblMassCalib.Text = "0.00";
+            this.lblMassCalib.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(88, 200);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(37, 12);
+            this.label15.TabIndex = 14;
+            this.label15.Text = "mass";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // pbarMassCalib
+            // 
+            this.pbarMassCalib.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.pbarMassCalib.Location = new System.Drawing.Point(6, 195);
+            this.pbarMassCalib.Name = "pbarMassCalib";
+            this.pbarMassCalib.Size = new System.Drawing.Size(75, 23);
+            this.pbarMassCalib.TabIndex = 5;
+            // 
             // mGCS
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1261,21 +1313,21 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbxIP;
+        private System.Windows.Forms.TextBox tbxGpsSimIP;
         private System.Windows.Forms.Button btnCntGpsSim;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbxFsIp;
         private System.Windows.Forms.Button btnCntFs;
-        private System.Windows.Forms.ComboBox cbxFtBaud;
-        private System.Windows.Forms.ComboBox cbxFtCom;
+        private System.Windows.Forms.ComboBox cbxFtBaudRate;
+        private System.Windows.Forms.ComboBox cbxFtComPort;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.IO.Ports.SerialPort ftSerialPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox cbxVhclBaud;
-        private System.Windows.Forms.ComboBox cbxVhclCom;
+        private System.Windows.Forms.ComboBox cbxVclBaudRate;
+        private System.Windows.Forms.ComboBox cbxVclComPort;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbxGpsSimPort;
         private System.Windows.Forms.Timer mFtTimer;
@@ -1286,7 +1338,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label lblAz;
-        private System.Windows.Forms.Label lblay;
+        private System.Windows.Forms.Label lblAy;
         private System.Windows.Forms.Label lblAx;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
@@ -1325,18 +1377,22 @@
         private System.Windows.Forms.Label lblFx0Calib;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.Label lblFz0Calib;
-        private System.Windows.Forms.Label lblMzv;
-        private System.Windows.Forms.Label lblMyv;
-        private System.Windows.Forms.Label lblMxv;
-        private System.Windows.Forms.Label lblMz;
-        private System.Windows.Forms.Label lblMy;
-        private System.Windows.Forms.Label mx;
+        private System.Windows.Forms.Label lblDY;
+        private System.Windows.Forms.Label lblDX;
+        private System.Windows.Forms.Label lblMs;
+        private System.Windows.Forms.Label lblDragY;
+        private System.Windows.Forms.Label lblDragX;
+        private System.Windows.Forms.Label lblMass;
         private System.Windows.Forms.TextBox tbxDragX;
         private System.Windows.Forms.Label lblVehicleMass;
         private System.Windows.Forms.TextBox tbxDragY;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button btnApplyDragY;
         private System.Windows.Forms.Button btnApplyDragX;
+        private System.Windows.Forms.Label lblMassCalib;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Button btnMassCalib;
+        private System.Windows.Forms.ProgressBar pbarMassCalib;
 
     }
 }

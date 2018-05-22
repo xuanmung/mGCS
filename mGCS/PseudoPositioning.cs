@@ -27,8 +27,11 @@ namespace mGCS
             z_estimate = 0;
         }
 
-        public bool runEstimation(double ax, double ay, double az)
+        public bool runEstimation(double accel_x, double accel_y, double accel_z)
         {
+            ax = accel_x;
+            ay = accel_y;
+            az = accel_z;
             vx += (ax - x_drag * vx) * sampling_time;
             vy += (ay - y_drag * vy) * sampling_time;
             vz += az * sampling_time;
@@ -52,6 +55,36 @@ namespace mGCS
         public double getZ()
         {
             return z_estimate;
+        }
+
+        public double getVx()
+        {
+            return vx;
+        }
+
+        public double getVy()
+        {
+            return vy;
+        }
+
+        public double getVz()
+        {
+            return vz;
+        }
+
+        public double getAx()
+        {
+            return ax;
+        }
+
+        public double getAy()
+        {
+            return ay;
+        }
+
+        public double getAz()
+        {
+            return az;
         }
 
         public bool restart()

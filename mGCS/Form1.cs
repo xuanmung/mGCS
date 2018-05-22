@@ -26,12 +26,13 @@ namespace mGCS
         //Variables declaration\
 
         private UserInputHelper mInputHelper;
+        private const string mParamFileName = "params.txt";
 
         //GPS Sim. variables
         private static Socket   mClient;
         bool skSts1;
         private static byte[]   mPkg = new byte[512];
-        private static string   gpsSimIP;
+        private static string   gpsSimIp;
         private static int      gpsSimPort;
         private System.Windows.Forms.Timer mTimer;
         private TcpClient client = new TcpClient();
@@ -39,14 +40,16 @@ namespace mGCS
 
         //F/T sensor variables
         private bool ftConnected = false;
-        private string ftCom;
-        private string ftBaud;
+        private string ftComPort;
+        private int ftBaudRate;
         //private double fx, fy, fz, tx, ty, tz;
         private double[] forces     = new double[3];
         public double[] forceBias   = new double[3];
         public double[] forceBiasCandidate = new double[3];
         private bool isFzCalibrating  = false;
         private bool isFxyCalibrating = false;
+        private bool isMassCalibrating = false;
+        private Thread ftCalibThread;
         private int numOfCalibSample = 100;
         private int calibStep = 0;
         private string ftBuffer;
@@ -57,17 +60,79 @@ namespace mGCS
         LowPassFilter mLpf;
         private const double mLpfSamplingTime = 0.05;
         PseudoPositioning mPsner;
-        private double mVehicleMass = 2.3;
+        private double mVehicleMass;
+        private double mVehicleMassCandidate;
         private double[] drag = new double[2];
+
         //Vehicle variables
         private bool vehicleConnected = false;
+        private string vclComPort;
+        private int vclBaudRate;
         
         //Flight Sim. variables
         private bool fsConnected = false;
+        private string fsIp;
 
         private void Form1_Load(object sender, EventArgs e)
         {
             mInputHelper = new UserInputHelper();
+
+            try
+            {
+                if (File.Exists(mParamFileName))
+                {
+                    StreamReader strRdr = new StreamReader(mParamFileName);
+
+                    ftComPort = strRdr.ReadLine();
+                    ftBaudRate = Convert.ToInt32(strRdr.ReadLine());
+
+                    vclComPort = strRdr.ReadLine();
+                    vclBaudRate = Convert.ToInt32(strRdr.ReadLine());
+
+                    gpsSimIp = strRdr.ReadLine();
+                    gpsSimPort = Convert.ToInt32(strRdr.ReadLine());
+
+                    fsIp = strRdr.ReadLine();
+
+                    mVehicleMass = Convert.ToDouble(strRdr.ReadLine());
+                    drag[0] = Convert.ToDouble(strRdr.ReadLine());
+                    drag[1] = Convert.ToDouble(strRdr.ReadLine());
+
+                    forceBias[0] = Convert.ToDouble(strRdr.ReadLine());
+                    forceBias[1] = Convert.ToDouble(strRdr.ReadLine());
+                    forceBias[2] = Convert.ToDouble(strRdr.ReadLine());
+
+                    strRdr.Close();
+
+                    cbxFtComPort.Text = ftComPort;
+                    cbxFtBaudRate.Text = ftBaudRate.ToString();
+
+                    cbxVclComPort.Text = vclComPort;
+                    cbxVclBaudRate.Text = vclBaudRate.ToString();
+
+                    tbxGpsSimIP.Text = gpsSimIp;
+                    tbxGpsSimPort.Text = gpsSimPort.ToString();
+                    tbxFsIp.Text = fsIp;
+
+                    lblMass.Text = mVehicleMass.ToString();
+                    lblDragX.Text = drag[0].ToString();
+                    lblDragY.Text = drag[1].ToString();
+                    tbxDragX.Text = drag[0].ToString();
+                    tbxDragY.Text = drag[1].ToString();
+
+                    lblFx0.Text = forceBias[0].ToString();
+                    lblFy0.Text = forceBias[1].ToString();
+                    lblFz0.Text = forceBias[2].ToString();
+                }
+                else
+                {
+                    //gpsSimIp = tbxGpsSimIP.Text;
+                    //gpsSimPort = Convert.ToInt32(tbxGpsSimPort.Text);
+                    //fsIp = tbxFsIp.Text;                    
+                }
+            }
+            catch (Exception x)
+            { }
 
             pbarFzCalib.Visible = false;
             pbarFxyCalib.Visible = false;
@@ -95,8 +160,33 @@ namespace mGCS
             {
                 try
                 {
+                    //Save parameters into an internal file
+                    StreamWriter mStrmWrt = new StreamWriter("params.txt"); 
+                    Thread.Sleep(10);
+
+                    mStrmWrt.WriteLine(ftComPort);
+                    mStrmWrt.WriteLine(ftBaudRate.ToString());
+
+                    mStrmWrt.WriteLine(vclComPort);
+                    mStrmWrt.WriteLine(vclBaudRate.ToString());
+
+                    mStrmWrt.WriteLine(gpsSimIp);
+                    mStrmWrt.WriteLine(gpsSimPort.ToString());
+
+                    mStrmWrt.WriteLine(fsIp);
+
+                    mStrmWrt.WriteLine(Math.Round(mVehicleMass, 2).ToString());
+                    mStrmWrt.WriteLine(Math.Round(drag[0], 2).ToString());
+                    mStrmWrt.WriteLine(Math.Round(drag[1], 2).ToString());
+
+                    mStrmWrt.WriteLine(Math.Round(forceBias[0], 2).ToString());
+                    mStrmWrt.WriteLine(Math.Round(forceBias[1], 2).ToString());
+                    mStrmWrt.WriteLine(Math.Round(forceBias[2], 2).ToString());
+
+                    mStrmWrt.Close(); 
+
                     if (socketConnected(mClient))
-                        mClient.Close();
+                        mClient.Close(); 
                 }
                 catch { }
             }
@@ -104,7 +194,7 @@ namespace mGCS
 
         private void tbxIP_TextChanged(object sender, EventArgs e)
         {
-            gpsSimIP = tbxIP.Text;
+            gpsSimIp = tbxGpsSimIP.Text;
         }
 
         private void tbxGpsSimPort_TextChanged(object sender, EventArgs e)
@@ -124,7 +214,7 @@ namespace mGCS
             {
                 try
                 {
-                    IPEndPoint iep = new IPEndPoint(IPAddress.Parse(gpsSimIP), gpsSimPort);
+                    IPEndPoint iep = new IPEndPoint(IPAddress.Parse(gpsSimIp), gpsSimPort);
                     mClient.BeginConnect(iep, new AsyncCallback(gpsSimConnected), mClient);
                     Thread.Sleep(10);
                     skSts1 = mClient.Connected;
@@ -287,10 +377,10 @@ namespace mGCS
             string[] ports = SerialPort.GetPortNames();
 
             //Clear all the items in the lists then re-add
-            cbxFtCom.Items.Clear();
-            cbxFtCom.Items.AddRange(ports);
-            cbxVhclCom.Items.Clear();
-            cbxVhclCom.Items.AddRange(ports);
+            cbxFtComPort.Items.Clear();
+            cbxFtComPort.Items.AddRange(ports);
+            cbxVclComPort.Items.Clear();
+            cbxVclComPort.Items.AddRange(ports);
         }
 
         private void cbxFtCom_Click(object sender, EventArgs e)
@@ -303,14 +393,14 @@ namespace mGCS
             if (!ftSerialPort.IsOpen)
             {
                 //If no COM port or no Baudrate selected, pop up a warning
-                if (cbxFtCom.Text == "" || cbxFtBaud.Text == "")
+                if (cbxFtComPort.Text == "" || cbxFtBaudRate.Text == "")
                 {
                     MessageBox.Show("Please fully choose a COM port and a Baudrate", "F/T sensor connection");
                 }
                 else //If both COM port and Baudrate selected then try to connect
                 {
-                    ftSerialPort.PortName = cbxFtCom.Text;
-                    ftSerialPort.BaudRate = Convert.ToInt32(cbxFtBaud.Text);
+                    ftSerialPort.PortName = ftComPort; // cbxFtComPort.Text;
+                    ftSerialPort.BaudRate = ftBaudRate;
                     try
                     {
                         //Open Serial Port
@@ -366,6 +456,7 @@ namespace mGCS
                     
                 //Return button's Icon
                 btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnConnect));
+                ftConnected = false;
 
                 //Invisible Refresh button
                 btnRefreshAll.Visible = false; ;
@@ -436,6 +527,7 @@ namespace mGCS
                     {
                         //Change button's Icon
                         btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
+                        ftConnected = true;
 
                         //Visible Refresh Button
                         btnRefreshAll.Visible = true;
@@ -461,8 +553,11 @@ namespace mGCS
                                 lblFz0Calib.Text = Math.Round(forceBiasCandidate[2], 2).ToString();
                                 if (calibStep >= numOfCalibSample)
                                 {
+                                    forceBias[2] = forceBiasCandidate[2];
+                                    btnFzCalib.Enabled = true;
                                     btnFxyCalib.Enabled = true;
                                     pbarFzCalib.Visible = false;
+
                                     isFzCalibrating = false;
                                     calibStep = 0;
                                 }
@@ -475,19 +570,53 @@ namespace mGCS
                                 forceBiasCandidate[1] = (forceBiasCandidate[1] * (calibStep - 1) + forces[1]) / calibStep;
                                 pbarFxyCalib.Value = calibStep;
                                 lblFx0Calib.Text = Math.Round(forceBiasCandidate[0], 2).ToString();
-                                lblFx0Calib.Text = Math.Round(forceBiasCandidate[1], 2).ToString();
+                                lblFy0Calib.Text = Math.Round(forceBiasCandidate[1], 2).ToString();
                                 if (calibStep >= numOfCalibSample)
                                 {
+                                    forceBias[0] = forceBiasCandidate[0];
+                                    forceBias[1] = forceBiasCandidate[1];
+                                    btnFxyCalib.Enabled = true;
                                     btnFzCalib.Enabled = true;
                                     pbarFxyCalib.Visible = false;
+
                                     isFxyCalibrating = false;
                                     calibStep = 0;
                                 }
                             }
 
+                            if (isMassCalibrating)
+                            {
+                                calibStep++;
+                                mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + forces[2] - forceBias[2]) / calibStep;
+                                pbarMassCalib.Value = calibStep;
+                                lblMassCalib.Text = Math.Round(mVehicleMassCandidate, 2).ToString();
+                                if (calibStep >= (int)numOfCalibSample/2)
+                                {
+                                    if (mVehicleMassCandidate <= 0)
+                                    {
+                                        ftCalibThread = new Thread(new ThreadStart(massCalibError));
+                                        ftCalibThread.Start();
+                                    }
+                                    else
+                                    {
+                                        mVehicleMass = Math.Round(mVehicleMassCandidate, 2);
+                                        lblMass.Text = mVehicleMass.ToString();
+                                    }
+
+                                    pbarMassCalib.Visible = false;
+                                    btnMassCalib.Visible = true;
+                                    btnMassCalib.Enabled = true;
+                                    btnFxyCalib.Enabled = true;
+                                    btnFzCalib.Enabled = true;
+
+                                    isMassCalibrating = false;
+                                    calibStep = 0;
+                                }
+                            }
                     
                             //Run the estimator of the Pseudo Positioner
-                            mPsner.runEstimation(forces[0] / mVehicleMass, forces[1] / mVehicleMass, forces[2] / mVehicleMass);
+                            mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass);
+
                         }
                         catch (Exception x)
                         {
@@ -537,10 +666,28 @@ namespace mGCS
                     MessageBox.Show(x.Message.ToString());
                 }
                 
-                //Update data visualization onto the Chart
+                //Update data visualizations
                 try
                 {
                     mPosMap.update(mPsner.getX(), mPsner.getY());
+
+                    lblFx.Text = Math.Round(forces[0], 2).ToString();
+                    lblFy.Text = Math.Round(forces[1], 2).ToString();
+                    lblFz.Text = Math.Round(forces[2], 2).ToString();
+
+                    lblAx.Text = Math.Round(mPsner.getAx(), 2).ToString();
+                    lblAy.Text = Math.Round(mPsner.getAy(), 2).ToString();
+                    lblAz.Text = Math.Round(mPsner.getAz(), 2).ToString();
+
+                    lblVx.Text = Math.Round(mPsner.getVx(), 2).ToString();
+                    lblVy.Text = Math.Round(mPsner.getVy(), 2).ToString();
+                    lblVz.Text = Math.Round(mPsner.getVz(), 2).ToString();
+
+                    lblX.Text = Math.Round(mPsner.getX(), 2).ToString();
+                    lblY.Text = Math.Round(mPsner.getY(), 2).ToString();
+                    lblZ.Text = Math.Round(mPsner.getZ(), 2).ToString();
+
+
                 }
                 catch (Exception e)
                 {
@@ -549,6 +696,20 @@ namespace mGCS
             }
         }
 
+        private void massCalibError()
+        {
+            DialogResult dlgRsl = MessageBox.Show("Mass Calib Failed. Need to calibrate Fz0 first", "FT Calibration", MessageBoxButtons.OK);
+            if (dlgRsl == DialogResult.OK)
+            {
+                while (ftCalibThread.IsAlive)
+                    try
+                    {
+                        //Dismiss the Thread
+                        ftCalibThread.Suspend();
+                    }
+                    catch { }
+            }
+        }
         private void mFtTimer_Tick(object sender, EventArgs e)
         {
             ftDataReceive();
@@ -567,6 +728,8 @@ namespace mGCS
 
         private void btnCancelFtSetting_Click(object sender, EventArgs e)
         {
+            btnFxyCalib.Enabled = true;
+            btnFzCalib.Enabled = true;
             pnlFtSetting.Visible    = false;
             isFxyCalibrating        = false;
             isFzCalibrating         = false;
@@ -578,26 +741,77 @@ namespace mGCS
 
         private void btnFzCalib_Click(object sender, EventArgs e)
         {
-            btnFxyCalib.Enabled         = false;
-            calibStep                   = 0;
-            forceBiasCandidate[2]       = 0;
-            pbarFzCalib.Visible         = true;
-            //btnApplyFtSetting.Visible   = false;
+            if (ftConnected)
+            {
+                btnFzCalib.Enabled = false;
+                btnFxyCalib.Enabled = false;
 
-            isFzCalibrating = true;
-            //forceBias[3] = 
+                calibStep = 0;
+                forceBiasCandidate[2] = 0;
+
+                pbarFzCalib.Visible = true;
+                pbarFzCalib.Maximum = numOfCalibSample;
+                pbarFzCalib.Step = 1;
+                pbarFzCalib.Value = 1;
+
+                isFzCalibrating = true;
+            }
+            else
+            {
+                MessageBox.Show("FT sensor is not connected", "FT Connection");
+            }
         }
 
         private void btnFxyCalib_Click(object sender, EventArgs e)
         {
-            btnFzCalib.Enabled = false;
-            forceBiasCandidate[0] = 0;
-            forceBiasCandidate[1] = 0;
-            pbarFxyCalib.Visible = true;
-            pbarFxyCalib.Maximum = 100;
-            pbarFxyCalib.Step = 1;
-            pbarFxyCalib.Value = 1;
-            isFxyCalibrating = true;
+            if (ftConnected)
+            {
+                btnFxyCalib.Enabled = false;
+                btnFzCalib.Enabled = false;
+
+                calibStep = 0;
+                forceBiasCandidate[0] = 0;
+                forceBiasCandidate[1] = 0;
+
+                pbarFxyCalib.Visible = true;
+                pbarFxyCalib.Maximum = numOfCalibSample;
+                pbarFxyCalib.Step = 1;
+                pbarFxyCalib.Value = 1;
+
+                isFxyCalibrating = true;
+            }
+            else
+            {
+                MessageBox.Show("FT sensor is not connected", "FT Connection");
+            }
+        }
+
+        private void btnVclMassCalib_Click(object sender, EventArgs e)
+        {
+            if (ftConnected)
+            {
+                DialogResult dlgRsl = MessageBox.Show("You need to calibrate Fz0 first. \nClick OK to continue Mass Calib. Click Cancel to cancle", "FT Calibration", MessageBoxButtons.OKCancel);
+                if (dlgRsl == DialogResult.OK)
+                {
+                    btnFxyCalib.Enabled = false;
+                    btnFzCalib.Enabled = false;
+                    btnMassCalib.Enabled = false;
+                    btnMassCalib.Visible = false;
+
+                    calibStep = 0;
+                    mVehicleMassCandidate = 0;
+                    pbarMassCalib.Visible = true;
+                    pbarMassCalib.Maximum = numOfCalibSample/2;
+                    pbarFxyCalib.Step = 1;
+                    pbarFxyCalib.Value = 1;
+
+                    isMassCalibrating = true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("FT sensor is not connected", "FT Connection");
+            }
         }
 
         private void tbxDragX_KeyPress(object sender, KeyPressEventArgs e)
@@ -630,6 +844,26 @@ namespace mGCS
         {
             drag[1] = Convert.ToDouble(tbxDragY.Text);
             btnApplyDragY.Visible = false;
+        }
+
+        private void cbxFtComPort_TextChanged(object sender, EventArgs e)
+        {
+            ftComPort = cbxFtComPort.Text;
+        }
+
+        private void cbxFtBaudRate_TextChanged(object sender, EventArgs e)
+        {
+            ftBaudRate = Convert.ToInt32(cbxFtBaudRate.Text);
+        }
+
+        private void cbxVclComPort_TextChanged(object sender, EventArgs e)
+        {
+            vclComPort = cbxVclComPort.Text;
+        }
+
+        private void cbxVclBaudRate_TextChanged(object sender, EventArgs e)
+        {
+            vclBaudRate = Convert.ToInt32(cbxVclBaudRate.Text);
         }
     }
 }
