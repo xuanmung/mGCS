@@ -420,13 +420,18 @@ namespace mGCS
                         DialogResult dlgResult = sfDlg.ShowDialog();
                         if (dlgResult == DialogResult.OK && !string.IsNullOrWhiteSpace(sfDlg.FileName))
                         {
-                            ftLoggingFile = sfDlg.FileName; 
+                            ftLoggingFile = sfDlg.FileName;
                         }
 
                         //Launch a new Thread for FT data receiving
                         ftDataReceiver = new Thread(new ThreadStart(ftDataReceive));
                         //ftDataReceiver.Start();
                         mFtTimer.Start();
+                    }
+                    catch (IOException)
+                    {
+                        MessageBox.Show("There is no comport: " + ftComPort, "F/T sensor connection");
+ 
                     }
                     catch (UnauthorizedAccessException)
                     {

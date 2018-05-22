@@ -9,7 +9,7 @@ namespace mGCS
     class PseudoPositioning
     {
         private static double sampling_time, x_drag, y_drag;
-
+        private const double DEADZONE = 0.03;
         //double roll, pitch, yaw;
         private static double ax, ay, az, vx, vy, vz, x_estimate, y_estimate, z_estimate;
 
@@ -26,12 +26,16 @@ namespace mGCS
             y_estimate = 0;
             z_estimate = 0;
         }
-
+        private double deadzone(double a, double deadzone)
+        {
+            if (a < deadzone || a > -deadzone) return 0;
+            else return a;
+        }
         public bool runEstimation(double accel_x, double accel_y, double accel_z)
         {
-            ax = accel_x;
-            ay = accel_y;
-            az = accel_z;
+            ax = deadzone(accel_x, DEADZONE);
+            ay = deadzone(accel_y, DEADZONE);
+            az = deadzone(accel_z, DEADZONE);
             vx += (ax - x_drag * vx) * sampling_time;
             vy += (ay - y_drag * vy) * sampling_time;
             vz += az * sampling_time;
