@@ -14,6 +14,27 @@ namespace mGCS
         {
             mChart = chart;
             mChart.Series[0].IsVisibleInLegend = false;
+
+            mChart.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
+            mChart.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
+            mChart.ChartAreas[0].AxisX.Minimum = -300;
+            mChart.ChartAreas[0].AxisX.Maximum = 300;
+            mChart.ChartAreas[0].AxisY.Minimum = -300;
+            mChart.ChartAreas[0].AxisY.Maximum = 300;
+
+            mChart.ChartAreas[0].CursorX.IsUserEnabled = true;
+            mChart.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
+            mChart.ChartAreas[0].CursorY.IsUserEnabled = true;
+            mChart.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
+            mChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Gray;
+            mChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
+
+            mChart.Series[0].BorderWidth = 2;
+            mChart.Series[0].Color = Color.Red;
+            //mChart.Series[0].IsVisibleInLegend = false;
+            //mChart.Series[0]["PieLabelStyle"] = "Disabled";
+
+            mChart.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
         }
 
         public bool update(double x, double y)
@@ -22,27 +43,7 @@ namespace mGCS
             {
                 //mChart.ChartAreas[0].AxisX.ScaleView.Zoom(-10, 10);
                 //mChart.ChartAreas[0].AxisY.ScaleView.Zoom(-10, 10);
-                mChart.ChartAreas[0].AxisX.ScaleView.Zoomable = true;
-                mChart.ChartAreas[0].AxisY.ScaleView.Zoomable = true;
-                mChart.ChartAreas[0].AxisX.Minimum = -500;
-                mChart.ChartAreas[0].AxisX.Maximum = 500;
-                mChart.ChartAreas[0].AxisY.Minimum = -500;
-                mChart.ChartAreas[0].AxisY.Maximum = 500;
-
-                mChart.ChartAreas[0].CursorX.IsUserEnabled = true;
-                mChart.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
-                mChart.ChartAreas[0].CursorY.IsUserEnabled = true;
-                mChart.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;
-                mChart.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.Gray;
-                mChart.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.Gray;
-
-                mChart.Series[0].BorderWidth = 2;
-                mChart.Series[0].Color = Color.Red;
-                //mChart.Series[0].IsVisibleInLegend = false;
-                //mChart.Series[0]["PieLabelStyle"] = "Disabled";
-
-                mChart.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-
+                
                 mChart.Series[0].Points.AddXY(x, y);
 
                 return true;

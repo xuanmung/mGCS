@@ -37,6 +37,8 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.pnlFtInfo = new System.Windows.Forms.Panel();
             this.pnlFtSetting = new System.Windows.Forms.Panel();
+            this.lblMassCalib = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.tbxDragY = new System.Windows.Forms.TextBox();
             this.tbxDragX = new System.Windows.Forms.TextBox();
             this.pbarFxyCalib = new System.Windows.Forms.ProgressBar();
@@ -53,8 +55,10 @@
             this.btnCancelFtSetting = new System.Windows.Forms.Button();
             this.btnApplyDragY = new System.Windows.Forms.Button();
             this.btnApplyDragX = new System.Windows.Forms.Button();
+            this.btnMassCalib = new System.Windows.Forms.Button();
             this.btnFxyCalib = new System.Windows.Forms.Button();
             this.btnFzCalib = new System.Windows.Forms.Button();
+            this.pbarMassCalib = new System.Windows.Forms.ProgressBar();
             this.lblDY = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
@@ -123,10 +127,6 @@
             this.btnCntFs = new System.Windows.Forms.Button();
             this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.mFtTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnMassCalib = new System.Windows.Forms.Button();
-            this.lblMassCalib = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.pbarMassCalib = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -269,6 +269,26 @@
             this.pnlFtSetting.Size = new System.Drawing.Size(231, 221);
             this.pnlFtSetting.TabIndex = 13;
             this.pnlFtSetting.Visible = false;
+            // 
+            // lblMassCalib
+            // 
+            this.lblMassCalib.AutoSize = true;
+            this.lblMassCalib.Location = new System.Drawing.Point(125, 200);
+            this.lblMassCalib.Name = "lblMassCalib";
+            this.lblMassCalib.Size = new System.Drawing.Size(27, 12);
+            this.lblMassCalib.TabIndex = 15;
+            this.lblMassCalib.Text = "0.00";
+            this.lblMassCalib.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(88, 200);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(37, 12);
+            this.label15.TabIndex = 14;
+            this.label15.Text = "mass";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tbxDragY
             // 
@@ -428,6 +448,18 @@
             this.btnApplyDragX.Visible = false;
             this.btnApplyDragX.Click += new System.EventHandler(this.btnApplyDragX_Click);
             // 
+            // btnMassCalib
+            // 
+            this.btnMassCalib.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnMassCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnMassCalib.Location = new System.Drawing.Point(6, 195);
+            this.btnMassCalib.Name = "btnMassCalib";
+            this.btnMassCalib.Size = new System.Drawing.Size(75, 23);
+            this.btnMassCalib.TabIndex = 2;
+            this.btnMassCalib.Text = "Mass Cal";
+            this.btnMassCalib.UseVisualStyleBackColor = false;
+            this.btnMassCalib.Click += new System.EventHandler(this.btnVclMassCalib_Click);
+            // 
             // btnFxyCalib
             // 
             this.btnFxyCalib.BackColor = System.Drawing.SystemColors.ControlLight;
@@ -452,10 +484,18 @@
             this.btnFzCalib.UseVisualStyleBackColor = false;
             this.btnFzCalib.Click += new System.EventHandler(this.btnFzCalib_Click);
             // 
+            // pbarMassCalib
+            // 
+            this.pbarMassCalib.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.pbarMassCalib.Location = new System.Drawing.Point(6, 195);
+            this.pbarMassCalib.Name = "pbarMassCalib";
+            this.pbarMassCalib.Size = new System.Drawing.Size(75, 23);
+            this.pbarMassCalib.TabIndex = 5;
+            // 
             // lblDY
             // 
             this.lblDY.AutoSize = true;
-            this.lblDY.Location = new System.Drawing.Point(16, 71);
+            this.lblDY.Location = new System.Drawing.Point(10, 71);
             this.lblDY.Name = "lblDY";
             this.lblDY.Size = new System.Drawing.Size(38, 12);
             this.lblDY.TabIndex = 12;
@@ -465,7 +505,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(99, 71);
+            this.label40.Location = new System.Drawing.Point(93, 71);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(25, 12);
             this.label40.TabIndex = 12;
@@ -475,7 +515,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(166, 71);
+            this.label22.Location = new System.Drawing.Point(160, 71);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(19, 12);
             this.label22.TabIndex = 12;
@@ -485,7 +525,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(168, 161);
+            this.label34.Location = new System.Drawing.Point(162, 161);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(12, 12);
             this.label34.TabIndex = 12;
@@ -495,7 +535,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(98, 161);
+            this.label28.Location = new System.Drawing.Point(93, 161);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(18, 12);
             this.label28.TabIndex = 12;
@@ -505,7 +545,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(17, 161);
+            this.label12.Location = new System.Drawing.Point(11, 161);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(19, 12);
             this.label12.TabIndex = 12;
@@ -515,7 +555,7 @@
             // lblDX
             // 
             this.lblDX.AutoSize = true;
-            this.lblDX.Location = new System.Drawing.Point(16, 47);
+            this.lblDX.Location = new System.Drawing.Point(10, 47);
             this.lblDX.Name = "lblDX";
             this.lblDX.Size = new System.Drawing.Size(38, 12);
             this.lblDX.TabIndex = 12;
@@ -525,7 +565,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(99, 47);
+            this.label39.Location = new System.Drawing.Point(93, 47);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(25, 12);
             this.label39.TabIndex = 12;
@@ -535,7 +575,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(166, 47);
+            this.label21.Location = new System.Drawing.Point(160, 47);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(19, 12);
             this.label21.TabIndex = 12;
@@ -545,7 +585,7 @@
             // label33
             // 
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(168, 137);
+            this.label33.Location = new System.Drawing.Point(162, 137);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(12, 12);
             this.label33.TabIndex = 12;
@@ -555,7 +595,7 @@
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(98, 137);
+            this.label27.Location = new System.Drawing.Point(93, 137);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(18, 12);
             this.label27.TabIndex = 12;
@@ -565,7 +605,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(17, 137);
+            this.label11.Location = new System.Drawing.Point(11, 137);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(19, 12);
             this.label11.TabIndex = 12;
@@ -575,7 +615,7 @@
             // lblMs
             // 
             this.lblMs.AutoSize = true;
-            this.lblMs.Location = new System.Drawing.Point(16, 24);
+            this.lblMs.Location = new System.Drawing.Point(10, 24);
             this.lblMs.Name = "lblMs";
             this.lblMs.Size = new System.Drawing.Size(37, 12);
             this.lblMs.TabIndex = 12;
@@ -585,7 +625,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(99, 24);
+            this.label38.Location = new System.Drawing.Point(93, 24);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(25, 12);
             this.label38.TabIndex = 12;
@@ -595,7 +635,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(166, 24);
+            this.label20.Location = new System.Drawing.Point(160, 24);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(19, 12);
             this.label20.TabIndex = 12;
@@ -605,7 +645,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(168, 114);
+            this.label32.Location = new System.Drawing.Point(162, 114);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(12, 12);
             this.label32.TabIndex = 12;
@@ -615,7 +655,7 @@
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(98, 114);
+            this.label26.Location = new System.Drawing.Point(93, 114);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(18, 12);
             this.label26.TabIndex = 12;
@@ -625,7 +665,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(17, 114);
+            this.label10.Location = new System.Drawing.Point(11, 114);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(19, 12);
             this.label10.TabIndex = 12;
@@ -635,7 +675,7 @@
             // lblDragY
             // 
             this.lblDragY.AutoSize = true;
-            this.lblDragY.Location = new System.Drawing.Point(59, 71);
+            this.lblDragY.Location = new System.Drawing.Point(53, 71);
             this.lblDragY.Name = "lblDragY";
             this.lblDragY.Size = new System.Drawing.Size(27, 12);
             this.lblDragY.TabIndex = 12;
@@ -645,7 +685,7 @@
             // lblFz0
             // 
             this.lblFz0.AutoSize = true;
-            this.lblFz0.Location = new System.Drawing.Point(129, 71);
+            this.lblFz0.Location = new System.Drawing.Point(123, 71);
             this.lblFz0.Name = "lblFz0";
             this.lblFz0.Size = new System.Drawing.Size(27, 12);
             this.lblFz0.TabIndex = 12;
@@ -655,7 +695,7 @@
             // lblZ
             // 
             this.lblZ.AutoSize = true;
-            this.lblZ.Location = new System.Drawing.Point(196, 161);
+            this.lblZ.Location = new System.Drawing.Point(190, 161);
             this.lblZ.Name = "lblZ";
             this.lblZ.Size = new System.Drawing.Size(27, 12);
             this.lblZ.TabIndex = 12;
@@ -665,7 +705,7 @@
             // lblFz
             // 
             this.lblFz.AutoSize = true;
-            this.lblFz.Location = new System.Drawing.Point(196, 71);
+            this.lblFz.Location = new System.Drawing.Point(190, 71);
             this.lblFz.Name = "lblFz";
             this.lblFz.Size = new System.Drawing.Size(27, 12);
             this.lblFz.TabIndex = 12;
@@ -675,7 +715,7 @@
             // lblVz
             // 
             this.lblVz.AutoSize = true;
-            this.lblVz.Location = new System.Drawing.Point(128, 161);
+            this.lblVz.Location = new System.Drawing.Point(123, 161);
             this.lblVz.Name = "lblVz";
             this.lblVz.Size = new System.Drawing.Size(27, 12);
             this.lblVz.TabIndex = 12;
@@ -685,7 +725,7 @@
             // lblAz
             // 
             this.lblAz.AutoSize = true;
-            this.lblAz.Location = new System.Drawing.Point(59, 161);
+            this.lblAz.Location = new System.Drawing.Point(53, 161);
             this.lblAz.Name = "lblAz";
             this.lblAz.Size = new System.Drawing.Size(27, 12);
             this.lblAz.TabIndex = 12;
@@ -695,7 +735,7 @@
             // lblDragX
             // 
             this.lblDragX.AutoSize = true;
-            this.lblDragX.Location = new System.Drawing.Point(59, 47);
+            this.lblDragX.Location = new System.Drawing.Point(53, 47);
             this.lblDragX.Name = "lblDragX";
             this.lblDragX.Size = new System.Drawing.Size(27, 12);
             this.lblDragX.TabIndex = 12;
@@ -705,7 +745,7 @@
             // lblFy0
             // 
             this.lblFy0.AutoSize = true;
-            this.lblFy0.Location = new System.Drawing.Point(129, 47);
+            this.lblFy0.Location = new System.Drawing.Point(123, 47);
             this.lblFy0.Name = "lblFy0";
             this.lblFy0.Size = new System.Drawing.Size(27, 12);
             this.lblFy0.TabIndex = 12;
@@ -715,7 +755,7 @@
             // lblY
             // 
             this.lblY.AutoSize = true;
-            this.lblY.Location = new System.Drawing.Point(196, 137);
+            this.lblY.Location = new System.Drawing.Point(190, 137);
             this.lblY.Name = "lblY";
             this.lblY.Size = new System.Drawing.Size(27, 12);
             this.lblY.TabIndex = 12;
@@ -725,7 +765,7 @@
             // lblFy
             // 
             this.lblFy.AutoSize = true;
-            this.lblFy.Location = new System.Drawing.Point(196, 47);
+            this.lblFy.Location = new System.Drawing.Point(190, 47);
             this.lblFy.Name = "lblFy";
             this.lblFy.Size = new System.Drawing.Size(27, 12);
             this.lblFy.TabIndex = 12;
@@ -735,7 +775,7 @@
             // lblVy
             // 
             this.lblVy.AutoSize = true;
-            this.lblVy.Location = new System.Drawing.Point(128, 137);
+            this.lblVy.Location = new System.Drawing.Point(123, 137);
             this.lblVy.Name = "lblVy";
             this.lblVy.Size = new System.Drawing.Size(27, 12);
             this.lblVy.TabIndex = 12;
@@ -745,7 +785,7 @@
             // lblMass
             // 
             this.lblMass.AutoSize = true;
-            this.lblMass.Location = new System.Drawing.Point(59, 24);
+            this.lblMass.Location = new System.Drawing.Point(53, 24);
             this.lblMass.Name = "lblMass";
             this.lblMass.Size = new System.Drawing.Size(27, 12);
             this.lblMass.TabIndex = 12;
@@ -755,7 +795,7 @@
             // lblAy
             // 
             this.lblAy.AutoSize = true;
-            this.lblAy.Location = new System.Drawing.Point(59, 137);
+            this.lblAy.Location = new System.Drawing.Point(53, 137);
             this.lblAy.Name = "lblAy";
             this.lblAy.Size = new System.Drawing.Size(27, 12);
             this.lblAy.TabIndex = 12;
@@ -765,7 +805,7 @@
             // lblFx0
             // 
             this.lblFx0.AutoSize = true;
-            this.lblFx0.Location = new System.Drawing.Point(129, 24);
+            this.lblFx0.Location = new System.Drawing.Point(123, 24);
             this.lblFx0.Name = "lblFx0";
             this.lblFx0.Size = new System.Drawing.Size(27, 12);
             this.lblFx0.TabIndex = 12;
@@ -775,7 +815,7 @@
             // lblX
             // 
             this.lblX.AutoSize = true;
-            this.lblX.Location = new System.Drawing.Point(196, 114);
+            this.lblX.Location = new System.Drawing.Point(190, 114);
             this.lblX.Name = "lblX";
             this.lblX.Size = new System.Drawing.Size(27, 12);
             this.lblX.TabIndex = 12;
@@ -785,7 +825,7 @@
             // lblFx
             // 
             this.lblFx.AutoSize = true;
-            this.lblFx.Location = new System.Drawing.Point(196, 24);
+            this.lblFx.Location = new System.Drawing.Point(190, 24);
             this.lblFx.Name = "lblFx";
             this.lblFx.Size = new System.Drawing.Size(27, 12);
             this.lblFx.TabIndex = 12;
@@ -795,7 +835,7 @@
             // lblVx
             // 
             this.lblVx.AutoSize = true;
-            this.lblVx.Location = new System.Drawing.Point(128, 114);
+            this.lblVx.Location = new System.Drawing.Point(123, 114);
             this.lblVx.Name = "lblVx";
             this.lblVx.Size = new System.Drawing.Size(27, 12);
             this.lblVx.TabIndex = 12;
@@ -805,7 +845,7 @@
             // lblAx
             // 
             this.lblAx.AutoSize = true;
-            this.lblAx.Location = new System.Drawing.Point(59, 114);
+            this.lblAx.Location = new System.Drawing.Point(53, 114);
             this.lblAx.Name = "lblAx";
             this.lblAx.Size = new System.Drawing.Size(27, 12);
             this.lblAx.TabIndex = 12;
@@ -1202,47 +1242,8 @@
             // 
             // mFtTimer
             // 
+            this.mFtTimer.Interval = 10;
             this.mFtTimer.Tick += new System.EventHandler(this.mFtTimer_Tick);
-            // 
-            // btnMassCalib
-            // 
-            this.btnMassCalib.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btnMassCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnMassCalib.Location = new System.Drawing.Point(6, 195);
-            this.btnMassCalib.Name = "btnMassCalib";
-            this.btnMassCalib.Size = new System.Drawing.Size(75, 23);
-            this.btnMassCalib.TabIndex = 2;
-            this.btnMassCalib.Text = "Mass Cal";
-            this.btnMassCalib.UseVisualStyleBackColor = false;
-            this.btnMassCalib.Click += new System.EventHandler(this.btnVclMassCalib_Click);
-            // 
-            // lblMassCalib
-            // 
-            this.lblMassCalib.AutoSize = true;
-            this.lblMassCalib.Location = new System.Drawing.Point(125, 200);
-            this.lblMassCalib.Name = "lblMassCalib";
-            this.lblMassCalib.Size = new System.Drawing.Size(27, 12);
-            this.lblMassCalib.TabIndex = 15;
-            this.lblMassCalib.Text = "0.00";
-            this.lblMassCalib.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(88, 200);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(37, 12);
-            this.label15.TabIndex = 14;
-            this.label15.Text = "mass";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // pbarMassCalib
-            // 
-            this.pbarMassCalib.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.pbarMassCalib.Location = new System.Drawing.Point(6, 195);
-            this.pbarMassCalib.Name = "pbarMassCalib";
-            this.pbarMassCalib.Size = new System.Drawing.Size(75, 23);
-            this.pbarMassCalib.TabIndex = 5;
             // 
             // mGCS
             // 

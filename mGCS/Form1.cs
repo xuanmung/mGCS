@@ -56,12 +56,14 @@ namespace mGCS
         private Thread ftDataReceiver;
         private string ftLoggingFile;
         private static TextWriter mTwriter;
-        PositionMap mPosMap;
-        LowPassFilter mLpf;
-        private const double mLpfSamplingTime = 0.05;
-        PseudoPositioning mPsner;
+        private PositionMap mPosMap;
+        private Thread updatePosMapThread;
+        private LowPassFilter mLpf;
+        private const double mFtSamplingTime = 0.05;
+        private PseudoPositioning mPsner;
         private double mVehicleMass;
         private double mVehicleMassCandidate;
+        private const double GRAVITY = 9.81;
         private double[] drag = new double[2];
 
         //Vehicle variables
@@ -145,10 +147,11 @@ namespace mGCS
             //mTimer.Start();
 
             //Initiate Lowpass filter
-            mLpf = new LowPassFilter(2.0, 0.05);
+            mLpf = new LowPassFilter(2.0, mFtSamplingTime);
             mPosMap = new PositionMap(chartPosSim);
+            updatePosMapThread = new Thread(new ThreadStart(updatePosMap));
             chartPosSim.Titles.Add("Vehicle's Position");
-            mPsner = new PseudoPositioning(0.3, 0.28, mLpfSamplingTime);
+            mPsner = new PseudoPositioning(0.3, 0.28, mFtSamplingTime);
         }
 
         private void mGCS_FormClosing(object sender, FormClosingEventArgs e)
@@ -547,8 +550,8 @@ namespace mGCS
                         try
                         {
                             //Processing ftData
-                            FtConversion ftConverter = new FtConversion(mLpf);
-                            forces = ftConverter.normalize(ftData);
+                            FtConversion ftConverter = new FtConversion(mLpf); 
+                            forces = ftConverter.normalize(ftData); 
 
                             if (isFzCalibrating)
                             {
@@ -558,10 +561,11 @@ namespace mGCS
                                 lblFz0Calib.Text = Math.Round(forceBiasCandidate[2], 2).ToString();
                                 if (calibStep >= numOfCalibSample)
                                 {
-                                    forceBias[2] = forceBiasCandidate[2];
+                                    forceBias[2] = Math.Round(forceBiasCandidate[2], 2);
                                     btnFzCalib.Enabled = true;
                                     btnFxyCalib.Enabled = true;
                                     pbarFzCalib.Visible = false;
+                                    lblFz0.Text = forceBias[2].ToString();
 
                                     isFzCalibrating = false;
                                     calibStep = 0;
@@ -578,11 +582,13 @@ namespace mGCS
                                 lblFy0Calib.Text = Math.Round(forceBiasCandidate[1], 2).ToString();
                                 if (calibStep >= numOfCalibSample)
                                 {
-                                    forceBias[0] = forceBiasCandidate[0];
-                                    forceBias[1] = forceBiasCandidate[1];
+                                    forceBias[0] = Math.Round(forceBiasCandidate[0], 2);
+                                    forceBias[1] = Math.Round(forceBiasCandidate[1], 2);
                                     btnFxyCalib.Enabled = true;
                                     btnFzCalib.Enabled = true;
                                     pbarFxyCalib.Visible = false;
+                                    lblFx0.Text = forceBias[0].ToString();
+                                    lblFy0.Text = forceBias[1].ToString();
 
                                     isFxyCalibrating = false;
                                     calibStep = 0;
@@ -592,19 +598,19 @@ namespace mGCS
                             if (isMassCalibrating)
                             {
                                 calibStep++;
-                                mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + forces[2] - forceBias[2]) / calibStep;
+                                mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + (forces[2] - forceBias[2]) / GRAVITY) / calibStep;
                                 pbarMassCalib.Value = calibStep;
-                                lblMassCalib.Text = Math.Round(mVehicleMassCandidate, 2).ToString();
+                                lblMassCalib.Text = Math.Round(-mVehicleMassCandidate, 2).ToString();
                                 if (calibStep >= (int)numOfCalibSample/2)
                                 {
-                                    if (mVehicleMassCandidate <= 0)
+                                    if (mVehicleMassCandidate >= 0)
                                     {
                                         ftCalibThread = new Thread(new ThreadStart(massCalibError));
                                         ftCalibThread.Start();
                                     }
                                     else
                                     {
-                                        mVehicleMass = Math.Round(mVehicleMassCandidate, 2);
+                                        mVehicleMass = -Math.Round(mVehicleMassCandidate, 2);
                                         lblMass.Text = mVehicleMass.ToString();
                                     }
 
@@ -691,14 +697,24 @@ namespace mGCS
                     lblX.Text = Math.Round(mPsner.getX(), 2).ToString();
                     lblY.Text = Math.Round(mPsner.getY(), 2).ToString();
                     lblZ.Text = Math.Round(mPsner.getZ(), 2).ToString();
-
-
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message.ToString(), "Chart error");
                 }
             }
+        }
+
+        private void updatePosMap()
+        {
+            mPosMap.update(mPsner.getX(), mPsner.getY());
+            while (updatePosMapThread.IsAlive)
+                try
+                {
+                    //Dismiss the Thread
+                    updatePosMapThread.Suspend();
+                }
+                catch { }
         }
 
         private void massCalibError()
@@ -727,21 +743,21 @@ namespace mGCS
 
         private void btnRefreshAll_Click(object sender, EventArgs e)
         {
-            mPsner.restart();
-            mPosMap.refresh();
+            mPsner.restart(); 
+            mPosMap.refresh(); 
         }
 
         private void btnCancelFtSetting_Click(object sender, EventArgs e)
         {
-            btnFxyCalib.Enabled = true;
-            btnFzCalib.Enabled = true;
+            btnFxyCalib.Enabled     = true;
+            btnFzCalib.Enabled      = true;
             pnlFtSetting.Visible    = false;
             isFxyCalibrating        = false;
             isFzCalibrating         = false;
             calibStep = 0;
-            forceBiasCandidate[0] = 0;
-            forceBiasCandidate[1] = 0;
-            forceBiasCandidate[2] = 0;
+            forceBiasCandidate[0]   = 0;
+            forceBiasCandidate[1]   = 0;
+            forceBiasCandidate[2]   = 0;
         }
 
         private void btnFzCalib_Click(object sender, EventArgs e)
