@@ -42,6 +42,8 @@ namespace mGCS
         private bool ftConnected = false;
         private string ftComPort;
         private int ftBaudRate;
+        private StreamWriter mStrmWrt;
+        private string[] ftDataStr;
         //private double fx, fy, fz, tx, ty, tz;
         private double[] forces     = new double[3];
         public double[] forceBias   = new double[3];
@@ -56,15 +58,18 @@ namespace mGCS
         private Thread ftDataReceiver;
         private string ftLoggingFile;
         private static TextWriter mTwriter;
-        private PositionMap mPosMap;
-        private Thread updatePosMapThread;
-        private LowPassFilter mLpf;
+        private static PositionMap mPosMap;
+        private static Thread updatePosMapThread;
+        private static LowPassFilter mLpf;
         private const double mFtSamplingTime = 0.05;
-        private PseudoPositioning mPsner;
+        private static PseudoPositioning mPsner;
         private double mVehicleMass;
         private double mVehicleMassCandidate;
         private const double GRAVITY = 9.81;
         private double[] drag = new double[2];
+        private double[] estimatedPos = new double[3];
+        private double[] estimatedVel = new double[3];
+        private double[] estimatedAccel = new double[3];
 
         //Vehicle variables
         private bool vehicleConnected = false;
@@ -83,28 +88,28 @@ namespace mGCS
             {
                 if (File.Exists(mParamFileName))
                 {
-                    StreamReader strRdr = new StreamReader(mParamFileName);
+                    StreamReader streamRdr = new StreamReader(mParamFileName);
 
-                    ftComPort = strRdr.ReadLine();
-                    ftBaudRate = Convert.ToInt32(strRdr.ReadLine());
+                    ftComPort = streamRdr.ReadLine();
+                    ftBaudRate = Convert.ToInt32(streamRdr.ReadLine());
 
-                    vclComPort = strRdr.ReadLine();
-                    vclBaudRate = Convert.ToInt32(strRdr.ReadLine());
+                    vclComPort = streamRdr.ReadLine();
+                    vclBaudRate = Convert.ToInt32(streamRdr.ReadLine());
 
-                    gpsSimIp = strRdr.ReadLine();
-                    gpsSimPort = Convert.ToInt32(strRdr.ReadLine());
+                    gpsSimIp = streamRdr.ReadLine();
+                    gpsSimPort = Convert.ToInt32(streamRdr.ReadLine());
 
-                    fsIp = strRdr.ReadLine();
+                    fsIp = streamRdr.ReadLine();
 
-                    mVehicleMass = Convert.ToDouble(strRdr.ReadLine());
-                    drag[0] = Convert.ToDouble(strRdr.ReadLine());
-                    drag[1] = Convert.ToDouble(strRdr.ReadLine());
+                    mVehicleMass = Convert.ToDouble(streamRdr.ReadLine());
+                    drag[0] = Convert.ToDouble(streamRdr.ReadLine());
+                    drag[1] = Convert.ToDouble(streamRdr.ReadLine());
 
-                    forceBias[0] = Convert.ToDouble(strRdr.ReadLine());
-                    forceBias[1] = Convert.ToDouble(strRdr.ReadLine());
-                    forceBias[2] = Convert.ToDouble(strRdr.ReadLine());
+                    forceBias[0] = Convert.ToDouble(streamRdr.ReadLine());
+                    forceBias[1] = Convert.ToDouble(streamRdr.ReadLine());
+                    forceBias[2] = Convert.ToDouble(streamRdr.ReadLine());
 
-                    strRdr.Close();
+                    streamRdr.Close();
 
                     cbxFtComPort.Text = ftComPort;
                     cbxFtBaudRate.Text = ftBaudRate.ToString();
@@ -163,30 +168,32 @@ namespace mGCS
             {
                 try
                 {
-                    //Save parameters into an internal file
-                    StreamWriter mStrmWrt = new StreamWriter("params.txt"); 
-                    Thread.Sleep(10);
+                    /***
+                     * Save parameters into an internal file
+                     * The order of these parameter should NOT be changed
+                    ***/
+                    StreamWriter mStreamWrt = new StreamWriter("params.txt"); 
+                    
+                    mStreamWrt.WriteLine(ftComPort);
+                    mStreamWrt.WriteLine(ftBaudRate.ToString());
 
-                    mStrmWrt.WriteLine(ftComPort);
-                    mStrmWrt.WriteLine(ftBaudRate.ToString());
+                    mStreamWrt.WriteLine(vclComPort);
+                    mStreamWrt.WriteLine(vclBaudRate.ToString());
 
-                    mStrmWrt.WriteLine(vclComPort);
-                    mStrmWrt.WriteLine(vclBaudRate.ToString());
+                    mStreamWrt.WriteLine(gpsSimIp);
+                    mStreamWrt.WriteLine(gpsSimPort.ToString());
 
-                    mStrmWrt.WriteLine(gpsSimIp);
-                    mStrmWrt.WriteLine(gpsSimPort.ToString());
+                    mStreamWrt.WriteLine(fsIp);
 
-                    mStrmWrt.WriteLine(fsIp);
+                    mStreamWrt.WriteLine(Math.Round(mVehicleMass, 2).ToString());
+                    mStreamWrt.WriteLine(Math.Round(drag[0], 2).ToString());
+                    mStreamWrt.WriteLine(Math.Round(drag[1], 2).ToString());
 
-                    mStrmWrt.WriteLine(Math.Round(mVehicleMass, 2).ToString());
-                    mStrmWrt.WriteLine(Math.Round(drag[0], 2).ToString());
-                    mStrmWrt.WriteLine(Math.Round(drag[1], 2).ToString());
+                    mStreamWrt.WriteLine(Math.Round(forceBias[0], 2).ToString());
+                    mStreamWrt.WriteLine(Math.Round(forceBias[1], 2).ToString());
+                    mStreamWrt.WriteLine(Math.Round(forceBias[2], 2).ToString());
 
-                    mStrmWrt.WriteLine(Math.Round(forceBias[0], 2).ToString());
-                    mStrmWrt.WriteLine(Math.Round(forceBias[1], 2).ToString());
-                    mStrmWrt.WriteLine(Math.Round(forceBias[2], 2).ToString());
-
-                    mStrmWrt.Close(); 
+                    mStreamWrt.Close(); 
 
                     if (socketConnected(mClient))
                         mClient.Close(); 
@@ -444,14 +451,14 @@ namespace mGCS
             }
             else 
             {
-                while (ftDataReceiver.IsAlive)
-                    try
-                    {
-                        //Dismiss the Thread
-                        ftDataReceiver.Suspend();
-                    }
-                    catch { }
-
+                ftVisualizationTimer.Stop();
+                //while (ftDataReceiver.IsAlive)
+                //    try
+                //    {
+                //        //Dismiss the Thread
+                //        ftDataReceiver.Suspend();
+                //    }
+                //    catch { }
                 mFtTimer.Stop();
 
                 while (ftSerialPort.IsOpen)
@@ -474,9 +481,6 @@ namespace mGCS
         }
         void ftDataReceive()
         {
-            StreamWriter mStrmWrt;
-            string[] ftDataStr;
-
             if (ftSerialPort.IsOpen)
             {
                 //request code
@@ -484,11 +488,11 @@ namespace mGCS
                 
                 try
                 {
-                    //just for debugging
-                    this.Invoke((MethodInvoker)delegate()
-                    {
-                        lbxView.Items.Add("start");
-                    });
+                    ////just for debugging
+                    //this.Invoke((MethodInvoker)delegate()
+                    //{
+                    //    lbxView.Items.Add("start");
+                    //});
                 }
                 catch (Exception x)
                 {
@@ -498,8 +502,12 @@ namespace mGCS
                 //Send request to FT controller
                 try
                 {
-                    ftSerialPort.WriteLine(requestCode.ToString());
-                    Thread.Sleep(20);
+                    //while (ftBuffer == null)
+                    //{
+                        ftSerialPort.WriteLine(requestCode.ToString()); 
+                        Thread.Sleep(20);
+                        //if (ftSerialPort.BaseStream == null) { Thread.Sleep(10); };
+                    //}
                 }
                 catch (Exception x)
                 {
@@ -511,13 +519,15 @@ namespace mGCS
                     {
                         if (ftSerialPort.BytesToRead > 0)
                         {
-                            ftBuffer = ftSerialPort.ReadLine();
+                            //while (ftBuffer == null) 
+                            ftBuffer = ftSerialPort.ReadLine(); 
 
-                            //Just for Debugging
-                            this.Invoke((MethodInvoker)delegate()
-                            {
-                                lbxView.Items.Add(ftBuffer);
-                            });
+                            ////Just for Debugging
+                            //this.Invoke((MethodInvoker)delegate()
+                            //{
+                            //    if (lbxView.Items.Count > 10) lbxView.Items.Clear();
+                            //    lbxView.Items.Add(ftBuffer);
+                            //});
                         }
                     }
                     catch (TimeoutException)
@@ -533,176 +543,265 @@ namespace mGCS
                     }
                     else
                     {
-                        //Change button's Icon
-                        btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
-                        ftConnected = true;
+                        if (!ftConnected)
+                        {
+                            //Change button's Icon
+                            btnCntFt.Image = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
+                            ftConnected = true;
 
-                        //Visible Refresh Button
-                        btnRefreshAll.Visible = true;
+                            //Visible Refresh Button
+                            btnRefreshAll.Visible = true;
 
+                            //ftDataProcessingTimer.Start();
+                            ftVisualizationTimer.Start();
+                        }
                         //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
                     }
+                
+                //DO FT DATA PROCESSING
+                ftDataProcess(); 
+            }
+        }
 
-                    try
-                    {
-                        ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
-                        int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
-                        try
-                        {
-                            //Processing ftData
-                            FtConversion ftConverter = new FtConversion(mLpf); 
-                            forces = ftConverter.normalize(ftData); 
+        private void ftVisualize()
+        {
+            //Just for Debugging
+            this.Invoke((MethodInvoker)delegate()
+            {
+                if (lbxView.Items.Count > 10) 
+                    lbxView.Items.Clear();
 
-                            if (isFzCalibrating)
-                            {
-                                calibStep++;
-                                forceBiasCandidate[2] = (forceBiasCandidate[2] * (calibStep - 1) + forces[2]) / calibStep;
-                                pbarFzCalib.Value = calibStep;
-                                lblFz0Calib.Text = Math.Round(forceBiasCandidate[2], 2).ToString();
-                                if (calibStep >= numOfCalibSample)
-                                {
-                                    forceBias[2] = Math.Round(forceBiasCandidate[2], 2);
-                                    btnFzCalib.Enabled = true;
-                                    btnFxyCalib.Enabled = true;
-                                    pbarFzCalib.Visible = false;
-                                    lblFz0.Text = forceBias[2].ToString();
+                if (ftBuffer.IsNormalized()) 
+                    lbxView.Items.Add(ftBuffer);
+            });
 
-                                    isFzCalibrating = false;
-                                    calibStep = 0;
-                                }
-                            }
+            //Assign values
+            estimatedPos[0] = mPsner.getX();
+            estimatedPos[1] = mPsner.getY();
+            estimatedPos[2] = mPsner.getZ();
 
-                            if (isFxyCalibrating)
-                            {
-                                calibStep++;
-                                forceBiasCandidate[0] = (forceBiasCandidate[0] * (calibStep - 1) + forces[0]) / calibStep;
-                                forceBiasCandidate[1] = (forceBiasCandidate[1] * (calibStep - 1) + forces[1]) / calibStep;
-                                pbarFxyCalib.Value = calibStep;
-                                lblFx0Calib.Text = Math.Round(forceBiasCandidate[0], 2).ToString();
-                                lblFy0Calib.Text = Math.Round(forceBiasCandidate[1], 2).ToString();
-                                if (calibStep >= numOfCalibSample)
-                                {
-                                    forceBias[0] = Math.Round(forceBiasCandidate[0], 2);
-                                    forceBias[1] = Math.Round(forceBiasCandidate[1], 2);
-                                    btnFxyCalib.Enabled = true;
-                                    btnFzCalib.Enabled = true;
-                                    pbarFxyCalib.Visible = false;
-                                    lblFx0.Text = forceBias[0].ToString();
-                                    lblFy0.Text = forceBias[1].ToString();
+            estimatedVel[0] = mPsner.getVx();
+            estimatedVel[1] = mPsner.getVy();
+            estimatedVel[2] = mPsner.getVz();
 
-                                    isFxyCalibrating = false;
-                                    calibStep = 0;
-                                }
-                            }
+            estimatedAccel[0] = mPsner.getAx();
+            estimatedAccel[1] = mPsner.getAy();
+            estimatedAccel[2] = mPsner.getAz();
 
-                            if (isMassCalibrating)
-                            {
-                                calibStep++;
-                                mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + (forces[2] - forceBias[2]) / GRAVITY) / calibStep;
-                                pbarMassCalib.Value = calibStep;
-                                lblMassCalib.Text = Math.Round(-mVehicleMassCandidate, 2).ToString();
-                                if (calibStep >= (int)numOfCalibSample/2)
-                                {
-                                    if (mVehicleMassCandidate >= 0)
-                                    {
-                                        ftCalibThread = new Thread(new ThreadStart(massCalibError));
-                                        ftCalibThread.Start();
-                                    }
-                                    else
-                                    {
-                                        mVehicleMass = -Math.Round(mVehicleMassCandidate, 2);
-                                        lblMass.Text = mVehicleMass.ToString();
-                                    }
+            //Update data visualizations
+            try
+            {
+                if (!string.IsNullOrEmpty(ftLoggingFile))
+                {
+                    //Open file to append text
+                    mStrmWrt = File.AppendText(ftLoggingFile);
 
-                                    pbarMassCalib.Visible = false;
-                                    btnMassCalib.Visible = true;
-                                    btnMassCalib.Enabled = true;
-                                    btnFxyCalib.Enabled = true;
-                                    btnFzCalib.Enabled = true;
+                    //For stabilizing the streamWriter
+                    while (mStrmWrt.BaseStream == null) { };
 
-                                    isMassCalibrating = false;
-                                    calibStep = 0;
-                                }
-                            }
+                    //LOGGING
+                    //Position
+                    mStrmWrt.Write((Math.Round(estimatedPos[0], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(estimatedPos[1], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(estimatedPos[2], 2)).ToString() + "\t");
+
+                    //Velocity
+                    mStrmWrt.Write((Math.Round(estimatedVel[0], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(estimatedVel[1], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(estimatedVel[2], 2)).ToString() + "\t");
+
+                    //Acceleration
+                    mStrmWrt.Write((Math.Round(estimatedAccel[0], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(estimatedAccel[1], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(estimatedAccel[2], 2)).ToString() + "\t");
+
+                    //Processed Forces
+                    mStrmWrt.Write((Math.Round(forces[0] - forceBias[0], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(forces[1] - forceBias[1], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(forces[2] - forceBias[2], 2)).ToString() + "\t");
                     
-                            //Run the estimator of the Pseudo Positioner
-                            mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass);
+                    //mStrmWrt.Write((Math.Round(forces[0], 2)).ToString().TrimEnd('0') + "\t");
 
-                        }
-                        catch (Exception x)
+                    //Write ftData into text file
+                    if (ftDataStr.Length > 0)
+                        foreach (string str in ftDataStr)
                         {
-                            MessageBox.Show(x.Message.ToString());
-                        }
-
-                        if (!string.IsNullOrEmpty(ftLoggingFile))
-                        {
-                            //Open file to append text
-                            mStrmWrt = File.AppendText(ftLoggingFile);
-
-                            //stable
-                            Thread.Sleep(10);
-
-                            mStrmWrt.Write((Math.Round(mPsner.getX(), 2)).ToString().TrimEnd('0') + "\t");
-                            mStrmWrt.Write((Math.Round(mPsner.getY(), 2)).ToString().TrimEnd('0') + "\t");
-                            mStrmWrt.Write((Math.Round(mPsner.getZ(), 2)).ToString().TrimEnd('0') + "\t");
-
-                            foreach (double d in forces)
+                            //Write "\t" following each element of ftDataStr
+                            if (str.GetEnumerator().MoveNext())
+                                mStrmWrt.Write(str + "\t");
+                            else
                             {
-                                mStrmWrt.Write((Math.Round(d, 2)).ToString().TrimEnd('0') + "\t");
+                                //Write the last element of ftDataStr, new line is already included
+                                mStrmWrt.Write(str);
+                                //mStrmWrt.WriteLine(str);
+                            }
+                        }
+
+                    //Close stream writter after appending text
+                    mStrmWrt.Close();
+                }
+
+                //Update Position Map
+                mPosMap.update(estimatedPos[0], estimatedPos[1]);
+
+                //Update other detailed information
+                lblFx.Text = Math.Round(forces[0], 2).ToString();
+                lblFy.Text = Math.Round(forces[1], 2).ToString();
+                lblFz.Text = Math.Round(forces[2], 2).ToString();
+
+                lblAx.Text = Math.Round(estimatedAccel[0], 2).ToString();
+                lblAy.Text = Math.Round(estimatedAccel[1], 2).ToString();
+                lblAz.Text = Math.Round(estimatedAccel[2], 2).ToString();
+
+                lblVx.Text = Math.Round(estimatedVel[0], 2).ToString();
+                lblVy.Text = Math.Round(estimatedVel[1], 2).ToString();
+                lblVz.Text = Math.Round(estimatedVel[2], 2).ToString();
+
+                lblX.Text = Math.Round(estimatedPos[0], 2).ToString();
+                lblY.Text = Math.Round(estimatedPos[1], 2).ToString();
+                lblZ.Text = Math.Round(estimatedPos[2], 2).ToString();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message.ToString(), "Chart error");
+            }
+        }
+
+        protected void ftDataProcess()
+        {
+            //Processing ftData
+            try
+            {
+                ftDataStr = ftBuffer.Split(new[] { "," }, StringSplitOptions.None);
+                int[] ftData = Array.ConvertAll(ftDataStr, s => int.Parse(s));
+                try
+                {
+                    //Processing ftData: From [count] to [N]
+                    FtConversion ftConverter = new FtConversion(mLpf);
+                    forces = ftConverter.normalize(ftData);
+
+                    //Do calibrations
+                    if (isFzCalibrating)
+                    {
+                        calibStep++;
+
+                        //Calculate average value
+                        forceBiasCandidate[2] = (forceBiasCandidate[2] * (calibStep - 1) + forces[2]) / calibStep;
+
+                        //Update progress bar status
+                        pbarFzCalib.Value = calibStep;
+
+                        //Update indicating lable's text
+                        lblFz0Calib.Text = Math.Round(forceBiasCandidate[2], 2).ToString();
+
+                        //When calibration done
+                        if (calibStep >= numOfCalibSample)
+                        {
+                            //Get the candidate data as formal data
+                            forceBias[2] = Math.Round(forceBiasCandidate[2], 2);
+
+                            //Update visualization
+                            btnFzCalib.Enabled = true;
+                            btnFxyCalib.Enabled = true;
+                            pbarFzCalib.Visible = false;
+                            lblFz0.Text = forceBias[2].ToString();
+
+                            //Reset calibrating values
+                            isFzCalibrating = false;
+                            calibStep = 0;
+                        }
+                    }
+
+                    if (isFxyCalibrating)
+                    {
+                        calibStep++;
+                        //Calculate average value
+                        forceBiasCandidate[0] = (forceBiasCandidate[0] * (calibStep - 1) + forces[0]) / calibStep;
+                        forceBiasCandidate[1] = (forceBiasCandidate[1] * (calibStep - 1) + forces[1]) / calibStep;
+
+                        //Update progress bar status
+                        pbarFxyCalib.Value = calibStep;
+
+                        //Update indicating lable's text
+                        lblFx0Calib.Text = Math.Round(forceBiasCandidate[0], 2).ToString();
+                        lblFy0Calib.Text = Math.Round(forceBiasCandidate[1], 2).ToString();
+
+                        //When calibration done
+                        if (calibStep >= numOfCalibSample)
+                        {
+                            //Get the candidate data as formal data
+                            forceBias[0] = Math.Round(forceBiasCandidate[0], 2);
+                            forceBias[1] = Math.Round(forceBiasCandidate[1], 2);
+
+                            //Update visualization
+                            btnFxyCalib.Enabled = true;
+                            btnFzCalib.Enabled = true;
+                            pbarFxyCalib.Visible = false;
+                            lblFx0.Text = forceBias[0].ToString();
+                            lblFy0.Text = forceBias[1].ToString();
+
+                            //Reset calibrating values
+                            isFxyCalibrating = false;
+                            calibStep = 0;
+                        }
+                    }
+
+                    if (isMassCalibrating)
+                    {
+                        calibStep++;
+
+                        //Calculate average value
+                        mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + (forces[2] - forceBias[2]) / GRAVITY) / calibStep;
+
+                        //Update progress bar status
+                        pbarMassCalib.Value = calibStep;
+
+                        //Update indicating lable's text
+                        lblMassCalib.Text = Math.Round(-mVehicleMassCandidate, 2).ToString();
+
+                        //When calibration done
+                        if (calibStep >= (int)numOfCalibSample / 2)
+                        {
+                            if (mVehicleMassCandidate >= 0)
+                            {
+                                ftCalibThread = new Thread(new ThreadStart(massCalibError));
+                                ftCalibThread.Start();
+                            }
+                            else
+                            {
+                                //Get the candidate data as formal data
+                                mVehicleMass = -Math.Round(mVehicleMassCandidate, 2);
+                                lblMass.Text = mVehicleMass.ToString();
                             }
 
-                            //Write data into text file
-                            if (ftDataStr.Length > 0)
-                                foreach (string str in ftDataStr)
-                                {
-                                    //Write "\t" following each element of ftDataStr
-                                    if (str.GetEnumerator().MoveNext())
-                                        mStrmWrt.Write(str + "\t");
-                                    else
-                                    {
-                                        //Write new line after fully writting ftDataStr
-                                        //string lastStr = str.Replace("\r", string.Empty);
-                                        //mStrmWrt.WriteLine(lastStr);
-                                        mStrmWrt.Write(str);
-                                        //mStrmWrt.WriteLine(str);
-                                    }
-                                }
-                            
-                            //Close stream writter after appending text
-                            mStrmWrt.Close();
+                            //Update visualization
+                            pbarMassCalib.Visible = false;
+                            btnMassCalib.Visible = true;
+                            btnMassCalib.Enabled = true;
+                            btnFxyCalib.Enabled = true;
+                            btnFzCalib.Enabled = true;
+
+                            //Reset calibrating values
+                            isMassCalibrating = false;
+                            calibStep = 0;
                         }
+                    }
+
+                    //Run the estimator of the Pseudo Positioner
+                    if (mVehicleMass <= 0) mVehicleMass = 0.01;
+                    mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass);
+
                 }
                 catch (Exception x)
                 {
                     MessageBox.Show(x.Message.ToString());
                 }
-                
-                //Update data visualizations
-                try
-                {
-                    mPosMap.update(mPsner.getX(), mPsner.getY());
-
-                    lblFx.Text = Math.Round(forces[0], 2).ToString();
-                    lblFy.Text = Math.Round(forces[1], 2).ToString();
-                    lblFz.Text = Math.Round(forces[2], 2).ToString();
-
-                    lblAx.Text = Math.Round(mPsner.getAx(), 2).ToString();
-                    lblAy.Text = Math.Round(mPsner.getAy(), 2).ToString();
-                    lblAz.Text = Math.Round(mPsner.getAz(), 2).ToString();
-
-                    lblVx.Text = Math.Round(mPsner.getVx(), 2).ToString();
-                    lblVy.Text = Math.Round(mPsner.getVy(), 2).ToString();
-                    lblVz.Text = Math.Round(mPsner.getVz(), 2).ToString();
-
-                    lblX.Text = Math.Round(mPsner.getX(), 2).ToString();
-                    lblY.Text = Math.Round(mPsner.getY(), 2).ToString();
-                    lblZ.Text = Math.Round(mPsner.getZ(), 2).ToString();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message.ToString(), "Chart error");
-                }
             }
+            catch (Exception x)
+            {
+                MessageBox.Show(x.Message.ToString());
+            }
+ 
         }
 
         private void updatePosMap()
@@ -754,6 +853,22 @@ namespace mGCS
             pnlFtSetting.Visible    = false;
             isFxyCalibrating        = false;
             isFzCalibrating         = false;
+            isMassCalibrating = false;
+
+            pbarFxyCalib.Value = 0;
+            pbarFxyCalib.Visible = false;
+            pbarFzCalib.Value = 0;
+            pbarFzCalib.Visible = false;
+            pbarMassCalib.Value = 0;
+            pbarMassCalib.Visible = false;
+            btnMassCalib.Visible = true;
+            btnMassCalib.Enabled = true;
+
+            lblFx0Calib.Text = "0.00";
+            lblFy0Calib.Text = "0.00";
+            lblFz0Calib.Text = "0.00";
+            lblMassCalib.Text = "0.00";
+
             calibStep = 0;
             forceBiasCandidate[0]   = 0;
             forceBiasCandidate[1]   = 0;
@@ -885,6 +1000,16 @@ namespace mGCS
         private void cbxVclBaudRate_TextChanged(object sender, EventArgs e)
         {
             vclBaudRate = Convert.ToInt32(cbxVclBaudRate.Text);
+        }
+
+        private void ftDataProcessingTimer_Tick(object sender, EventArgs e)
+        {
+            //ftDataProcess();
+        }
+
+        private void ftVisualizationTimer_Tick(object sender, EventArgs e)
+        {
+            ftVisualize();
         }
     }
 }

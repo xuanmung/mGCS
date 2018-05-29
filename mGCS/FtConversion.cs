@@ -22,7 +22,7 @@ namespace mGCS
             double[] convertedData = new double[3];
              //Convert Fx, Fy, Fz from [Count] to [N]
             convertedData[0] = 0.0061 * ftData[1];
-            convertedData[1] = 0.0061 * ftData[2];
+            convertedData[1] = -0.0061 * ftData[2];
             convertedData[2] = 0.0061 * ftData[3];
 
             return convertedData;

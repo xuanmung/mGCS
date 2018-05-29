@@ -127,6 +127,8 @@
             this.btnCntFs = new System.Windows.Forms.Button();
             this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.mFtTimer = new System.Windows.Forms.Timer(this.components);
+            this.ftDataProcessingTimer = new System.Windows.Forms.Timer(this.components);
+            this.ftVisualizationTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -865,10 +867,10 @@
             // btnRefreshAll
             // 
             this.btnRefreshAll.BackgroundImage = global::mGCS.Properties.Resources.btnRefres;
-            this.btnRefreshAll.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnRefreshAll.Location = new System.Drawing.Point(700, 4);
+            this.btnRefreshAll.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnRefreshAll.Location = new System.Drawing.Point(711, 4);
             this.btnRefreshAll.Name = "btnRefreshAll";
-            this.btnRefreshAll.Size = new System.Drawing.Size(70, 68);
+            this.btnRefreshAll.Size = new System.Drawing.Size(57, 50);
             this.btnRefreshAll.TabIndex = 0;
             this.btnRefreshAll.UseVisualStyleBackColor = true;
             this.btnRefreshAll.Click += new System.EventHandler(this.btnRefreshAll_Click);
@@ -1242,8 +1244,17 @@
             // 
             // mFtTimer
             // 
-            this.mFtTimer.Interval = 10;
+            this.mFtTimer.Interval = 50;
             this.mFtTimer.Tick += new System.EventHandler(this.mFtTimer_Tick);
+            // 
+            // ftDataProcessingTimer
+            // 
+            this.ftDataProcessingTimer.Interval = 50;
+            this.ftDataProcessingTimer.Tick += new System.EventHandler(this.ftDataProcessingTimer_Tick);
+            // 
+            // ftVisualizationTimer
+            // 
+            this.ftVisualizationTimer.Tick += new System.EventHandler(this.ftVisualizationTimer_Tick);
             // 
             // mGCS
             // 
@@ -1394,6 +1405,8 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnMassCalib;
         private System.Windows.Forms.ProgressBar pbarMassCalib;
+        private System.Windows.Forms.Timer ftDataProcessingTimer;
+        private System.Windows.Forms.Timer ftVisualizationTimer;
 
     }
 }

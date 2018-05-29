@@ -14,9 +14,9 @@ D:\STUDY\DOCTOR COURSE\Projects\6DOF GTB\5_Source_code\mGCS\mGCS\obj\x86\Release
 D:\STUDY\DOCTOR COURSE\Projects\6DOF GTB\5_Source_code\mGCS\mGCS\obj\x86\Release\mGCS.csprojResolveAssemblyReference.cache
 D:\Mung_Projects\mGCS\mGCS\bin\Release\mGCS.exe
 D:\Mung_Projects\mGCS\mGCS\bin\Release\mGCS.pdb
+D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.csprojResolveAssemblyReference.cache
 D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.mGCS.resources
 D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.Properties.Resources.resources
 D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.csproj.GenerateResource.Cache
 D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.exe
 D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.pdb
-D:\Mung_Projects\mGCS\mGCS\obj\x86\Release\mGCS.csprojResolveAssemblyReference.cache
