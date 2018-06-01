@@ -37,6 +37,15 @@ namespace mGCS
         private System.Windows.Forms.Timer mTimer;
         private TcpClient client = new TcpClient();
         private bool gpsConnected = false;
+        private const double initEcefX = -3052685.2;
+        private const double initEcefY = 4040266.6;
+        private const double initEcefZ = 3866655.3;
+        private const double initLon = 127.073428630829;
+        private const double initLat = 37.5503616346548;
+        private MatrixHelper mMatrixHelper;
+        private double[][] mRotationMatrixEcef2Ned;
+        private double[][] mRotationMatrixNed2Ecef;
+        private double[][] posEcef, posEcefRef, posNed;
 
         //F/T sensor variables
         private bool ftConnected = false;
@@ -84,6 +93,42 @@ namespace mGCS
         {
             mInputHelper = new UserInputHelper();
 
+            mMatrixHelper = new MatrixHelper();
+
+            //Calculate rotation matrix from ECEF to NED
+            mRotationMatrixEcef2Ned = mMatrixHelper.MatrixCreate(3,3);
+
+            mRotationMatrixEcef2Ned[0][0] = -Math.Sin(initLat) * Math.Cos(initLon);
+            mRotationMatrixEcef2Ned[0][1] = -Math.Sin(initLat) * Math.Sin(initLon);
+            mRotationMatrixEcef2Ned[0][2] = Math.Cos(initLat);
+
+            mRotationMatrixEcef2Ned[1][0] = -Math.Sin(initLon); 
+            mRotationMatrixEcef2Ned[1][1] = Math.Cos(initLon);
+            mRotationMatrixEcef2Ned[1][2] = 0;
+
+            mRotationMatrixEcef2Ned[2][0] = -Math.Cos(initLat) * Math.Cos(initLon);
+            mRotationMatrixEcef2Ned[2][1] = -Math.Cos(initLat) * Math.Sin(initLon);
+            mRotationMatrixEcef2Ned[2][2] = -Math.Sin(initLat);
+
+            //Calculate rotation matrix from NED to ECEF
+            mRotationMatrixNed2Ecef = mMatrixHelper.MatrixCreate(3, 3);
+            try
+            {
+                mRotationMatrixNed2Ecef = mMatrixHelper.MatrixInverse(mRotationMatrixEcef2Ned);
+            }
+            catch { }
+
+            //Declare the ECEF reference postion
+            posEcefRef = mMatrixHelper.MatrixCreate(3, 1);
+            posEcefRef[0][0] = initEcefX;
+            posEcefRef[1][0] = initEcefY;
+            posEcefRef[2][0] = initEcefZ;
+
+            //Init the ECEF reference postion
+            posEcef = mMatrixHelper.MatrixCreate(3, 1);
+            posNed = mMatrixHelper.MatrixCreate(3, 1);
+
+            //Inquiry parameters from saved internal file (if any)
             try
             {
                 if (File.Exists(mParamFileName))
@@ -302,7 +347,17 @@ namespace mGCS
             byte[] dataLen = BitConverter.GetBytes((uint)32);
             Array.Reverse(dataLen, 0, dataLen.Length);
 
-            byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)(-3121354.2511 + mPsner.getX())), ecef_y = BitConverter.GetBytes((double)(4085516.7232 + mPsner.getY())), ecef_z = BitConverter.GetBytes((double)3761774.7523);
+            //Assign NED position
+            posNed[0][0] = mPsner.getX();
+            posNed[1][0] = mPsner.getX();
+            posNed[2][0] = mPsner.getX();
+
+            //Convert pseudo position from NED to ECEF
+            posEcef = mMatrixHelper.MatrixAdd(mMatrixHelper.MatrixProduct(mRotationMatrixNed2Ecef, posNed), posEcefRef);
+
+            //byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)(-3121354.2511 + mPsner.getX())), ecef_y = BitConverter.GetBytes((double)(4085516.7232 + mPsner.getY())), ecef_z = BitConverter.GetBytes((double)3761774.7523);
+            byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes(posEcef[0][0]), ecef_y = BitConverter.GetBytes(posEcef[1][0]), ecef_z = BitConverter.GetBytes(posEcef[2][0]);
+
             Array.Reverse(time, 0, time.Length);
             Array.Reverse(ecef_x, 0, ecef_x.Length);
             Array.Reverse(ecef_y, 0, ecef_y.Length);
@@ -1010,6 +1065,51 @@ namespace mGCS
         private void ftVisualizationTimer_Tick(object sender, EventArgs e)
         {
             ftVisualize();
+        }
+
+        private void btnCntFs_Click(object sender, EventArgs e)
+        {
+            /*** This part is just for testing the NED to ECEF conversion
+            MatrixHelper mMatrixHelper = new MatrixHelper();
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbxView.Items.Add("\nBegin matrix inverse using Crout LU decomp demo \n");
+            });
+
+            double[][] e2n = mMatrixHelper.MatrixCreate(3, 3);
+            e2n[0][0] = 3.0; e2n[0][1] = 7.0; e2n[0][2] = 2.0;
+            e2n[1][0] = 1.0; e2n[1][1] = 8.0; e2n[1][2] = 4.0;
+            e2n[2][0] = 2.0; e2n[2][1] = 1.0; e2n[2][2] = 9.0;
+
+            e2n = mRotationMatrixEcef2Ned;
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbxView.Items.Add("Inverse matrix is ");
+                lbxView.Items.Add(mMatrixHelper.MatrixAsString(e2n));
+            });
+
+            double[][] per = mMatrixHelper.MatrixCreate(3, 1);
+            per[0][0] = 3.0; per[1][0] = 7.0; per[2][0] = 2.0;
+
+            double[][] pn = mMatrixHelper.MatrixCreate(3, 1);
+            pn[0][0] = 0.1; pn[1][0] = 0.1; pn[2][0] = 10.10;
+
+            double[][] n2e = mMatrixHelper.MatrixInverse(e2n);
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbxView.Items.Add("Inverse matrix inv is ");
+                lbxView.Items.Add(mMatrixHelper.MatrixAsString(n2e));
+            });
+
+            double[][] pe = mMatrixHelper.MatrixAdd(mMatrixHelper.MatrixProduct(mRotationMatrixNed2Ecef, pn), posEcefRef);
+
+            //double[][] pe = mMatrixHelper.MatrixAdd(mMatrixHelper.MatrixProduct(n2e, pn), per);
+            this.Invoke((MethodInvoker)delegate()
+            {
+                lbxView.Items.Add("The Pe is ");
+                lbxView.Items.Add(mMatrixHelper.MatrixAsString(pe));
+            });
+            ***/
         }
     }
 }

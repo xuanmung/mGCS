@@ -194,7 +194,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.lbxView);
             this.splitContainer2.Size = new System.Drawing.Size(246, 512);
-            this.splitContainer2.SplitterDistance = 237;
+            this.splitContainer2.SplitterDistance = 224;
             this.splitContainer2.TabIndex = 0;
             // 
             // pnlFtInfo
@@ -275,7 +275,7 @@
             // lblMassCalib
             // 
             this.lblMassCalib.AutoSize = true;
-            this.lblMassCalib.Location = new System.Drawing.Point(125, 200);
+            this.lblMassCalib.Location = new System.Drawing.Point(125, 195);
             this.lblMassCalib.Name = "lblMassCalib";
             this.lblMassCalib.Size = new System.Drawing.Size(27, 12);
             this.lblMassCalib.TabIndex = 15;
@@ -285,7 +285,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(88, 200);
+            this.label15.Location = new System.Drawing.Point(88, 195);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(37, 12);
             this.label15.TabIndex = 14;
@@ -294,7 +294,7 @@
             // 
             // tbxDragY
             // 
-            this.tbxDragY.Location = new System.Drawing.Point(89, 163);
+            this.tbxDragY.Location = new System.Drawing.Point(89, 156);
             this.tbxDragY.Name = "tbxDragY";
             this.tbxDragY.Size = new System.Drawing.Size(67, 21);
             this.tbxDragY.TabIndex = 13;
@@ -303,7 +303,7 @@
             // 
             // tbxDragX
             // 
-            this.tbxDragX.Location = new System.Drawing.Point(89, 130);
+            this.tbxDragX.Location = new System.Drawing.Point(89, 123);
             this.tbxDragX.Name = "tbxDragX";
             this.tbxDragX.Size = new System.Drawing.Size(67, 21);
             this.tbxDragX.TabIndex = 13;
@@ -312,7 +312,7 @@
             // 
             // pbarFxyCalib
             // 
-            this.pbarFxyCalib.Location = new System.Drawing.Point(6, 111);
+            this.pbarFxyCalib.Location = new System.Drawing.Point(6, 106);
             this.pbarFxyCalib.Name = "pbarFxyCalib";
             this.pbarFxyCalib.Size = new System.Drawing.Size(218, 10);
             this.pbarFxyCalib.TabIndex = 4;
@@ -320,7 +320,7 @@
             // lblFy0Calib
             // 
             this.lblFy0Calib.AutoSize = true;
-            this.lblFy0Calib.Location = new System.Drawing.Point(199, 90);
+            this.lblFy0Calib.Location = new System.Drawing.Point(199, 85);
             this.lblFy0Calib.Name = "lblFy0Calib";
             this.lblFy0Calib.Size = new System.Drawing.Size(27, 12);
             this.lblFy0Calib.TabIndex = 12;
@@ -330,7 +330,7 @@
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(162, 90);
+            this.label46.Location = new System.Drawing.Point(162, 85);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(25, 12);
             this.label46.TabIndex = 12;
@@ -340,7 +340,7 @@
             // lblFx0Calib
             // 
             this.lblFx0Calib.AutoSize = true;
-            this.lblFx0Calib.Location = new System.Drawing.Point(127, 90);
+            this.lblFx0Calib.Location = new System.Drawing.Point(127, 85);
             this.lblFx0Calib.Name = "lblFx0Calib";
             this.lblFx0Calib.Size = new System.Drawing.Size(27, 12);
             this.lblFx0Calib.TabIndex = 12;
@@ -350,7 +350,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(90, 90);
+            this.label44.Location = new System.Drawing.Point(90, 85);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(25, 12);
             this.label44.TabIndex = 12;
@@ -360,7 +360,7 @@
             // lblFz0Calib
             // 
             this.lblFz0Calib.AutoSize = true;
-            this.lblFz0Calib.Location = new System.Drawing.Point(128, 51);
+            this.lblFz0Calib.Location = new System.Drawing.Point(128, 46);
             this.lblFz0Calib.Name = "lblFz0Calib";
             this.lblFz0Calib.Size = new System.Drawing.Size(27, 12);
             this.lblFz0Calib.TabIndex = 12;
@@ -370,7 +370,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(91, 51);
+            this.label42.Location = new System.Drawing.Point(91, 46);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(25, 12);
             this.label42.TabIndex = 12;
@@ -380,7 +380,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 169);
+            this.label13.Location = new System.Drawing.Point(6, 162);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(75, 12);
             this.label13.TabIndex = 12;
@@ -390,7 +390,7 @@
             // lblVehicleMass
             // 
             this.lblVehicleMass.AutoSize = true;
-            this.lblVehicleMass.Location = new System.Drawing.Point(6, 136);
+            this.lblVehicleMass.Location = new System.Drawing.Point(6, 129);
             this.lblVehicleMass.Name = "lblVehicleMass";
             this.lblVehicleMass.Size = new System.Drawing.Size(75, 12);
             this.lblVehicleMass.TabIndex = 12;
@@ -400,9 +400,10 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(9, 20);
+            this.label41.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label41.Location = new System.Drawing.Point(9, 15);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(127, 12);
+            this.label41.Size = new System.Drawing.Size(148, 12);
             this.label41.TabIndex = 12;
             this.label41.Text = "FT sensor Calibration";
             this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -410,7 +411,7 @@
             // pbarFzCalib
             // 
             this.pbarFzCalib.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.pbarFzCalib.Location = new System.Drawing.Point(6, 71);
+            this.pbarFzCalib.Location = new System.Drawing.Point(6, 66);
             this.pbarFzCalib.Name = "pbarFzCalib";
             this.pbarFzCalib.Size = new System.Drawing.Size(218, 10);
             this.pbarFzCalib.TabIndex = 5;
@@ -418,7 +419,7 @@
             // btnCancelFtSetting
             // 
             this.btnCancelFtSetting.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnCancelFtSetting.Location = new System.Drawing.Point(161, 195);
+            this.btnCancelFtSetting.Location = new System.Drawing.Point(161, 190);
             this.btnCancelFtSetting.Name = "btnCancelFtSetting";
             this.btnCancelFtSetting.Size = new System.Drawing.Size(62, 23);
             this.btnCancelFtSetting.TabIndex = 2;
@@ -429,7 +430,7 @@
             // btnApplyDragY
             // 
             this.btnApplyDragY.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnApplyDragY.Location = new System.Drawing.Point(161, 163);
+            this.btnApplyDragY.Location = new System.Drawing.Point(161, 156);
             this.btnApplyDragY.Name = "btnApplyDragY";
             this.btnApplyDragY.Size = new System.Drawing.Size(61, 23);
             this.btnApplyDragY.TabIndex = 2;
@@ -441,7 +442,7 @@
             // btnApplyDragX
             // 
             this.btnApplyDragX.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnApplyDragX.Location = new System.Drawing.Point(162, 128);
+            this.btnApplyDragX.Location = new System.Drawing.Point(162, 121);
             this.btnApplyDragX.Name = "btnApplyDragX";
             this.btnApplyDragX.Size = new System.Drawing.Size(61, 23);
             this.btnApplyDragX.TabIndex = 2;
@@ -454,7 +455,7 @@
             // 
             this.btnMassCalib.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnMassCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnMassCalib.Location = new System.Drawing.Point(6, 195);
+            this.btnMassCalib.Location = new System.Drawing.Point(6, 190);
             this.btnMassCalib.Name = "btnMassCalib";
             this.btnMassCalib.Size = new System.Drawing.Size(75, 23);
             this.btnMassCalib.TabIndex = 2;
@@ -466,7 +467,7 @@
             // 
             this.btnFxyCalib.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnFxyCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnFxyCalib.Location = new System.Drawing.Point(6, 85);
+            this.btnFxyCalib.Location = new System.Drawing.Point(6, 80);
             this.btnFxyCalib.Name = "btnFxyCalib";
             this.btnFxyCalib.Size = new System.Drawing.Size(75, 23);
             this.btnFxyCalib.TabIndex = 2;
@@ -478,7 +479,7 @@
             // 
             this.btnFzCalib.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnFzCalib.Font = new System.Drawing.Font("Gulim", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnFzCalib.Location = new System.Drawing.Point(6, 46);
+            this.btnFzCalib.Location = new System.Drawing.Point(6, 41);
             this.btnFzCalib.Name = "btnFzCalib";
             this.btnFzCalib.Size = new System.Drawing.Size(75, 23);
             this.btnFzCalib.TabIndex = 3;
@@ -489,7 +490,7 @@
             // pbarMassCalib
             // 
             this.pbarMassCalib.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.pbarMassCalib.Location = new System.Drawing.Point(6, 195);
+            this.pbarMassCalib.Location = new System.Drawing.Point(6, 190);
             this.pbarMassCalib.Name = "pbarMassCalib";
             this.pbarMassCalib.Size = new System.Drawing.Size(75, 23);
             this.pbarMassCalib.TabIndex = 5;
@@ -861,7 +862,7 @@
             this.lbxView.ItemHeight = 12;
             this.lbxView.Location = new System.Drawing.Point(0, 0);
             this.lbxView.Name = "lbxView";
-            this.lbxView.Size = new System.Drawing.Size(244, 269);
+            this.lbxView.Size = new System.Drawing.Size(244, 282);
             this.lbxView.TabIndex = 0;
             // 
             // btnRefreshAll
@@ -1241,6 +1242,7 @@
             this.btnCntFs.Size = new System.Drawing.Size(75, 64);
             this.btnCntFs.TabIndex = 9;
             this.btnCntFs.UseVisualStyleBackColor = true;
+            this.btnCntFs.Click += new System.EventHandler(this.btnCntFs_Click);
             // 
             // mFtTimer
             // 

@@ -66,6 +66,7 @@
     <Compile Include="FtCalibration.cs" />
     <Compile Include="FtConversion.cs" />
     <Compile Include="LowPassFilter.cs" />
+    <Compile Include="MatrixHelper.cs" />
     <Compile Include="PositionMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
