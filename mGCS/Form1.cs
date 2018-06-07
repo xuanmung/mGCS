@@ -35,6 +35,7 @@ namespace mGCS
         private static string   gpsSimIp;
         private static int      gpsSimPort;
         private System.Windows.Forms.Timer mTimer;
+        double mTimerChecker = 0;
         private TcpClient client = new TcpClient();
         private bool gpsConnected = false;
         private const double initEcefX = -3052685.2;
@@ -42,6 +43,8 @@ namespace mGCS
         private const double initEcefZ = 3866655.3;
         private const double initLon = 127.073428630829;
         private const double initLat = 37.5503616346548;
+        private double initLonRad;
+        private double initLatRad;
         private MatrixHelper mMatrixHelper;
         private double[][] mRotationMatrixEcef2Ned;
         private double[][] mRotationMatrixNed2Ecef;
@@ -70,7 +73,9 @@ namespace mGCS
         private static PositionMap mPosMap;
         private static Thread updatePosMapThread;
         private static LowPassFilter mLpf;
-        private const double mFtSamplingTime = 0.05;
+        //private static DateTime mDateTime;
+        private long mTimePoint;
+        private double mFtSamplingTime = 0;
         private static PseudoPositioning mPsner;
         private double mVehicleMass;
         private double mVehicleMassCandidate;
@@ -95,20 +100,38 @@ namespace mGCS
 
             mMatrixHelper = new MatrixHelper();
 
+            //Convert lon and lat from [deg] to [rad]
+            initLonRad = mMatrixHelper.deg2rad(initLon);
+            initLatRad = mMatrixHelper.deg2rad(initLat);
+
             //Calculate rotation matrix from ECEF to NED
             mRotationMatrixEcef2Ned = mMatrixHelper.MatrixCreate(3,3);
 
-            mRotationMatrixEcef2Ned[0][0] = -Math.Sin(initLat) * Math.Cos(initLon);
-            mRotationMatrixEcef2Ned[0][1] = -Math.Sin(initLat) * Math.Sin(initLon);
-            mRotationMatrixEcef2Ned[0][2] = Math.Cos(initLat);
+            mRotationMatrixEcef2Ned[0][0] = -Math.Sin(initLatRad) * Math.Cos(initLonRad);
+            mRotationMatrixEcef2Ned[0][1] = -Math.Sin(initLatRad) * Math.Sin(initLonRad);
+            mRotationMatrixEcef2Ned[0][2] = Math.Cos(initLatRad);
 
-            mRotationMatrixEcef2Ned[1][0] = -Math.Sin(initLon); 
-            mRotationMatrixEcef2Ned[1][1] = Math.Cos(initLon);
+            mRotationMatrixEcef2Ned[1][0] = -Math.Sin(initLonRad);
+            mRotationMatrixEcef2Ned[1][1] = Math.Cos(initLonRad);
             mRotationMatrixEcef2Ned[1][2] = 0;
 
-            mRotationMatrixEcef2Ned[2][0] = -Math.Cos(initLat) * Math.Cos(initLon);
-            mRotationMatrixEcef2Ned[2][1] = -Math.Cos(initLat) * Math.Sin(initLon);
-            mRotationMatrixEcef2Ned[2][2] = -Math.Sin(initLat);
+            mRotationMatrixEcef2Ned[2][0] = -Math.Cos(initLatRad) * Math.Cos(initLonRad);
+            mRotationMatrixEcef2Ned[2][1] = -Math.Cos(initLatRad) * Math.Sin(initLonRad);
+            mRotationMatrixEcef2Ned[2][2] = -Math.Sin(initLatRad);
+
+
+
+            //mRotationMatrixEcef2Ned[0][0] = -Math.Sin(initLonRad);
+            //mRotationMatrixEcef2Ned[0][1] = Math.Cos(initLonRad);
+            //mRotationMatrixEcef2Ned[0][2] = 0;
+
+            //mRotationMatrixEcef2Ned[1][0] = -Math.Sin(initLatRad) * Math.Cos(initLonRad);
+            //mRotationMatrixEcef2Ned[1][1] = -Math.Sin(initLatRad) * Math.Sin(initLonRad);
+            //mRotationMatrixEcef2Ned[1][2] = Math.Cos(initLatRad);
+
+            //mRotationMatrixEcef2Ned[2][0] = Math.Cos(initLatRad) * Math.Cos(initLonRad);
+            //mRotationMatrixEcef2Ned[2][1] = Math.Cos(initLatRad) * Math.Sin(initLonRad);
+            //mRotationMatrixEcef2Ned[2][2] = Math.Sin(initLatRad);
 
             //Calculate rotation matrix from NED to ECEF
             mRotationMatrixNed2Ecef = mMatrixHelper.MatrixCreate(3, 3);
@@ -116,7 +139,10 @@ namespace mGCS
             {
                 mRotationMatrixNed2Ecef = mMatrixHelper.MatrixInverse(mRotationMatrixEcef2Ned);
             }
-            catch { }
+            catch
+            {
+                MessageBox.Show("Coordinate transform failed");
+            }
 
             //Declare the ECEF reference postion
             posEcefRef = mMatrixHelper.MatrixCreate(3, 1);
@@ -196,12 +222,20 @@ namespace mGCS
             mTimer.Tick += new System.EventHandler(mTimer_Tick);
             //mTimer.Start();
 
+            mTimePoint = 0;
+
             //Initiate Lowpass filter
             mLpf = new LowPassFilter(2.0, mFtSamplingTime);
+
+            //Assign position map
             mPosMap = new PositionMap(chartPosSim);
-            updatePosMapThread = new Thread(new ThreadStart(updatePosMap));
-            chartPosSim.Titles.Add("Vehicle's Position");
-            mPsner = new PseudoPositioning(0.3, 0.28, mFtSamplingTime);
+            mPosMap.setTitle("Vehicle's Position");
+            //chartPosSim.Titles.Add("Vehicle's Position");
+
+            updatePosMapThread = new Thread(new ThreadStart(updatePosMap)); 
+
+            //mPsner = new PseudoPositioning(0.3, 0.28);
+            mPsner = new PseudoPositioning(drag[0], drag[1]); 
         }
 
         private void mGCS_FormClosing(object sender, FormClosingEventArgs e)
@@ -338,6 +372,8 @@ namespace mGCS
 
         void mTimer_Tick(object sender, EventArgs e)
         {
+            //mTimerChecker = (DateTime.Now.Millisecond - milisecondTimePoint) * 0.001;
+            //milisecondTimePoint = DateTime.Now.Millisecond;
             const int INT_SIZE = 4, DOUBLE_SIZE = 8;
             byte[] msg = new byte[40];
 
@@ -349,11 +385,11 @@ namespace mGCS
 
             //Assign NED position
             posNed[0][0] = mPsner.getX();
-            posNed[1][0] = mPsner.getX();
-            posNed[2][0] = mPsner.getX();
+            posNed[1][0] = mPsner.getY();
+            posNed[2][0] = -mPsner.getZ();
 
             //Convert pseudo position from NED to ECEF
-            posEcef = mMatrixHelper.MatrixAdd(mMatrixHelper.MatrixProduct(mRotationMatrixNed2Ecef, posNed), posEcefRef);
+            posEcef = mMatrixHelper.MatrixAdd(mMatrixHelper.MatrixProduct(mRotationMatrixNed2Ecef, posNed), posEcefRef); 
 
             //byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)(-3121354.2511 + mPsner.getX())), ecef_y = BitConverter.GetBytes((double)(4085516.7232 + mPsner.getY())), ecef_z = BitConverter.GetBytes((double)3761774.7523);
             byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes(posEcef[0][0]), ecef_y = BitConverter.GetBytes(posEcef[1][0]), ecef_z = BitConverter.GetBytes(posEcef[2][0]);
@@ -507,6 +543,9 @@ namespace mGCS
             else 
             {
                 ftVisualizationTimer.Stop();
+
+                ftPositioningTimer.Stop();
+
                 //while (ftDataReceiver.IsAlive)
                 //    try
                 //    {
@@ -560,7 +599,7 @@ namespace mGCS
                     //while (ftBuffer == null)
                     //{
                         ftSerialPort.WriteLine(requestCode.ToString()); 
-                        Thread.Sleep(20);
+                        //Thread.Sleep(1);
                         //if (ftSerialPort.BaseStream == null) { Thread.Sleep(10); };
                     //}
                 }
@@ -607,7 +646,7 @@ namespace mGCS
                             //Visible Refresh Button
                             btnRefreshAll.Visible = true;
 
-                            //ftDataProcessingTimer.Start();
+                            ftPositioningTimer.Start();
                             ftVisualizationTimer.Start();
                         }
                         //MessageBox.Show("F/T sensor connected", "F/T sensor connection");
@@ -626,8 +665,10 @@ namespace mGCS
                 if (lbxView.Items.Count > 10) 
                     lbxView.Items.Clear();
 
-                if (ftBuffer.IsNormalized()) 
-                    lbxView.Items.Add(ftBuffer);
+                //if (ftBuffer.IsNormalized()) 
+                //    lbxView.Items.Add(ftBuffer);
+
+                lbxView.Items.Add(mFtSamplingTime.ToString());
             });
 
             //Assign values
@@ -842,9 +883,19 @@ namespace mGCS
                         }
                     }
 
-                    //Run the estimator of the Pseudo Positioner
-                    if (mVehicleMass <= 0) mVehicleMass = 0.01;
-                    mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass);
+                    //if (mTimePoint == 0)
+                    //{
+                    //    mTimePoint = DateTime.Now.Ticks - mTimePoint;
+                    //}
+                    //else
+                    //{
+                    //    mFtSamplingTime = (DateTime.Now.Ticks - mTimePoint) * Math.Pow(10, -7);
+                    //    mTimePoint = DateTime.Now.Ticks;
+                    //}
+
+                    ////Run the estimator of the Pseudo Positioner
+                    //if (mVehicleMass <= 0) mVehicleMass = 0.01;
+                    //mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass, mFtSamplingTime);
 
                 }
                 catch (Exception x)
@@ -1029,12 +1080,16 @@ namespace mGCS
         {
             drag[0] = Convert.ToDouble(tbxDragX.Text);
             btnApplyDragX.Visible = false;
+            lblDragX.Text = Math.Round(drag[0], 2).ToString();
+            mPsner.setDrag(drag[0], drag[1], 0.2);
         }
 
         private void btnApplyDragY_Click(object sender, EventArgs e)
         {
             drag[1] = Convert.ToDouble(tbxDragY.Text);
             btnApplyDragY.Visible = false;
+            lblDragY.Text = Math.Round(drag[1], 2).ToString();
+            mPsner.setDrag(drag[0], drag[1], 0.2);
         }
 
         private void cbxFtComPort_TextChanged(object sender, EventArgs e)
@@ -1057,9 +1112,24 @@ namespace mGCS
             vclBaudRate = Convert.ToInt32(cbxVclBaudRate.Text);
         }
 
-        private void ftDataProcessingTimer_Tick(object sender, EventArgs e)
+        private void ftPositioningTimer_Tick(object sender, EventArgs e)
         {
-            //ftDataProcess();
+
+            if (mTimePoint == 0)
+            {
+                mTimePoint = DateTime.Now.Ticks - mTimePoint;
+            }
+            else
+            {
+                //Update sampling time
+                mFtSamplingTime = (DateTime.Now.Ticks - mTimePoint) * Math.Pow(10, -7);
+
+                //Update time point
+                mTimePoint = DateTime.Now.Ticks;
+            }
+            //Run the estimator of the Pseudo Positioner 
+            if (mVehicleMass <= 0) mVehicleMass = 0.01;
+            mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass, mFtSamplingTime);
         }
 
         private void ftVisualizationTimer_Tick(object sender, EventArgs e)

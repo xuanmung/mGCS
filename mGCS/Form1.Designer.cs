@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mGCS));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -127,7 +127,7 @@
             this.btnCntFs = new System.Windows.Forms.Button();
             this.ftSerialPort = new System.IO.Ports.SerialPort(this.components);
             this.mFtTimer = new System.Windows.Forms.Timer(this.components);
-            this.ftDataProcessingTimer = new System.Windows.Forms.Timer(this.components);
+            this.ftPositioningTimer = new System.Windows.Forms.Timer(this.components);
             this.ftVisualizationTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -878,17 +878,17 @@
             // 
             // chartPosSim
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPosSim.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chartPosSim.ChartAreas.Add(chartArea3);
             this.chartPosSim.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chartPosSim.Legends.Add(legend1);
+            legend3.Name = "Legend1";
+            this.chartPosSim.Legends.Add(legend3);
             this.chartPosSim.Location = new System.Drawing.Point(0, 0);
             this.chartPosSim.Name = "chartPosSim";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartPosSim.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chartPosSim.Series.Add(series3);
             this.chartPosSim.Size = new System.Drawing.Size(771, 510);
             this.chartPosSim.TabIndex = 0;
             // 
@@ -1244,15 +1244,19 @@
             this.btnCntFs.UseVisualStyleBackColor = true;
             this.btnCntFs.Click += new System.EventHandler(this.btnCntFs_Click);
             // 
+            // ftSerialPort
+            // 
+            this.ftSerialPort.BaudRate = 57600;
+            // 
             // mFtTimer
             // 
-            this.mFtTimer.Interval = 50;
+            this.mFtTimer.Interval = 10;
             this.mFtTimer.Tick += new System.EventHandler(this.mFtTimer_Tick);
             // 
-            // ftDataProcessingTimer
+            // ftPositioningTimer
             // 
-            this.ftDataProcessingTimer.Interval = 50;
-            this.ftDataProcessingTimer.Tick += new System.EventHandler(this.ftDataProcessingTimer_Tick);
+            this.ftPositioningTimer.Interval = 10;
+            this.ftPositioningTimer.Tick += new System.EventHandler(this.ftPositioningTimer_Tick);
             // 
             // ftVisualizationTimer
             // 
@@ -1407,7 +1411,7 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnMassCalib;
         private System.Windows.Forms.ProgressBar pbarMassCalib;
-        private System.Windows.Forms.Timer ftDataProcessingTimer;
+        private System.Windows.Forms.Timer ftPositioningTimer;
         private System.Windows.Forms.Timer ftVisualizationTimer;
 
     }

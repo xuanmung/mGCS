@@ -37,14 +37,23 @@ namespace mGCS
             mChart.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
         }
 
-        public bool update(double x, double y)
+        public void setTitle(string title)
+        {
+            try
+            {
+                mChart.Titles.Add(title);
+            }
+            catch { }
+        }
+
+        public bool update(double north, double east)
         {
             try
             {
                 //mChart.ChartAreas[0].AxisX.ScaleView.Zoom(-10, 10);
                 //mChart.ChartAreas[0].AxisY.ScaleView.Zoom(-10, 10);
-                
-                mChart.Series[0].Points.AddXY(x, y);
+
+                mChart.Series[0].Points.AddXY(east, north);
 
                 return true;
             }

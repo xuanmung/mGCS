@@ -333,5 +333,10 @@ namespace mGCS
                 }
             return matrixResult;
         }
+
+        public double deg2rad(double deg)
+        {
+            return deg * Math.PI / 180.0;
+        }
     }
 }
