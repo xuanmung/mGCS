@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mGCS));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -96,6 +96,8 @@
             this.lblVx = new System.Windows.Forms.Label();
             this.lblAx = new System.Windows.Forms.Label();
             this.lbxView = new System.Windows.Forms.ListBox();
+            this.btnSendingStep = new System.Windows.Forms.Button();
+            this.tbxsendingStep = new System.Windows.Forms.TextBox();
             this.btnRefreshAll = new System.Windows.Forms.Button();
             this.chartPosSim = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -172,6 +174,8 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.btnSendingStep);
+            this.splitContainer1.Panel2.Controls.Add(this.tbxsendingStep);
             this.splitContainer1.Panel2.Controls.Add(this.btnRefreshAll);
             this.splitContainer1.Panel2.Controls.Add(this.chartPosSim);
             this.splitContainer1.Size = new System.Drawing.Size(1023, 512);
@@ -865,6 +869,26 @@
             this.lbxView.Size = new System.Drawing.Size(244, 282);
             this.lbxView.TabIndex = 0;
             // 
+            // btnSendingStep
+            // 
+            this.btnSendingStep.Location = new System.Drawing.Point(693, 108);
+            this.btnSendingStep.Name = "btnSendingStep";
+            this.btnSendingStep.Size = new System.Drawing.Size(73, 23);
+            this.btnSendingStep.TabIndex = 11;
+            this.btnSendingStep.Text = "SendStep";
+            this.btnSendingStep.UseVisualStyleBackColor = true;
+            this.btnSendingStep.Click += new System.EventHandler(this.btnSendingStep_Click);
+            // 
+            // tbxsendingStep
+            // 
+            this.tbxsendingStep.Location = new System.Drawing.Point(643, 109);
+            this.tbxsendingStep.Name = "tbxsendingStep";
+            this.tbxsendingStep.Size = new System.Drawing.Size(44, 21);
+            this.tbxsendingStep.TabIndex = 10;
+            this.tbxsendingStep.Text = "16001";
+            this.tbxsendingStep.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbxsendingStep.TextChanged += new System.EventHandler(this.tbxsendingStep_TextChanged);
+            // 
             // btnRefreshAll
             // 
             this.btnRefreshAll.BackgroundImage = global::mGCS.Properties.Resources.btnRefres;
@@ -878,17 +902,17 @@
             // 
             // chartPosSim
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chartPosSim.ChartAreas.Add(chartArea3);
+            chartArea1.Name = "ChartArea1";
+            this.chartPosSim.ChartAreas.Add(chartArea1);
             this.chartPosSim.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend3.Name = "Legend1";
-            this.chartPosSim.Legends.Add(legend3);
+            legend1.Name = "Legend1";
+            this.chartPosSim.Legends.Add(legend1);
             this.chartPosSim.Location = new System.Drawing.Point(0, 0);
             this.chartPosSim.Name = "chartPosSim";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chartPosSim.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartPosSim.Series.Add(series1);
             this.chartPosSim.Size = new System.Drawing.Size(771, 510);
             this.chartPosSim.TabIndex = 0;
             // 
@@ -1246,7 +1270,7 @@
             // 
             // ftSerialPort
             // 
-            this.ftSerialPort.BaudRate = 57600;
+            this.ftSerialPort.BaudRate = 115200;
             // 
             // mFtTimer
             // 
@@ -1280,6 +1304,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
@@ -1413,6 +1438,8 @@
         private System.Windows.Forms.ProgressBar pbarMassCalib;
         private System.Windows.Forms.Timer ftPositioningTimer;
         private System.Windows.Forms.Timer ftVisualizationTimer;
+        private System.Windows.Forms.Button btnSendingStep;
+        private System.Windows.Forms.TextBox tbxsendingStep;
 
     }
 }

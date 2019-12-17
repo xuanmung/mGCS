@@ -19,7 +19,7 @@ namespace mGCS
         public MatrixHelper()
         { }
 
-        void examples(string[] args)
+        private void examples(string[] args)
         {
             Console.WriteLine("\nBegin matrix inverse using Crout LU decomp demo \n");
 

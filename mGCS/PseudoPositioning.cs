@@ -13,6 +13,7 @@ namespace mGCS
         private const double DEADZONE = 0.2;
         //double roll, pitch, yaw;
         private static double ax, ay, az, vx, vy, vz, x_estimate, y_estimate, z_estimate;
+        private float lpfWeight = 0.85f;
 
         public PseudoPositioning(double drag_x, double drag_y)
         {
@@ -37,6 +38,10 @@ namespace mGCS
 
         public bool runEstimation(double accel_x, double accel_y, double accel_z, double samplingTime)
         {
+            //ax = lpfWeight * ax + (1 - lpfWeight) * deadzone(accel_x, DEADZONE);
+            //ay = lpfWeight * ay + (1 - lpfWeight) * deadzone(accel_y, DEADZONE);
+            //az = lpfWeight * az + (1 - lpfWeight) * deadzone(accel_z, DEADZONE);
+
             ax = deadzone(accel_x, DEADZONE);
             ay = deadzone(accel_y, DEADZONE);
             az = deadzone(accel_z, DEADZONE);

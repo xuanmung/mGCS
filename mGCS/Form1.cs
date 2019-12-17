@@ -30,25 +30,28 @@ namespace mGCS
 
         //GPS Sim. variables
         private static Socket   mClient;
-        bool skSts1;
-        private static byte[]   mPkg = new byte[512];
+        bool socketStatus;
+        //private static byte[]   mPkg = new byte[512];
         private static string   gpsSimIp;
         private static int      gpsSimPort;
         private System.Windows.Forms.Timer mTimer;
-        double mTimerChecker = 0;
-        private TcpClient client = new TcpClient();
+        private double mGpsSimTransmitTime= 0;
+        //double mTimerChecker = 0;
+        //private TcpClient client = new TcpClient();
         private bool gpsConnected = false;
-        private const double initEcefX = -3052685.2;
-        private const double initEcefY = 4040266.6;
-        private const double initEcefZ = 3866655.3;
-        private const double initLon = 127.073428630829;
-        private const double initLat = 37.5503616346548;
+        private const double initEcefX = -3052177.341;
+        private const double initEcefY = 4039584.961;
+        private const double initEcefZ = 3866018.510;
+        private const double initLon = 127.073493004;
+        private const double initLat = 37.550480719;
         private double initLonRad;
         private double initLatRad;
         private MatrixHelper mMatrixHelper;
         private double[][] mRotationMatrixEcef2Ned;
         private double[][] mRotationMatrixNed2Ecef;
-        private double[][] posEcef, posEcefRef, posNed;
+        private static double[][] posEcef, posEcefRef, posNed;
+        private double sendingStep;
+        private long mGpsTimePoint;
 
         //F/T sensor variables
         private bool ftConnected = false;
@@ -57,7 +60,7 @@ namespace mGCS
         private StreamWriter mStrmWrt;
         private string[] ftDataStr;
         //private double fx, fy, fz, tx, ty, tz;
-        private double[] forces     = new double[3];
+        private static double[] forces     = new double[3];
         public double[] forceBias   = new double[3];
         public double[] forceBiasCandidate = new double[3];
         private bool isFzCalibrating  = false;
@@ -74,7 +77,9 @@ namespace mGCS
         private static Thread updatePosMapThread;
         private static LowPassFilter mLpf;
         //private static DateTime mDateTime;
-        private long mTimePoint;
+        private static long mTimePoint0;
+        private static long mTimePoint;
+        private static double mtime = 0;
         private double mFtSamplingTime = 0;
         private static PseudoPositioning mPsner;
         private double mVehicleMass;
@@ -84,14 +89,18 @@ namespace mGCS
         private double[] estimatedPos = new double[3];
         private double[] estimatedVel = new double[3];
         private double[] estimatedAccel = new double[3];
+        private long loggingTimepoint0 = 0;
+        private double loggingTime = 0;
+        private double posNedX0 = 0;
+        private double changeTimePoint = 0;
 
         //Vehicle variables
-        private bool vehicleConnected = false;
+        //private bool vehicleConnected = false;
         private string vclComPort;
         private int vclBaudRate;
         
         //Flight Sim. variables
-        private bool fsConnected = false;
+        //private bool fsConnected = false;
         private string fsIp;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -119,8 +128,7 @@ namespace mGCS
             mRotationMatrixEcef2Ned[2][1] = -Math.Cos(initLatRad) * Math.Sin(initLonRad);
             mRotationMatrixEcef2Ned[2][2] = -Math.Sin(initLatRad);
 
-
-
+            
             //mRotationMatrixEcef2Ned[0][0] = -Math.Sin(initLonRad);
             //mRotationMatrixEcef2Ned[0][1] = Math.Cos(initLonRad);
             //mRotationMatrixEcef2Ned[0][2] = 0;
@@ -218,11 +226,14 @@ namespace mGCS
             pnlFtSetting.Visible = false;
 
             mTimer = new System.Windows.Forms.Timer();
-            mTimer.Interval = 100; //100 mili-seconds
+            mTimer.Interval = 95; //100 mili-seconds
             mTimer.Tick += new System.EventHandler(mTimer_Tick);
             //mTimer.Start();
 
             mTimePoint = 0;
+            mTimePoint0 = 0;
+            sendingStep = 0.0;
+            mGpsTimePoint = 0;
 
             //Initiate Lowpass filter
             mLpf = new LowPassFilter(2.0, mFtSamplingTime);
@@ -306,7 +317,7 @@ namespace mGCS
                     IPEndPoint iep = new IPEndPoint(IPAddress.Parse(gpsSimIp), gpsSimPort);
                     mClient.BeginConnect(iep, new AsyncCallback(gpsSimConnected), mClient);
                     Thread.Sleep(10);
-                    skSts1 = mClient.Connected;
+                    //socketStatus = mClient.Connected;
                     //bool skSts1 = socketConnected(mClient);
                     btnCntGpsSim.BackgroundImage = ((System.Drawing.Image)(Properties.Resources.btnDisConnect));
                     gpsConnected = true;
@@ -372,10 +383,25 @@ namespace mGCS
 
         void mTimer_Tick(object sender, EventArgs e)
         {
+
+            if (mGpsTimePoint == 0)
+            {
+                mGpsTimePoint = DateTime.Now.Ticks - mGpsTimePoint;
+            }
+            else
+            {
+                //Update sampling time
+                mGpsSimTransmitTime = (DateTime.Now.Ticks - mGpsTimePoint) * Math.Pow(10, -7);
+
+                //Update time point
+                mGpsTimePoint = DateTime.Now.Ticks;
+            }
+             
+
             //mTimerChecker = (DateTime.Now.Millisecond - milisecondTimePoint) * 0.001;
             //milisecondTimePoint = DateTime.Now.Millisecond;
-            const int INT_SIZE = 4, DOUBLE_SIZE = 8;
-            byte[] msg = new byte[40];
+            const int INT_SIZE = 4, DOUBLE_SIZE = 8; 
+            byte[] msg = new byte[40]; 
 
             byte[] dataType = BitConverter.GetBytes((uint)3593);
             Array.Reverse(dataType, 0, dataType.Length);
@@ -383,13 +409,45 @@ namespace mGCS
             byte[] dataLen = BitConverter.GetBytes((uint)32);
             Array.Reverse(dataLen, 0, dataLen.Length);
 
+            mtime += 0.1; //(mTimePoint - mTimePoint0) * Math.Pow(10, -7); 
+
             //Assign NED position
-            posNed[0][0] = mPsner.getX();
-            posNed[1][0] = mPsner.getY();
-            posNed[2][0] = -mPsner.getZ();
+            if (ftConnected)
+            {
+                //posNed[0][0] = mPsner.getX(); // posNedX0 + sendingStep * mtime; //4 * Math.Sin(1.256 * mtime); 
+                //if (posNed[0][0] > 10) posNed[0][0] = 10; 
+                //if (posNed[0][0] < -10) posNed[0][0] = -10;
+                //posNed[1][0] = mPsner.getY(); //0.001 * Math.Sin(1.256 * mtime);  
+                //posNed[2][0] = mPsner.getZ(); // -10;
+                //if (posNed[2][0] == 0)
+                //{
+                //    posNed[2][0] = -1 * mtime;
+                //    if (posNed[2][0] < -10) posNed[2][0] = -10; 
+                //}
+                //else
+                //{
+                //    posNed[2][0] = -10;
+                //}
+
+                posNed[0][0] = mPsner.getX();
+                posNed[1][0] = mPsner.getY();
+                posNed[2][0] = mPsner.getZ();
+            }
+            else
+            {
+                mTimePoint0  = mTimePoint; 
+                posNed[0][0] = 0; 
+                posNed[1][0] = 0; 
+                posNed[2][0] = 0; // mPsner.getZ(); 
+            }
 
             //Convert pseudo position from NED to ECEF
             posEcef = mMatrixHelper.MatrixAdd(mMatrixHelper.MatrixProduct(mRotationMatrixNed2Ecef, posNed), posEcefRef); 
+            
+            // just for debuging
+            //posEcef[0][0] =  posEcefRef[0][0] + 100;
+            //posEcef[1][0] = posEcefRef[1][0] + 200;
+            //posEcef[2][0] = posEcefRef[2][0] + 300;
 
             //byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes((double)(-3121354.2511 + mPsner.getX())), ecef_y = BitConverter.GetBytes((double)(4085516.7232 + mPsner.getY())), ecef_z = BitConverter.GetBytes((double)3761774.7523);
             byte[] time = BitConverter.GetBytes((double)10.1), ecef_x = BitConverter.GetBytes(posEcef[0][0]), ecef_y = BitConverter.GetBytes(posEcef[1][0]), ecef_z = BitConverter.GetBytes(posEcef[2][0]);
@@ -438,7 +496,7 @@ namespace mGCS
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            if (!mTimer.Enabled)
+            if (gpsConnected && !mTimer.Enabled)
             {
                 mTimer.Start();
             }
@@ -659,16 +717,18 @@ namespace mGCS
 
         private void ftVisualize()
         {
-            //Just for Debugging
+            ////Just for Debugging
             this.Invoke((MethodInvoker)delegate()
             {
-                if (lbxView.Items.Count > 10) 
+                if (lbxView.Items.Count > 10)
                     lbxView.Items.Clear();
 
                 //if (ftBuffer.IsNormalized()) 
                 //    lbxView.Items.Add(ftBuffer);
 
-                lbxView.Items.Add(mFtSamplingTime.ToString());
+                //lbxView.Items.Add(mFtSamplingTime.ToString());
+                lbxView.Items.Add(sendingStep.ToString());
+                //lbxView.Items.Add(mGpsSimTransmitTime.ToString());
             });
 
             //Assign values
@@ -696,7 +756,18 @@ namespace mGCS
                     while (mStrmWrt.BaseStream == null) { };
 
                     //LOGGING
-                    //Position
+                    //Time stamp
+                    mStrmWrt.Write((Math.Round(loggingTime, 4)).ToString() + "\t");
+
+                    ////mStrmWrt.Write(((mTimePoint - mTimePoint0) * Math.Pow(10, -7)).ToString() + "\t");
+                    //mStrmWrt.Write((Math.Round(mtime, 4)).ToString() + "\t");
+
+                    //ECEF position
+                    mStrmWrt.Write((Math.Round(posEcef[0][0], 3)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(posEcef[1][0], 3)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(posEcef[2][0], 3)).ToString() + "\t");
+
+                    //Local Position
                     mStrmWrt.Write((Math.Round(estimatedPos[0], 2)).ToString() + "\t");
                     mStrmWrt.Write((Math.Round(estimatedPos[1], 2)).ToString() + "\t");
                     mStrmWrt.Write((Math.Round(estimatedPos[2], 2)).ToString() + "\t");
@@ -712,9 +783,9 @@ namespace mGCS
                     mStrmWrt.Write((Math.Round(estimatedAccel[2], 2)).ToString() + "\t");
 
                     //Processed Forces
-                    mStrmWrt.Write((Math.Round(forces[0] - forceBias[0], 2)).ToString() + "\t");
-                    mStrmWrt.Write((Math.Round(forces[1] - forceBias[1], 2)).ToString() + "\t");
-                    mStrmWrt.Write((Math.Round(forces[2] - forceBias[2], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(forces[0], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(forces[1], 2)).ToString() + "\t");
+                    mStrmWrt.Write((Math.Round(forces[2], 2)).ToString() + "\t");
                     
                     //mStrmWrt.Write((Math.Round(forces[0], 2)).ToString().TrimEnd('0') + "\t");
 
@@ -765,6 +836,7 @@ namespace mGCS
 
         protected void ftDataProcess()
         {
+            float mLpfWeight = 0.85f;
             //Processing ftData
             try
             {
@@ -774,15 +846,19 @@ namespace mGCS
                 {
                     //Processing ftData: From [count] to [N]
                     FtConversion ftConverter = new FtConversion(mLpf);
-                    forces = ftConverter.normalize(ftData);
-
+                    double[] currentForce = ftConverter.normalize(ftData);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        forces[i] = mLpfWeight * forces[i] + (1 - mLpfWeight) * (currentForce[i] - forceBias[i]);
+                    }
+                    
                     //Do calibrations
                     if (isFzCalibrating)
                     {
                         calibStep++;
 
                         //Calculate average value
-                        forceBiasCandidate[2] = (forceBiasCandidate[2] * (calibStep - 1) + forces[2]) / calibStep;
+                        forceBiasCandidate[2] = (forceBiasCandidate[2] * (calibStep - 1) + forces[2] + forceBias[2]) / calibStep;
 
                         //Update progress bar status
                         pbarFzCalib.Value = calibStep;
@@ -812,8 +888,8 @@ namespace mGCS
                     {
                         calibStep++;
                         //Calculate average value
-                        forceBiasCandidate[0] = (forceBiasCandidate[0] * (calibStep - 1) + forces[0]) / calibStep;
-                        forceBiasCandidate[1] = (forceBiasCandidate[1] * (calibStep - 1) + forces[1]) / calibStep;
+                        forceBiasCandidate[0] = (forceBiasCandidate[0] * (calibStep - 1) + forces[0] + forceBias[0]) / calibStep;
+                        forceBiasCandidate[1] = (forceBiasCandidate[1] * (calibStep - 1) + forces[1] + forceBias[1]) / calibStep;
 
                         //Update progress bar status
                         pbarFxyCalib.Value = calibStep;
@@ -847,7 +923,8 @@ namespace mGCS
                         calibStep++;
 
                         //Calculate average value
-                        mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + (forces[2] - forceBias[2]) / GRAVITY) / calibStep;
+                        //mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + (forces[2] - forceBias[2]) / GRAVITY) / calibStep;
+                        mVehicleMassCandidate = (mVehicleMassCandidate * (calibStep - 1) + forces[2] / GRAVITY) / calibStep;
 
                         //Update progress bar status
                         pbarMassCalib.Value = calibStep;
@@ -943,7 +1020,7 @@ namespace mGCS
 
         private void lblCntFt_Click(object sender, EventArgs e)
         {
-            pnlFtSetting.Visible = true;
+            pnlFtSetting.Visible = true; 
         }
 
         private void btnRefreshAll_Click(object sender, EventArgs e)
@@ -1114,10 +1191,10 @@ namespace mGCS
 
         private void ftPositioningTimer_Tick(object sender, EventArgs e)
         {
-
             if (mTimePoint == 0)
             {
                 mTimePoint = DateTime.Now.Ticks - mTimePoint;
+                mTimePoint0 = mTimePoint;
             }
             else
             {
@@ -1127,13 +1204,23 @@ namespace mGCS
                 //Update time point
                 mTimePoint = DateTime.Now.Ticks;
             }
+            
             //Run the estimator of the Pseudo Positioner 
             if (mVehicleMass <= 0) mVehicleMass = 0.01;
-            mPsner.runEstimation((forces[0] - forceBias[0]) / mVehicleMass, (forces[1] - forceBias[1]) / mVehicleMass, (forces[2] - forceBias[2]) / mVehicleMass, mFtSamplingTime);
+            mPsner.runEstimation(forces[0] / mVehicleMass, forces[1] / mVehicleMass, forces[2] / mVehicleMass, mFtSamplingTime);
         }
 
         private void ftVisualizationTimer_Tick(object sender, EventArgs e)
         {
+            if (loggingTimepoint0 == 0)
+            {
+                loggingTimepoint0 = DateTime.Now.Ticks;
+                loggingTime = 0;
+            }
+            else
+            {
+                loggingTime = (DateTime.Now.Ticks - loggingTimepoint0) * Math.Pow(10, -7);
+            }
             ftVisualize();
         }
 
@@ -1180,6 +1267,18 @@ namespace mGCS
                 lbxView.Items.Add(mMatrixHelper.MatrixAsString(pe));
             });
             ***/
+        }
+
+        private void tbxsendingStep_TextChanged(object sender, EventArgs e)
+        {
+             
+        }
+
+        private void btnSendingStep_Click(object sender, EventArgs e)
+        {
+            sendingStep = Convert.ToDouble(tbxsendingStep.Text);
+            posNedX0 = posNed[0][0];
+            mtime = 0.0; 
         }
     }
 }
